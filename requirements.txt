@@ -1,1 +1,15 @@
-pandas\nnumpy\nscikit-learn\nmlflow\ntransformers\nsentence-transformers\nprefect\nyfinance\n
+pandas
+numpy
+scikit-learn
+mlflow
+transformers
+sentence-transformers
+prefect
+yfinance
+dash
+plotly
+papermill
+jupyter
+spacy
+tensorflow
+torch
