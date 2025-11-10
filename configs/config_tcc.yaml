@@ -1,0 +1,23 @@
+# Configurações principais do TCC USP (sentimento x Ibovespa)
+
+periodo_estudo:
+  start: "2018-01-01"
+  end: "2025-01-31"
+
+colunas_data:
+  ibov: "day"
+  noticias: "day"
+  eventos: "event_day"
+
+arquivos_chave:
+  ibov_clean: data_processed/ibovespa_clean.csv
+  ibov_raw: data_raw/ibovespa.csv
+  news_clean: data_processed/news_clean.parquet
+  news_multisource: data_processed/news_multisource.parquet
+  tfidf_daily_matrix: data_processed/tfidf_daily_matrix.npz
+  tfidf_daily_vocab: data_processed/tfidf_daily_vocab.json
+  tfidf_daily_index: data_processed/tfidf_daily_index.csv
+  labels_y_daily: data_processed/labels_y_daily.csv
+  backtest_results: data_processed/18_backtest_results.csv
+  latency_events: data_processed/event_study_latency.csv
+  dashboard_final: data_processed/20_final_dashboard.html

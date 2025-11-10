@@ -1,111 +1,119 @@
 """
-Validation helpers to make sure sentiment/IBOV merges always have overlapping dates.
-These checks should run near the start of each notebook before any heavy processing.
+Date-range validation helpers for safely merging Ibovespa and news sentiment series.
 """
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
-from typing import Tuple
+from typing import Dict, Optional
 
 import pandas as pd
 
-__all__ = ["check_ibov_news_intersection", "assert_min_intersection"]
+__all__ = ["summarize_date_range", "check_intersection"]
 
 
 @dataclass(frozen=True)
-class IntersectionStats:
-    start_ibov: pd.Timestamp
-    end_ibov: pd.Timestamp
-    start_news: pd.Timestamp
-    end_news: pd.Timestamp
-    days_common: int
+class DateSummary:
+    """Container for date statistics (mostly for internal use / testing)."""
+
+    min_date: Optional[pd.Timestamp]
+    max_date: Optional[pd.Timestamp]
+    n_days: int
+    n_records: int
+    n_missing: int
 
 
-def _prepare_dates(df: pd.DataFrame, date_col: str) -> pd.Series:
-    if date_col not in df.columns:
-        raise ValueError(f"Column '{date_col}' not found in dataframe with columns={list(df.columns)}")
-    dates = pd.to_datetime(df[date_col], errors="coerce")
+def _ensure_datetime(series: pd.Series, col_name: str) -> pd.Series:
+    """Convert a series to daily resolution datetimes."""
+    if series.empty:
+        raise ValueError(f"DataFrame sem registros para coluna '{col_name}'.")
+    dates = pd.to_datetime(series, errors="coerce")
     if dates.isna().all():
-        raise ValueError(f"Column '{date_col}' could not be parsed as datetime.")
-    return dates
+        raise ValueError(f"Coluna '{col_name}' não pôde ser convertida para datetime.")
+    return dates.dt.floor("D")
 
 
-def _intersection_stats(
-    df_ibov: pd.DataFrame,
-    df_news: pd.DataFrame,
-    date_col_ibov: str,
-    date_col_news: str,
-) -> IntersectionStats:
-    ibov_dates = _prepare_dates(df_ibov, date_col_ibov)
-    news_dates = _prepare_dates(df_news, date_col_news)
-
-    ibov_range = (ibov_dates.min(), ibov_dates.max())
-    news_range = (news_dates.min(), news_dates.max())
-
-    common = pd.Index(ibov_dates.dt.normalize().unique()).intersection(
-        news_dates.dt.normalize().unique()
-    )
-
-    return IntersectionStats(
-        start_ibov=ibov_range[0],
-        end_ibov=ibov_range[1],
-        start_news=news_range[0],
-        end_news=news_range[1],
-        days_common=int(common.size),
-    )
-
-
-def check_ibov_news_intersection(
-    df_ibov: pd.DataFrame,
-    df_news: pd.DataFrame,
-    date_col_ibov: str = "day",
-    date_col_news: str = "day",
-) -> IntersectionStats:
+def summarize_date_range(df: pd.DataFrame, col: str = "day") -> DateSummary:
     """
-    Print range summaries for both series and raise if there is zero overlap.
-    Returns the stats object for downstream reuse.
+    Print a summary (min/max/n dias/registros) for the provided date column.
+
+    Returns the `DateSummary` dataclass for optional downstream checks.
     """
-    stats = _intersection_stats(df_ibov, df_news, date_col_ibov, date_col_news)
+    if col not in df.columns:
+        raise KeyError(f"Coluna '{col}' não encontrada em {list(df.columns)}")
 
-    print(
-        f"IBOV range: {stats.start_ibov.date()} → {stats.end_ibov.date()}  "
-        f"({len(df_ibov)} registros)"
+    dates = _ensure_datetime(df[col], col)
+    summary = DateSummary(
+        min_date=dates.min(),
+        max_date=dates.max(),
+        n_days=int(dates.nunique()),
+        n_records=len(df),
+        n_missing=int(df[col].isna().sum()),
     )
+    min_repr = summary.min_date.date() if pd.notna(summary.min_date) else "NaT"
+    max_repr = summary.max_date.date() if pd.notna(summary.max_date) else "NaT"
     print(
-        f"News range: {stats.start_news.date()} → {stats.end_news.date()}  "
-        f"({len(df_news)} registros)"
+        f"[{col}] {min_repr} → {max_repr} | {summary.n_days} dias únicos | "
+        f"{summary.n_records} registros | missing={summary.n_missing}"
     )
-    print(f"Dias em comum: {stats.days_common}")
+    return summary
 
-    if stats.days_common == 0:
+
+def check_intersection(
+    df_left: pd.DataFrame,
+    df_right: pd.DataFrame,
+    col_left: str = "day",
+    col_right: str = "day",
+    min_days: int = 60,
+) -> Dict[str, object]:
+    """
+    Validate that two date series have a meaningful intersection.
+
+    Parameters
+    ----------
+    df_left, df_right : pd.DataFrame
+        Dataframes to compare (e.g., Ibovespa vs. sentimento diário).
+    col_left, col_right : str, default "day"
+        Columns containing the date information in each dataframe.
+    min_days : int, default 60
+        Minimum number of overlapping days considered acceptable.
+
+    Returns
+    -------
+    dict
+        Keys: `left`, `right`, `common_days`, `days_list`.
+
+    Raises
+    ------
+    ValueError
+        When there is zero overlap between the series.
+    """
+    left_summary = summarize_date_range(df_left, col_left)
+    right_summary = summarize_date_range(df_right, col_right)
+
+    left_dates = _ensure_datetime(df_left[col_left], col_left).dropna().unique()
+    right_dates = _ensure_datetime(df_right[col_right], col_right).dropna().unique()
+
+    common = pd.Index(left_dates).intersection(pd.Index(right_dates))
+    n_common = common.size
+
+    print(f"Dias em comum: {n_common}")
+    if n_common == 0:
         raise ValueError(
-            "Sem interseção entre datas de Ibovespa e notícias. "
+            "Sem interseção entre as séries informadas. "
             "Revise o período de coleta ou o pré-processamento antes de seguir com o merge."
         )
-    return stats
-
-
-def assert_min_intersection(
-    df_ibov: pd.DataFrame,
-    df_news: pd.DataFrame,
-    min_days: int = 60,
-    date_col_ibov: str = "day",
-    date_col_news: str = "day",
-) -> IntersectionStats:
-    """
-    Ensure there is a minimum number of overlapping days before modeling.
-    Raises ValueError when the overlap is below `min_days`.
-    """
-    stats = check_ibov_news_intersection(
-        df_ibov=df_ibov,
-        df_news=df_news,
-        date_col_ibov=date_col_ibov,
-        date_col_news=date_col_news,
-    )
-    if stats.days_common < min_days:
-        raise ValueError(
-            f"Interseção insuficiente ({stats.days_common} dias). "
-            f"São necessários pelo menos {min_days} dias para prosseguir."
+    if n_common < min_days:
+        warnings.warn(
+            f"Amostra curta: apenas {n_common} dias em comum (< {min_days}). "
+            "Resultados estatísticos podem ficar instáveis.",
+            stacklevel=2,
         )
-    return stats
+
+    return {
+        "left": left_summary,
+        "right": right_summary,
+        "common_days": n_common,
+        "days_list": common.sort_values(),
+    }

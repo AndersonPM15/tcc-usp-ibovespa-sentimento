@@ -1,131 +1,139 @@
 """
-Utilities for centralized path resolution across local (Windows) and Google Colab
-environments. All notebooks should rely on these helpers instead of hardcoding
-`/content/drive/...` or `C:/Users/...`.
+Centralized path helpers for the TCC USP project.
+
+This module standardizes how notebooks/scripts refer to the shared folders both
+locally (Windows) and on Google Colab.  Always import these helpers instead of
+hardcoding `/content/drive/...` or `C:/Users/...`.
 """
 
 from __future__ import annotations
 
 import os
-from functools import lru_cache
 from pathlib import Path
 from typing import Dict
 
-__all__ = ["get_base_path", "get_data_paths", "get_project_paths"]
+__all__ = ["detect_env", "get_base_path", "get_data_paths", "get_project_paths"]
+
+_COLAB_SENTINELS = ("COLAB_RELEASE_TAG", "COLAB_GPU", "COLAB_BACKEND_VERSION")
+_COLAB_DRIVE_ROOT = Path("/content/drive")
+_COLAB_DRIVE_FOLDERS = ("MyDrive", "MeuDrive")
+_ENV_OVERRIDE_VAR = "TCC_USP_BASE"
 
 _DATA_DIRS = ("data_raw", "data_processed", "data_interim")
-_PROJECT_DIRS = ("notebooks", "configs", "reports", "src")
-_COLAB_DRIVE_CANDIDATES = (
-    Path("/content/drive/MyDrive/TCC_USP"),
-    Path("/content/drive/MeuDrive/TCC_USP"),
-)
-_LOCAL_DEFAULTS = (
-    Path("C:/Users/ander/OneDrive/TCC_USP"),
-    Path.home() / "OneDrive" / "TCC_USP",
-)
+_PROJECT_DIRS = ("data", "notebooks", "configs", "reports", "src")
 
 
-def _is_colab_runtime() -> bool:
-    """Infer whether the current interpreter is running inside Google Colab."""
-    return any(
-        env_var in os.environ
-        for env_var in ("COLAB_RELEASE_TAG", "COLAB_GPU", "COLAB_BACKEND_VERSION")
-    )
+def detect_env() -> str:
+    """
+    Return the current runtime environment identifier.
+
+    Returns
+    -------
+    str
+        `"colab"` when running inside Google Colab, otherwise `"local"`.
+    """
+    if any(marker in os.environ for marker in _COLAB_SENTINELS):
+        return "colab"
+    if _COLAB_DRIVE_ROOT.exists():
+        # When Drive is mounted but COLAB_* vars are absent (rare but possible).
+        return "colab"
+    return "local"
 
 
-def _has_data_dirs(path: Path) -> bool:
-    """Check whether all expected data directories live inside `path`."""
-    return all((path / directory).exists() for directory in _DATA_DIRS)
-
-
-def _env_override() -> Path | None:
-    """Allow power users to specify the base path manually via env var."""
-    env_value = os.environ.get("TCC_USP_BASE_PATH")
-    if not env_value:
-        return None
-    override = Path(env_value).expanduser()
-    return override if override.exists() else None
-
-
-def _detect_colab_base() -> Path:
-    """Resolve the Drive mount used inside Colab."""
-    drive_root = Path("/content/drive")
-    if not drive_root.exists():
-        return Path.cwd()
-    for candidate in _COLAB_DRIVE_CANDIDATES:
-        if candidate.exists():
-            return candidate
-    # Default to MyDrive even if the folder is not there yet.
-    return _COLAB_DRIVE_CANDIDATES[0]
-
-
-def _candidate_local_roots() -> list[Path]:
-    """Generate a list of plausible base folders on the local machine."""
-    module_path = Path(__file__).resolve()
-    parents = list(module_path.parents)
-    cwd = Path.cwd()
-    candidates = [cwd] + parents
-    candidates.extend(_LOCAL_DEFAULTS)
-    return candidates
-
-
-def _detect_local_base() -> Path:
-    """Find the best local folder that should contain the shared data dirs."""
-    candidates = _candidate_local_roots()
-    for candidate in candidates:
-        if candidate.exists() and _has_data_dirs(candidate):
-            return candidate
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate
-    # Fall back to the repository root (two levels above src/io).
+def _repo_root() -> Path:
+    """Return the repository root (two levels above src/io)."""
     return Path(__file__).resolve().parents[2]
 
 
-@lru_cache(maxsize=1)
+def _colab_base() -> Path:
+    """Locate `/content/drive/<Drive>/TCC_USP` on Colab."""
+    if not _COLAB_DRIVE_ROOT.exists():
+        raise RuntimeError(
+            "Google Drive não está montado. Execute `drive.mount('/content/drive')`."
+        )
+
+    for folder in _COLAB_DRIVE_FOLDERS:
+        candidate = _COLAB_DRIVE_ROOT / folder / "TCC_USP"
+        if candidate.exists():
+            return candidate
+    # Default to MyDrive even if the folder has not been created yet.
+    return _COLAB_DRIVE_ROOT / _COLAB_DRIVE_FOLDERS[0] / "TCC_USP"
+
+
+def _local_base() -> Path:
+    """Infer the local base folder `.../OneDrive/TCC_USP`."""
+    repo_parent = _repo_root().parent
+    explicit = Path("C:/Users/ander/OneDrive/TCC_USP")
+    onedrive_default = Path.home() / "OneDrive" / "TCC_USP"
+
+    candidates = []
+    for candidate in (repo_parent, onedrive_default, explicit):
+        resolved = candidate.expanduser()
+        key = resolved.as_posix().lower()
+        if key not in {c.as_posix().lower() for c in candidates}:
+            candidates.append(resolved)
+
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return candidates[0]
+
+
 def get_base_path() -> Path:
     """
-    Detect the canonical BASE_PATH.
+    Resolve the canonical `BASE_PATH` where shared data lives.
 
-    - Colab → `/content/drive/{MyDrive|MeuDrive}/TCC_USP`
-    - Local → parent directory that holds `data_raw`, `data_processed`, `data_interim`
-      (defaults to the OneDrive workspace if nothing else matches)
-    - Manual override → set `TCC_USP_BASE_PATH` before importing this module.
+    Precedence:
+    1. Environment variable `TCC_USP_BASE`
+    2. Colab detection  → `/content/drive/{MyDrive|MeuDrive}/TCC_USP`
+    3. Local detection  → parent folder that contains the repository (fallback to
+       `%USERPROFILE%/OneDrive/TCC_USP`)
     """
-    override = _env_override()
+    override = os.environ.get(_ENV_OVERRIDE_VAR)
     if override:
-        return override.resolve()
+        return Path(override).expanduser().resolve()
 
-    if _is_colab_runtime():
-        return _detect_colab_base().resolve()
-    return _detect_local_base().resolve()
+    env = detect_env()
+    base = _colab_base() if env == "colab" else _local_base()
+    return base.resolve()
 
 
-@lru_cache(maxsize=1)
-def get_data_paths() -> Dict[str, Path]:
+def get_data_paths(create: bool = True) -> Dict[str, Path]:
     """
-    Return the three canonical data directories relative to BASE_PATH.
+    Return a dictionary with the shared data folders.
 
-    The directories are created lazily if they do not exist yet to keep the
-    pipeline idempotent when run on a fresh machine.
+    Parameters
+    ----------
+    create : bool, default True
+        Create the directories when they do not exist.
+
+    Returns
+    -------
+    dict
+        Keys: `base`, `data_raw`, `data_processed`, `data_interim`.
     """
-    base_path = get_base_path()
-    mapping = {name: (base_path / name) for name in _DATA_DIRS}
-    for path in mapping.values():
-        path.mkdir(parents=True, exist_ok=True)
+    base = get_base_path()
+    mapping: Dict[str, Path] = {"base": base}
+
+    for name in _DATA_DIRS:
+        path = base / name
+        if create:
+            path.mkdir(parents=True, exist_ok=True)
+        mapping[name] = path
     return mapping
 
 
-@lru_cache(maxsize=1)
 def get_project_paths() -> Dict[str, Path]:
     """
-    Return important project folders (repo root + notebooks/configs/reports/src).
+    Return a dictionary with important folders inside the repository.
 
-    These paths are derived from the repository location to keep code + data
-    references decoupled: data lives in BASE_PATH, code lives inside the repo.
+    Returns
+    -------
+    dict
+        Keys: `repo_root`, `data`, `notebooks`, `configs`, `reports`, `src`.
     """
-    repo_root = Path(__file__).resolve().parents[2]
-    mapping = {"repo_root": repo_root}
-    for directory in _PROJECT_DIRS:
-        mapping[directory] = repo_root / directory
+    repo_root = _repo_root()
+    mapping: Dict[str, Path] = {"repo_root": repo_root}
+    for name in _PROJECT_DIRS:
+        mapping[name] = repo_root / name
     return mapping
