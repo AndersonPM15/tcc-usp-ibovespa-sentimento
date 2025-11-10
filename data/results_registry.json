@@ -1,0 +1,614 @@
+[
+  {
+    "timestamp": "2025-11-10T19:41:27.349784",
+    "model": "00_data_download",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 5.52059
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_164121_00_data_download.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:41:47.465068",
+    "model": "01_preprocessing",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 18.052151
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_164129_01_preprocessing.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:41:57.153673",
+    "model": "02_baseline_logit",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 9.490641
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_164147_02_baseline_logit.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:42:09.952861",
+    "model": "03_tfidf_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 12.47412
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_164157_03_tfidf_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:42:20.534620",
+    "model": "04_embeddings_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 10.432752
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [5]\":\n---------------------------------------------------------------------------\nNameError                                 Traceback (most recent call last)\nCell In[5], line 2\n      1 # 4. Merge com IBOV e criar target\n----> 2 df = pd.merge(df_ibov.sort_values(\"data\"), daily_emb, on=\"data\", how=\"left\").fillna(0)\n      3 df[\"ret1\"] = df[\"close\"].pct_change().shift(-1)           # retorno do dia seguinte\n      4 df = df.dropna().copy()\n\nNameError: name 'daily_emb' is not defined\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:48:14.823031",
+    "model": "04_embeddings_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 7.59243
+    },
+    "extra": {
+      "error": "[Errno 13] Permission denied: 'C:\\\\Users\\\\ander\\\\OneDrive\\\\TCC_USP\\\\tcc-usp-ibovespa-sentimento\\\\notebooks\\\\_runs\\\\20251110_164807_04_embeddings_models.ipynb'"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:50:17.829036",
+    "model": "04_embeddings_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 80.793854
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_164857_04_embeddings_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:52:01.268539",
+    "model": "08_embeddings_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 79.610854
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_165041_08_embeddings_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:52:50.511633",
+    "model": "00_data_download",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 9.876681
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_165240_00_data_download.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:53:03.605681",
+    "model": "01_preprocessing",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 11.354181
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_165252_01_preprocessing.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:53:23.513641",
+    "model": "02_baseline_logit",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 19.596607
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_165303_02_baseline_logit.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:53:36.020635",
+    "model": "03_tfidf_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 11.720269
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_165324_03_tfidf_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:54:59.868591",
+    "model": "04_embeddings_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 83.617094
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_165336_04_embeddings_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:55:11.310552",
+    "model": "05_data_collection_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 10.818666
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_165500_05_data_collection_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:55:24.981676",
+    "model": "06_preprocessing_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 13.463395
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_165511_06_preprocessing_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:55:41.520645",
+    "model": "07_tfidf_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 16.349842
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_165525_07_tfidf_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:57:17.453660",
+    "model": "08_embeddings_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 95.759868
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_165541_08_embeddings_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T19:58:01.524560",
+    "model": "09_lstm_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 43.40493
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [6]\":\n---------------------------------------------------------------------------\nNameError                                 Traceback (most recent call last)\nCell In[6], line 12\n      9         y_seq.append(y[i+window])\n     10     return np.array(X_seq), np.array(y_seq)\n---> 12 X_seq, y_seq = create_sequences(X, y, window=3)\n     14 print(\"X_seq:\", X_seq.shape, \"| y_seq:\", y_seq.shape)\n\nNameError: name 'X' is not defined\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:00:24.469571",
+    "model": "00_data_download",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.59788
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170016_00_data_download.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:00:35.667649",
+    "model": "01_preprocessing",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 9.511924
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170026_01_preprocessing.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:00:49.367645",
+    "model": "02_baseline_logit",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 13.485243
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170035_02_baseline_logit.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:00:59.957997",
+    "model": "03_tfidf_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 10.39299
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170049_03_tfidf_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:02:02.267978",
+    "model": "04_embeddings_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 62.132385
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170100_04_embeddings_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:02:12.111119",
+    "model": "05_data_collection_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 9.562529
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170202_05_data_collection_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:02:23.624004",
+    "model": "06_preprocessing_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 11.163949
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170212_06_preprocessing_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:02:36.624616",
+    "model": "07_tfidf_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 12.724487
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170223_07_tfidf_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:03:48.696860",
+    "model": "08_embeddings_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 71.79002
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170236_08_embeddings_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:04:54.937826",
+    "model": "09_lstm_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 66.06903
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170348_09_lstm_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:05:07.134468",
+    "model": "10_dashboard_results",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 12.043269
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170455_10_dashboard_results.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:05:11.854757",
+    "model": "11_event_study_latency",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 4.536516
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170507_11_event_study_latency.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:05:21.196484",
+    "model": "12_data_collection_multisource",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 9.187676
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170512_12_data_collection_multisource.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:05:29.647803",
+    "model": "13_etl_dedup",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 8.310714
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [8]\":\n---------------------------------------------------------------------------\nNameError                                 Traceback (most recent call last)\nCell In[8], line 5\n      3 clean_csv     = os.path.join(PROC_PATH, \"news_multisource_clean.csv\")\n      4 dict_csv      = os.path.join(PROC_PATH, \"dicionario_dados_news.csv\")\n----> 5 report_json   = os.path.join(PROC_PATH, f\"etl_report_{SNAPSHOT_ID}.json\")\n      7 # salvar dados limpos\n      8 df_out = df[[\"date\",\"title\",\"text\",\"source\",\"url_norm\",\"origin\"]].rename(columns={\"url_norm\":\"url\"})\n\nNameError: name 'SNAPSHOT_ID' is not defined\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:08:35.882962",
+    "model": "09_lstm_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 78.412419
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170717_09_lstm_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:09:12.221792",
+    "model": "10_dashboard_results",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 12.535217
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170859_10_dashboard_results.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:09:23.840063",
+    "model": "11_event_study_latency",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 9.46018
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170914_11_event_study_latency.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:09:34.911842",
+    "model": "12_data_collection_multisource",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 10.899864
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_170924_12_data_collection_multisource.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:09:43.950340",
+    "model": "13_etl_dedup",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 8.858393
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [8]\":\n---------------------------------------------------------------------------\nNameError                                 Traceback (most recent call last)\nCell In[8], line 40\n     24 report = {\n     25     \"notebook\": NB_NAME,\n     26     \"snapshot_id\": SNAPSHOT_ID,\n   (...)     37     }\n     38 }\n     39 with open(report_json, \"w\", encoding=\"utf-8\") as f:\n---> 40     json.dump(report, f, ensure_ascii=False, indent=2)\n     42 print(\"✅ Arquivos salvos:\")\n     43 print(clean_parquet)\n\nNameError: name 'json' is not defined\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:10:37.638741",
+    "model": "10_dashboard_results",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 16.024917
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_171021_10_dashboard_results.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:10:46.539131",
+    "model": "11_event_study_latency",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 6.136277
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_171040_11_event_study_latency.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:10:57.462815",
+    "model": "12_data_collection_multisource",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 10.726824
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_171046_12_data_collection_multisource.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:11:04.038861",
+    "model": "13_etl_dedup",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 6.351988
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_171057_13_etl_dedup.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:11:12.081994",
+    "model": "14_preprocess_ptbr",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 7.80309
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [7]\":\n---------------------------------------------------------------------------\nNameError                                 Traceback (most recent call last)\nCell In[7], line 7\n      3 tqdm.pandas()\n      5 df = df.assign(text_full=df.apply(build_text, axis=1))\n----> 7 if USE_SPACY:\n      8     out = df[\"text_full\"].progress_apply(preprocess_spacy_pt)\n      9 else:\n\nNameError: name 'USE_SPACY' is not defined\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:13:28.628163",
+    "model": "10_dashboard_results",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 4.787736
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_171323_10_dashboard_results.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:13:32.266499",
+    "model": "11_event_study_latency",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 2.540631
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_171329_11_event_study_latency.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:13:38.777483",
+    "model": "12_data_collection_multisource",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 6.338004
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_171332_12_data_collection_multisource.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:13:43.563546",
+    "model": "13_etl_dedup",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 4.63679
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_171338_13_etl_dedup.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:13:50.693194",
+    "model": "14_preprocess_ptbr",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 6.98691
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [5]\":\n---------------------------------------------------------------------------\nModuleNotFoundError                       Traceback (most recent call last)\nCell In[5], line 4\n      2 import nltk\n      3 from nltk.corpus import stopwords\n----> 4 from unidecode import unidecode\n      6 nltk.download(\"stopwords\", quiet=True)\n      7 STOP_PT = set(stopwords.words(\"portuguese\"))\n\nModuleNotFoundError: No module named 'unidecode'\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:14:31.314123",
+    "model": "14_preprocess_ptbr",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 9.882701
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_171421_14_preprocess_ptbr.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T20:14:35.725481",
+    "model": "15_features_tfidf_daily",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 3.628668
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [6]\":\n---------------------------------------------------------------------------\nNameError                                 Traceback (most recent call last)\nCell In[6], line 8\n      5 vocab_file = os.path.join(PROC_PATH, \"tfidf_daily_vocab.json\")\n      6 index_file = os.path.join(PROC_PATH, \"tfidf_daily_index.csv\")\n----> 8 save_npz(mat_file, X_day)\n      9 with open(vocab_file, \"w\", encoding=\"utf-8\") as f:\n     10     json.dump({\"terms\": terms.tolist()}, f, ensure_ascii=False)\n\nNameError: name 'X_day' is not defined\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T23:21:16.392279",
+    "model": "14_preprocess_ptbr",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 17.428842
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251110_202058_14_preprocess_ptbr.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-10T23:21:25.019437",
+    "model": "15_features_tfidf_daily",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 7.068161
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [7]\":\n---------------------------------------------------------------------------\nNameError                                 Traceback (most recent call last)\nCell In[7], line 10\n      8 save_npz(mat_file, X_day)\n      9 with open(vocab_file, \"w\", encoding=\"utf-8\") as f:\n---> 10     json.dump({\"terms\": terms.tolist()}, f, ensure_ascii=False)\n     12 # índice de linhas -> dia\n     13 idx = docs_day[[\"day\"]].copy()\n\nNameError: name 'json' is not defined\n"
+    }
+  }
+]

@@ -1,207 +1,205 @@
 """
-Prefect-based orchestration for the TCC USP sentiment pipeline.
+Pipeline orchestration script for the TCC USP project.
 
-Usage
------
-python pipeline_orchestration.py
+Runs the notebooks 00→20 in sequence, logs progress, and stores executed
+versions under `notebooks/_runs/`.
+
+Usage:
+    python pipeline_orchestration.py
+    python pipeline_orchestration.py --continue-on-fail
+    python pipeline_orchestration.py --only 16 17 18
 """
 
 from __future__ import annotations
 
-import subprocess
+import argparse
+import logging
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Iterable
+from typing import Iterable, List, Sequence
 
 try:
     import papermill as pm
 
     HAVE_PAPERMILL = True
-except ImportError:
+except ImportError:  # pragma: no cover - papermill optional
     HAVE_PAPERMILL = False
 
-from prefect import flow, task, get_run_logger
-
-from src.config import loader as config_loader
+from src.config import loader as cfg
 from src.io import paths as path_utils
-
-# ------------------------------------------------------------------------------
-# Global paths / logging setup
-# ------------------------------------------------------------------------------
-
-DATA_PATHS = path_utils.get_data_paths()
-PROJECT_PATHS = path_utils.get_project_paths()
-NOTEBOOKS_DIR = PROJECT_PATHS["notebooks"]
-RUNS_DIR = NOTEBOOKS_DIR / "_runs"
-RUNS_DIR.mkdir(parents=True, exist_ok=True)
-
-LOG_DIR = PROJECT_PATHS["reports"] / "logs"
-LOG_DIR.mkdir(parents=True, exist_ok=True)
-TIMESTAMP = datetime.now().strftime("%Y%m%d_%H%M%S")
-LOG_FILE = LOG_DIR / f"pipeline_{TIMESTAMP}.log"
+from src.utils.logger import log_result
 
 
-def _log_to_file(message: str) -> None:
-    with LOG_FILE.open("a", encoding="utf-8") as fh:
-        fh.write(message + "\n")
+NOTEBOOK_SEQUENCE: Sequence[str] = [
+    "00_data_download",
+    "01_preprocessing",
+    "02_baseline_logit",
+    "03_tfidf_models",
+    "04_embeddings_models",
+    "05_data_collection_real",
+    "06_preprocessing_real",
+    "07_tfidf_real",
+    "08_embeddings_real",
+    "09_lstm_real",
+    "10_dashboard_results",
+    "11_event_study_latency",
+    "12_data_collection_multisource",
+    "13_etl_dedup",
+    "14_preprocess_ptbr",
+    "15_features_tfidf_daily",
+    "16_models_tfidf_baselines",
+    "17_sentiment_validation",
+    "18_backtest_simulation",
+    "19_future_extension",
+    "20_final_dashboard_analysis",
+]
 
 
-def run_notebook(notebook_name: str, parameters: Dict[str, str] | None = None) -> Path:
-    """
-    Execute a notebook via papermill (if installed) or jupyter nbconvert.
+def _setup_logging() -> Path:
+    project_paths = path_utils.get_project_paths()
+    log_dir = project_paths["reports"] / "logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = log_dir / f"pipeline_run_{timestamp}.log"
 
-    Returns
-    -------
-    Path
-        Location of the executed notebook output.
-    """
-    parameters = parameters or {}
-    src = NOTEBOOKS_DIR / f"{notebook_name}.ipynb"
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)s | %(message)s",
+        handlers=[
+            logging.FileHandler(log_file, encoding="utf-8"),
+            logging.StreamHandler(sys.stdout),
+        ],
+    )
+    return log_file
+
+
+def _execute_notebook(
+    notebook_name: str,
+    base_path: Path,
+    runs_dir: Path,
+) -> None:
+    src = path_utils.get_project_paths()["notebooks"] / f"{notebook_name}.ipynb"
     if not src.exists():
         raise FileNotFoundError(f"Notebook não encontrado: {src}")
 
-    output = RUNS_DIR / f"{TIMESTAMP}_{notebook_name}.ipynb"
-    msg = f"[{datetime.now():%H:%M:%S}] Executando {src.name}"
-    print(msg)
-    _log_to_file(msg)
+    runs_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    output = runs_dir / f"{timestamp}_{notebook_name}.ipynb"
 
-    if HAVE_PAPERMILL:
-        pm.execute_notebook(
-            input_path=str(src),
-            output_path=str(output),
-            parameters=parameters,
-            log_output=True,
-        )
-    else:
-        cmd = [
-            sys.executable,
-            "-m",
-            "jupyter",
-            "nbconvert",
-            "--to",
-            "notebook",
-            "--execute",
-            str(src),
-            "--output",
-            output.name,
-            "--output-dir",
-            str(RUNS_DIR),
-        ]
-        result = subprocess.run(
-            cmd, capture_output=True, text=True, check=False
-        )
-        if result.returncode != 0:
-            _log_to_file(result.stdout)
-            _log_to_file(result.stderr)
-            raise RuntimeError(
-                f"Falha ao executar {src.name} via nbconvert. "
-                f"stdout: {result.stdout}\n stderr: {result.stderr}"
+    logging.info("Executando %s", notebook_name)
+    start = datetime.now()
+    try:
+        if HAVE_PAPERMILL:
+            pm.execute_notebook(
+                input_path=str(src),
+                output_path=str(output),
+                parameters={
+                    "base_path": str(base_path),
+                    "run_id": timestamp,
+                },
+                progress_bar=False,
+                report_mode=True,
             )
-    done_msg = f"[{datetime.now():%H:%M:%S}] Concluído {src.name}"
-    print(done_msg)
-    _log_to_file(done_msg)
-    return output
+        else:  # pragma: no cover - fallback for environments sem papermill
+            import subprocess
+
+            cmd = [
+                sys.executable,
+                "-m",
+                "jupyter",
+                "nbconvert",
+                "--to",
+                "notebook",
+                "--execute",
+                str(src),
+                "--output",
+                output.name,
+                "--output-dir",
+                str(runs_dir),
+            ]
+            result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+            if result.returncode != 0:
+                raise RuntimeError(result.stderr.strip() or result.stdout.strip())
+    except Exception as exc:  # noqa: BLE001
+        duration = (datetime.now() - start).total_seconds()
+        logging.error("Falha em %s (%.1fs): %s", notebook_name, duration, exc)
+        metrics = {"status": 0, "duration_s": duration}
+        log_result(
+            model_name=notebook_name,
+            dataset_name="pipeline",
+            metrics=metrics,
+            extra={"error": str(exc)},
+        )
+        raise
+
+    duration = (datetime.now() - start).total_seconds()
+    logging.info("Concluído %s em %.1fs", notebook_name, duration)
+    metrics = {"status": 1, "duration_s": duration}
+    log_result(
+        model_name=notebook_name,
+        dataset_name="pipeline",
+        metrics=metrics,
+        extra={"output_notebook": str(output)},
+    )
 
 
-def run_group(notebooks: Iterable[str], parameters: Dict[str, str]) -> None:
-    for nb in notebooks:
-        run_notebook(nb, parameters=parameters)
+def run_pipeline(
+    notebooks: Iterable[str],
+    continue_on_fail: bool = False,
+) -> List[str]:
+    data_paths = path_utils.get_data_paths()
+    base_path = data_paths["base"]
+    runs_dir = path_utils.get_project_paths()["notebooks"] / "_runs"
+
+    completed: List[str] = []
+    for nb_name in notebooks:
+        try:
+            _execute_notebook(nb_name, base_path=base_path, runs_dir=runs_dir)
+            completed.append(nb_name)
+        except Exception:
+            if not continue_on_fail:
+                raise
+            logging.warning("Continuando após falha em %s", nb_name)
+    return completed
 
 
-# ------------------------------------------------------------------------------
-# Prefect tasks
-# ------------------------------------------------------------------------------
-
-@task(name="Protótipo 00-04")
-def tarefa_00_01_02_03_04(params: Dict[str, str]) -> None:
-    notebooks = [
-        "00_data_download",
-        "01_preprocessing",
-        "02_baseline_logit",
-        "03_tfidf_models",
-        "04_embeddings_models",
-    ]
-    run_group(notebooks, params)
-
-
-@task(name="Dados reais 05-10")
-def tarefa_05_06_07_08_09_10(params: Dict[str, str]) -> None:
-    notebooks = [
-        "05_data_collection_real",
-        "06_preprocessing_real",
-        "07_tfidf_real",
-        "08_embeddings_real",
-        "09_lstm_real",
-        "10_dashboard_results",
-    ]
-    run_group(notebooks, params)
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Executa o pipeline 00→20.")
+    parser.add_argument(
+        "--continue-on-fail",
+        action="store_true",
+        help="Não interrompe o pipeline quando um notebook falhar.",
+    )
+    parser.add_argument(
+        "--only",
+        nargs="+",
+        help="Lista de notebooks para executar (ex.: 16 17 18).",
+    )
+    return parser.parse_args()
 
 
-@task(name="Multisource 11-15")
-def tarefa_11_12_13_14_15(params: Dict[str, str]) -> None:
-    notebooks = [
-        "11_event_study_latency",
-        "12_data_collection_multisource",
-        "13_etl_dedup",
-        "14_preprocess_ptbr",
-        "15_features_tfidf_daily",
-    ]
-    run_group(notebooks, params)
+def main() -> None:
+    log_file = _setup_logging()
+    args = parse_args()
+    if args.only:
+        notebooks = [f"{nb if nb.endswith('.ipynb') else nb}".replace(".ipynb", "") for nb in args.only]
+    else:
+        notebooks = list(NOTEBOOK_SEQUENCE)
 
+    logging.info("Iniciando pipeline com %d notebooks.", len(notebooks))
+    logging.info("Log: %s", log_file)
+    logging.info("Ambiente base_path: %s", path_utils.get_data_paths()["base"])
 
-@task(name="Modelos finais 16-20")
-def tarefa_16_17_18_19_20(params: Dict[str, str]) -> None:
-    notebooks = [
-        "16_models_tfidf_baselines",
-        "17_sentiment_validation",
-        "18_backtest_simulation",
-        "19_future_extension",
-        "20_final_dashboard_analysis",
-    ]
-    run_group(notebooks, params)
+    try:
+        completed = run_pipeline(notebooks, continue_on_fail=args.continue_on_fail)
+    except Exception as exc:  # noqa: BLE001
+        logging.error("Pipeline interrompido: %s", exc)
+        logging.info("Notebooks concluídos antes da falha: %s", completed if 'completed' in locals() else [])
+        sys.exit(1)
 
-
-# ------------------------------------------------------------------------------
-# Flow definition
-# ------------------------------------------------------------------------------
-
-def _build_parameters() -> Dict[str, str]:
-    cfg = config_loader.load_config()
-    periodo = cfg.get("periodo_estudo", {})
-    params = {
-        "base_path": str(DATA_PATHS["base"]),
-        "proc_path": str(DATA_PATHS["data_processed"]),
-        "raw_path": str(DATA_PATHS["data_raw"]),
-        "interim_path": str(DATA_PATHS["data_interim"]),
-        "periodo_start": periodo.get("start"),
-        "periodo_end": periodo.get("end"),
-    }
-    return params
-
-
-@flow(name="tcc_pipeline_orchestration")
-def orchestrate_pipeline() -> None:
-    logger = get_run_logger()
-    logger.info("Iniciando pipeline TCC USP")
-    logger.info(f"Logs em: {LOG_FILE}")
-    params = _build_parameters()
-    logger.info(f"Parâmetros base: {params}")
-
-    res_proto = tarefa_00_01_02_03_04.submit(params)
-    res_proto.result()
-
-    res_real = tarefa_05_06_07_08_09_10.submit(params)
-    res_real.result()
-
-    res_multi = tarefa_11_12_13_14_15.submit(params)
-    res_multi.result()
-
-    res_final = tarefa_16_17_18_19_20.submit(params)
-    res_final.result()
-
-    logger.info("Pipeline concluído com sucesso ✅")
+    logging.info("Pipeline finalizado. Notebooks concluídos: %s", completed)
 
 
 if __name__ == "__main__":
-    orchestrate_pipeline()
+    main()

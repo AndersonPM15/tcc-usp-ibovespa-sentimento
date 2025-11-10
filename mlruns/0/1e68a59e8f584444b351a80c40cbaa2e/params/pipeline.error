@@ -1,0 +1,13 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [8]":
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+Cell In[8], line 5
+      3 clean_csv     = os.path.join(PROC_PATH, "news_multisource_clean.csv")
+      4 dict_csv      = os.path.join(PROC_PATH, "dicionario_dados_news.csv")
+----> 5 report_json   = os.path.join(PROC_PATH, f"etl_report_{SNAPSHOT_ID}.json")
+      7 # salvar dados limpos
+      8 df_out = df[["date","title","text","source","url_norm","origin"]].rename(columns={"url_norm":"url"})
+
+NameError: name 'SNAPSHOT_ID' is not defined
