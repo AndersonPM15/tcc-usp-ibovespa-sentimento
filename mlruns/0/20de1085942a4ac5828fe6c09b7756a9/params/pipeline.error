@@ -1,0 +1,11 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [7]":
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+Cell In[7], line 1
+----> 1 anova_lookup = anova_df.set_index("model").to_dict("index") if not anova_df.empty else {}
+      2 for _, row in corr_df.iterrows():
+      3     model = row.get("model")
+
+NameError: name 'anova_df' is not defined

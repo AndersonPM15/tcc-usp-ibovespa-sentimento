@@ -1,0 +1,8 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [9]":
+  Cell In[9], line 4
+    md = "**17_sentiment_validation concluído ✅**
+         ^
+SyntaxError: unterminated string literal (detected at line 4)
+

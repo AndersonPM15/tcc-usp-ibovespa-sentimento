@@ -1,0 +1,8 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [12]":
+  Cell In[12], line 4
+    f.write("<h1>Dashboard Final – Sentimento x Ibovespa</h1>
+            ^
+SyntaxError: unterminated string literal (detected at line 4)
+

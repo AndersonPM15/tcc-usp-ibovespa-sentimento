@@ -1,0 +1,8 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [11]":
+  Cell In[11], line 7
+    md = "**16_models_tfidf_baselines concluído ?**
+         ^
+SyntaxError: unterminated string literal (detected at line 7)
+

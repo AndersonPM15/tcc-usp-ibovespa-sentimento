@@ -1,0 +1,56 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [11]":
+---------------------------------------------------------------------------
+ModuleNotFoundError                       Traceback (most recent call last)
+File C:\Python311\Lib\site-packages\pandas\compat\_optional.py:135, in import_optional_dependency(name, extra, errors, min_version)
+    134 try:
+--> 135     module = importlib.import_module(name)
+    136 except ImportError:
+
+File C:\Python311\Lib\importlib\__init__.py:126, in import_module(name, package)
+    125         level += 1
+--> 126 return _bootstrap._gcd_import(name[level:], package, level)
+
+File <frozen importlib._bootstrap>:1204, in _gcd_import(name, package, level)
+
+File <frozen importlib._bootstrap>:1176, in _find_and_load(name, import_)
+
+File <frozen importlib._bootstrap>:1140, in _find_and_load_unlocked(name, import_)
+
+ModuleNotFoundError: No module named 'tabulate'
+
+During handling of the above exception, another exception occurred:
+
+ImportError                               Traceback (most recent call last)
+Cell In[11], line 5
+      2 from IPython.display import Markdown
+      4 best = perf_df.sort_values("sharpe", ascending=False).head(3)
+----> 5 best_md = best.to_markdown(index=False)
+      7 md = "**18_backtest_simulation concluido**\n"
+      8 md += "- Estrategias testadas: " + ", ".join([c["name"] for c in STRATEGIES]) + "\n"
+
+File C:\Python311\Lib\site-packages\pandas\util\_decorators.py:333, in deprecate_nonkeyword_arguments.<locals>.decorate.<locals>.wrapper(*args, **kwargs)
+    327 if len(args) > num_allow_args:
+    328     warnings.warn(
+    329         msg.format(arguments=_format_argument_list(allow_args)),
+    330         FutureWarning,
+    331         stacklevel=find_stack_level(),
+    332     )
+--> 333 return func(*args, **kwargs)
+
+File C:\Python311\Lib\site-packages\pandas\core\frame.py:2988, in DataFrame.to_markdown(self, buf, mode, index, storage_options, **kwargs)
+   2986 kwargs.setdefault("tablefmt", "pipe")
+   2987 kwargs.setdefault("showindex", index)
+-> 2988 tabulate = import_optional_dependency("tabulate")
+   2989 result = tabulate.tabulate(self, **kwargs)
+   2990 if buf is None:
+
+File C:\Python311\Lib\site-packages\pandas\compat\_optional.py:138, in import_optional_dependency(name, extra, errors, min_version)
+    136 except ImportError:
+    137     if errors == "raise":
+--> 138         raise ImportError(msg)
+    139     return None
+    141 # Handle submodules: if we have submodule, grab parent module from sys.modules
+
+ImportError: Missing optional dependency 'tabulate'.  Use pip or conda to install tabulate.
