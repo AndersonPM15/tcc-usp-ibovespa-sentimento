@@ -1,0 +1,9 @@
+﻿Pipeline run: FAILED
+Start time: 2025-11-10 15:56:50
+End time: 2025-11-10 15:57:01
+Duration (approx): 11 seconds
+Notebooks completed: 0
+Notebook failed: 00_data_download.ipynb
+Error: ModuleNotFoundError - No module named 'google.colab' (drive mount cell).
+Log file: reports/logs/pipeline_20251110_155603.log
+Action: adaptar notebooks para usar src.io.paths e caminhos locais antes de rerodar.

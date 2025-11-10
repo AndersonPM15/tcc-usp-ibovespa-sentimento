@@ -13,3 +13,7 @@ jupyter
 spacy
 tensorflow
 torch
+nltk
+xgboost
+sentence-transformers
+tf-keras
