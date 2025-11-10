@@ -1,0 +1,17 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [2]":
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+Cell In[2], line 11
+      7 import plotly.express as px
+      8 import plotly.graph_objects as go
+     10 paths = {
+---> 11     "labels": os.path.join(PROC_PATH, "labels_y_daily.csv"),
+     12     "oof": os.path.join(PROC_PATH, "16_oof_predictions.csv"),
+     13     "results16": os.path.join(PROC_PATH, "results_16_models_tfidf.json"),
+     14 }
+     16 for key, path in paths.items():
+     17     if not os.path.exists(path):
+
+NameError: name 'PROC_PATH' is not defined

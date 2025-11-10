@@ -1,0 +1,8 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [8]":
+  Cell In[8], line 13
+    f.write(f"<h2>{name}</h2>
+            ^
+SyntaxError: unterminated string literal (detected at line 13)
+

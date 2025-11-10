@@ -1,0 +1,13 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [4]":
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+Cell In[4], line 14
+     11     raise ValueError("Sem previsões para o backtest.")
+     13 if "ret_next" not in df.columns:
+---> 14     raise ValueError("labels_y_daily.csv precisa ter a coluna ret_next.")
+     16 df.sort_values(["model", "day"], inplace=True)
+     17 df["sentiment"] = df["proba"] * 2 - 1
+
+ValueError: labels_y_daily.csv precisa ter a coluna ret_next.
