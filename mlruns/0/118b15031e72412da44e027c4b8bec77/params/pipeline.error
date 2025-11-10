@@ -1,0 +1,12 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [6]":
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+Cell In[6], line 12
+      9         y_seq.append(y[i+window])
+     10     return np.array(X_seq), np.array(y_seq)
+---> 12 X_seq, y_seq = create_sequences(X, y, window=3)
+     14 print("X_seq:", X_seq.shape, "| y_seq:", y_seq.shape)
+
+NameError: name 'X' is not defined
