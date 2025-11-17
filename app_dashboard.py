@@ -19,6 +19,7 @@ import plotly.graph_objects as go
 from dash import Dash, Input, Output, dash_table, dcc, html
 
 from src.config import loader as cfg
+from src.config.constants import START_DATE, END_DATE
 from src.io import paths
 
 # ------------------------------------------------------------------------------
@@ -134,10 +135,11 @@ SENTIMENT_DF = load_sentiment()
 RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
 
-DATE_MIN = IBOV_DF["day"].min() if not IBOV_DF.empty else None
-DATE_MAX = IBOV_DF["day"].max() if not IBOV_DF.empty else None
+# Usar constantes do plano de pesquisa como limites (2018-01-02 a 2025-12-31)
+DATE_MIN = pd.Timestamp(START_DATE) if not IBOV_DF.empty else pd.Timestamp(START_DATE)
+DATE_MAX = pd.Timestamp(END_DATE) if not IBOV_DF.empty else pd.Timestamp(END_DATE)
 
-MODEL_OPTIONS = sorted(RESULTS_DF["model"].dropna().unique())
+MODEL_OPTIONS = sorted(RESULTS_DF["model"].dropna().unique()) if not RESULTS_DF.empty and "model" in RESULTS_DF.columns else []
 METRIC_OPTIONS = [
     {"label": "AUC", "value": "auc"},
     {"label": "MDA", "value": "mda"},
@@ -328,4 +330,4 @@ def update_dashboard(start_date, end_date, selected_models, metric):
 
 if __name__ == "__main__":
     print("Iniciando dashboard em http://localhost:8050 ...")
-    app.run_server(debug=True)
+    app.run(debug=True)
