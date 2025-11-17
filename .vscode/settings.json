@@ -1,4 +1,5 @@
 {
+    "python.defaultInterpreterPath": "C:/Users/ander/anaconda3/envs/tcc_usp/python.exe",
     "python-envs.defaultEnvManager": "ms-python.python:conda",
     "python-envs.defaultPackageManager": "ms-python.python:conda",
     "python-envs.pythonProjects": [],
