@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -74,12 +75,32 @@ def _setup_logging() -> Path:
     return log_file
 
 
+def _ensure_pythonpath(repo_root: Path) -> None:
+    """
+    Guarantee that the repository root is present on PYTHONPATH.
+
+    This avoids `ModuleNotFoundError: src` when notebooks are executed via
+    nbconvert (fallback mode) even quando o ambiente nǜo tem papermill.
+    """
+    current = os.environ.get("PYTHONPATH", "")
+    paths = [p for p in current.split(os.pathsep) if p]
+    repo_str = str(repo_root)
+    if repo_str not in paths:
+        os.environ["PYTHONPATH"] = os.pathsep.join([repo_str] + paths)
+
+
 def _execute_notebook(
     notebook_name: str,
     base_path: Path,
     runs_dir: Path,
 ) -> None:
-    src = path_utils.get_project_paths()["notebooks"] / f"{notebook_name}.ipynb"
+    project_paths = path_utils.get_project_paths()
+    repo_root = project_paths["repo_root"]
+    notebooks_dir = project_paths["notebooks"]
+
+    _ensure_pythonpath(repo_root)
+
+    src = notebooks_dir / f"{notebook_name}.ipynb"
     if not src.exists():
         raise FileNotFoundError(f"Notebook não encontrado: {src}")
 
@@ -101,7 +122,7 @@ def _execute_notebook(
                 progress_bar=False,
                 report_mode=True,
             )
-        else:  # pragma: no cover - fallback for environments sem papermill
+        else:  # pragma: no cover - fallback para ambientes sem papermill
             import subprocess
 
             cmd = [
@@ -118,7 +139,14 @@ def _execute_notebook(
                 "--output-dir",
                 str(runs_dir),
             ]
-            result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+            env = os.environ.copy()
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=env,
+            )
             if result.returncode != 0:
                 raise RuntimeError(result.stderr.strip() or result.stdout.strip())
     except Exception as exc:  # noqa: BLE001

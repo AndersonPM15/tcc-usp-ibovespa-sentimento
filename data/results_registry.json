@@ -2222,5 +2222,389 @@
     "extra": {
       "error": "[NbConvertApp] Converting notebook C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\00_data_download.ipynb to notebook\nC:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\zmq\\_future.py:718: RuntimeWarning: Proactor event loop does not implement add_reader family of methods required for zmq. Registering an additional selector thread for add_reader support via tornado. Use `asyncio.set_event_loop_policy(WindowsSelectorEventLoopPolicy())` to avoid this warning.\n  self._get_loop()\nTraceback (most recent call last):\n  File \"<frozen runpy>\", line 198, in _run_module_as_main\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Scripts\\jupyter-nbconvert.EXE\\__main__.py\", line 6, in <module>\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\jupyter_core\\application.py\", line 284, in launch_instance\n    super().launch_instance(argv=argv, **kwargs)\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\traitlets\\config\\application.py\", line 1075, in launch_instance\n    app.start()\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\nbconvertapp.py\", line 420, in start\n    self.convert_notebooks()\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\nbconvertapp.py\", line 597, in convert_notebooks\n    self.convert_single_notebook(notebook_filename)\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\nbconvertapp.py\", line 563, in convert_single_notebook\n    output, resources = self.export_single_notebook(\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\nbconvertapp.py\", line 487, in export_single_notebook\n    output, resources = self.exporter.from_filename(\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\exporters\\exporter.py\", line 201, in from_filename\n    return self.from_file(f, resources=resources, **kw)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\exporters\\exporter.py\", line 220, in from_file\n    return self.from_notebook_node(\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\exporters\\notebook.py\", line 36, in from_notebook_node\n    nb_copy, resources = super().from_notebook_node(nb, resources, **kw)\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\exporters\\exporter.py\", line 154, in from_notebook_node\n    nb_copy, resources = self._preprocess(nb_copy, resources)\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\exporters\\exporter.py\", line 353, in _preprocess\n    nbc, resc = preprocessor(nbc, resc)\n                ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\preprocessors\\base.py\", line 48, in __call__\n    return self.preprocess(nb, resources)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\preprocessors\\execute.py\", line 103, in preprocess\n    self.preprocess_cell(cell, resources, index)\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbconvert\\preprocessors\\execute.py\", line 124, in preprocess_cell\n    cell = self.execute_cell(cell, index, store_history=True)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\jupyter_core\\utils\\__init__.py\", line 165, in wrapped\n    return loop.run_until_complete(inner)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\asyncio\\base_events.py\", line 691, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbclient\\client.py\", line 1062, in async_execute_cell\n    await self._check_raise_for_error(cell, cell_index, exec_reply)\n  File \"C:\\Users\\ander\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\nbclient\\client.py\", line 918, in _check_raise_for_error\n    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)\nnbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:\n------------------\n# 1. Setup de caminhos locais\nimport os\nimport subprocess\nfrom datetime import datetime\nfrom pathlib import Path\n\nfrom src.io import paths\nfrom src.config import loader as cfg\n\nDATA_PATHS = paths.get_data_paths()\nPROJECT_PATHS = paths.get_project_paths()\nBASE_PATH = str(DATA_PATHS[\"base\"])\nRAW_PATH = str(DATA_PATHS[\"data_raw\"])\nPROC_PATH = str(DATA_PATHS[\"data_processed\"])\nINTERIM_PATH = str(DATA_PATHS[\"data_interim\"])\nCONFIG = cfg.load_config()\n\nNB_NAME = \"00_data_download\"\nSTAMP = datetime.now().strftime(\"%Y%m%d_%H%M%S\")\n\nprint(\"BASE_PATH:\", BASE_PATH)\nprint(\"PROC_PATH:\", PROC_PATH)\n\n------------------\n\n\n\u001b[31m---------------------------------------------------------------------------\u001b[39m\n\u001b[31mModuleNotFoundError\u001b[39m                       Traceback (most recent call last)\n\u001b[36mCell\u001b[39m\u001b[36m \u001b[39m\u001b[32mIn[1]\u001b[39m\u001b[32m, line 7\u001b[39m\n\u001b[32m      4\u001b[39m \u001b[38;5;28;01mfrom\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01mdatetime\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[38;5;28;01mimport\u001b[39;00m datetime\n\u001b[32m      5\u001b[39m \u001b[38;5;28;01mfrom\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01mpathlib\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[38;5;28;01mimport\u001b[39;00m Path\n\u001b[32m----> \u001b[39m\u001b[32m7\u001b[39m \u001b[38;5;28;01mfrom\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01msrc\u001b[39;00m\u001b[34;01m.\u001b[39;00m\u001b[34;01mio\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[38;5;28;01mimport\u001b[39;00m paths\n\u001b[32m      8\u001b[39m \u001b[38;5;28;01mfrom\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[34;01msrc\u001b[39;00m\u001b[34;01m.\u001b[39;00m\u001b[34;01mconfig\u001b[39;00m\u001b[38;5;250m \u001b[39m\u001b[38;5;28;01mimport\u001b[39;00m loader \u001b[38;5;28;01mas\u001b[39;00m cfg\n\u001b[32m     10\u001b[39m DATA_PATHS = paths.get_data_paths()\n\n\u001b[31mModuleNotFoundError\u001b[39m: No module named 'src'"
     }
+  },
+  {
+    "timestamp": "2025-11-17T17:07:28.271189",
+    "model": "00_data_download",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.721239
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_140720_00_data_download.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:07:51.403665",
+    "model": "00_data_download",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.174236
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_140744_00_data_download.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:08:01.107692",
+    "model": "01_preprocessing",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 8.414213
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_140752_01_preprocessing.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:08:06.722615",
+    "model": "02_baseline_logit",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 5.483681
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_140801_02_baseline_logit.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:08:14.727532",
+    "model": "03_tfidf_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.860087
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_140806_03_tfidf_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:09:15.854512",
+    "model": "04_embeddings_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 60.941468
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_140814_04_embeddings_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:09:26.964479",
+    "model": "05_data_collection_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 10.831517
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_140916_05_data_collection_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:09:41.375149",
+    "model": "06_preprocessing_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 14.124413
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_140927_06_preprocessing_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:09:54.687621",
+    "model": "07_tfidf_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 13.053437
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_140941_07_tfidf_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:11:11.164881",
+    "model": "08_embeddings_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 76.215277
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_140954_08_embeddings_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:12:40.702540",
+    "model": "09_lstm_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 89.236972
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141111_09_lstm_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:12:57.634732",
+    "model": "10_dashboard_results",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 16.630012
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141241_10_dashboard_results.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:13:05.668673",
+    "model": "11_event_study_latency",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.745781
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141257_11_event_study_latency.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:13:16.315051",
+    "model": "12_data_collection_multisource",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 10.315432
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141305_12_data_collection_multisource.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:13:21.281713",
+    "model": "13_etl_dedup",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 4.767032
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141316_13_etl_dedup.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:13:38.994492",
+    "model": "14_preprocess_ptbr",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 17.435863
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141321_14_preprocess_ptbr.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:13:45.871447",
+    "model": "15_features_tfidf_daily",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 6.718017
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141339_15_features_tfidf_daily.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:02.947745",
+    "model": "logreg_l2",
+    "dataset": "tfidf_daily",
+    "metrics": {
+      "auc": 0.08333333333333331,
+      "mda": 0.3333333333333333
+    },
+    "extra": {
+      "dataset": "tfidf_daily",
+      "coverage": 0.75,
+      "n_obs": 12,
+      "auc_ci": [
+        0.0,
+        0.3338095238095234
+      ],
+      "mda_ci": [
+        0.08333333333333333,
+        0.5854166666666648
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:04.445820",
+    "model": "rf_200",
+    "dataset": "tfidf_daily",
+    "metrics": {
+      "auc": 0.4722222222222222,
+      "mda": 0.3333333333333333
+    },
+    "extra": {
+      "dataset": "tfidf_daily",
+      "coverage": 0.75,
+      "n_obs": 12,
+      "auc_ci": [
+        0.08571428571428573,
+        0.8518518518518519
+      ],
+      "mda_ci": [
+        0.08333333333333333,
+        0.5833333333333334
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:10.006434",
+    "model": "16_models_tfidf_baselines",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 24.013911
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141345_16_models_tfidf_baselines.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:17.110603",
+    "model": "logreg_l2",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": -0.6736317697045828,
+      "spearman_r": -0.7242068243779014
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 12,
+      "anova_p": 0.0026113151911219073
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:18.331620",
+    "model": "rf_200",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": 0.008708662471891152,
+      "spearman_r": -0.04836508334066744
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 12,
+      "anova_p": 0.7732036103639154
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:26.246597",
+    "model": "17_sentiment_validation",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 16.119851
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141410_17_sentiment_validation.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:32.501411",
+    "model": "rf_200",
+    "dataset": "backtest_daily",
+    "metrics": {
+      "cagr": 0.04533982782553525,
+      "sharpe": 0.7587352611292212
+    },
+    "extra": {
+      "dataset": "backtest_daily",
+      "strategy": "long_short_sym",
+      "total_return": 0.002113755917247717,
+      "max_dd": -0.005749714378562754,
+      "hit_ratio": 0.3333333333333333,
+      "n_days": 12
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:33.785728",
+    "model": "logreg_l2",
+    "dataset": "backtest_daily",
+    "metrics": {
+      "cagr": -0.23623504573917575,
+      "sharpe": -8.110377977980114
+    },
+    "extra": {
+      "dataset": "backtest_daily",
+      "strategy": "long_short_sym",
+      "total_return": -0.012751111056080178,
+      "max_dd": -0.012751111056080178,
+      "hit_ratio": 0.0,
+      "n_days": 12
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:38.723333",
+    "model": "18_backtest_simulation",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 12.317623
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141426_18_backtest_simulation.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:41.398880",
+    "model": "19_future_extension",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 2.519821
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141438_19_future_extension.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:50.974857",
+    "model": "dashboard_summary",
+    "dataset": "dashboard_consolidado",
+    "metrics": {
+      "auc": 0.4722222222222222,
+      "mda": 0.3333333333333333
+    },
+    "extra": {
+      "dataset": "dashboard_consolidado",
+      "model": "rf_200",
+      "best_sharpe": 0.7587352611292212
+    }
+  },
+  {
+    "timestamp": "2025-11-17T17:14:53.986626",
+    "model": "20_final_dashboard_analysis",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 12.395625
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_141441_20_final_dashboard_analysis.ipynb"
+    }
   }
 ]

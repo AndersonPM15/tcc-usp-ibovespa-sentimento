@@ -30,6 +30,7 @@ PROJECT_PATHS = paths.get_project_paths()
 BASE_PATH = DATA_PATHS["base"]
 CONFIG = cfg.load_config()
 COL_DATE = cfg.get_colunas_data().get("ibov", "day")
+DATE_ALIASES = [COL_DATE, "day", "date", "data", "Data", "DATA"]
 
 # Arquivos principais
 IBOV_PATH = cfg.get_arquivo("ibov_clean", BASE_PATH)
@@ -50,13 +51,15 @@ def load_ibov() -> pd.DataFrame:
     df = _safe_read_csv(IBOV_PATH)
     if df.empty:
         return df
-    if COL_DATE in df.columns:
-        df[COL_DATE] = pd.to_datetime(df[COL_DATE])
-        df = df.rename(columns={COL_DATE: "day"})
-    elif "date" in df.columns:
-        df["day"] = pd.to_datetime(df["date"])
-    else:
+    chosen_col = None
+    for candidate in DATE_ALIASES:
+        if candidate in df.columns:
+            chosen_col = candidate
+            break
+    if chosen_col is None:
         raise KeyError("Arquivo de Ibovespa precisa ter coluna de data.")
+
+    df["day"] = pd.to_datetime(df[chosen_col])
     if "close" not in df.columns and "adj_close" in df.columns:
         df["close"] = df["adj_close"]
     return df.sort_values("day")
