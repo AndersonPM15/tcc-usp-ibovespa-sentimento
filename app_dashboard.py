@@ -328,4 +328,4 @@ def update_dashboard(start_date, end_date, selected_models, metric):
 
 if __name__ == "__main__":
     print("Iniciando dashboard em http://localhost:8050 ...")
-    app.run_server(debug=True)
+    app.run(debug=True)
