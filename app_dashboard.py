@@ -134,10 +134,10 @@ SENTIMENT_DF = load_sentiment()
 RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
 
-DATE_MIN = IBOV_DF["day"].min() if not IBOV_DF.empty else None
-DATE_MAX = IBOV_DF["day"].max() if not IBOV_DF.empty else None
+DATE_MIN = IBOV_DF["day"].min() if not IBOV_DF.empty else pd.Timestamp("2018-01-01")
+DATE_MAX = IBOV_DF["day"].max() if not IBOV_DF.empty else pd.Timestamp("2025-01-31")
 
-MODEL_OPTIONS = sorted(RESULTS_DF["model"].dropna().unique())
+MODEL_OPTIONS = sorted(RESULTS_DF["model"].dropna().unique()) if not RESULTS_DF.empty and "model" in RESULTS_DF.columns else []
 METRIC_OPTIONS = [
     {"label": "AUC", "value": "auc"},
     {"label": "MDA", "value": "mda"},
@@ -328,4 +328,4 @@ def update_dashboard(start_date, end_date, selected_models, metric):
 
 if __name__ == "__main__":
     print("Iniciando dashboard em http://localhost:8050 ...")
-    app.run_server(debug=True)
+    app.run(debug=True)
