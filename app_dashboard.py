@@ -7,6 +7,7 @@ Run with:
 The app reads the same artifacts used in `20_final_dashboard_analysis.ipynb`
 and exposes interactive filters for period, modelo e métrica.
 """
+# cSpell:ignore Ibovespa métrica Carregamento colunas ibov Arquivos principais precisa coluna proba cagr eventos modelo arquivo Sentimento Período modelos Notícia Notícias Comparativo Estratégia Gráfico hovertemplate Preço hovermode sentiment médio diário escala tozeroy hline Selecione Tabela
 
 from __future__ import annotations
 
