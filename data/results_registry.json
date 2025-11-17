@@ -3098,5 +3098,319 @@
     "extra": {
       "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_145607_20_final_dashboard_analysis.ipynb"
     }
+  },
+  {
+    "timestamp": "2025-11-17T19:10:28.407389",
+    "model": "01_preprocessing",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 25.186252
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161003_01_preprocessing.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:10:36.435075",
+    "model": "05_data_collection_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 6.862534
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161029_05_data_collection_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:10:42.654866",
+    "model": "06_preprocessing_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 6.115871
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161036_06_preprocessing_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:10:53.639771",
+    "model": "07_tfidf_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 10.842983
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161042_07_tfidf_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:12:41.393967",
+    "model": "08_embeddings_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 107.533759
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161053_08_embeddings_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:13:51.577986",
+    "model": "09_lstm_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 69.925665
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161241_09_lstm_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:13:57.024705",
+    "model": "11_event_study_latency",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 5.284752
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161351_11_event_study_latency.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:14:06.896812",
+    "model": "12_data_collection_multisource",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 9.620058
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161357_12_data_collection_multisource.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:14:14.150932",
+    "model": "13_etl_dedup",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.023179
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161407_13_etl_dedup.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:14:40.519920",
+    "model": "14_preprocess_ptbr",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 26.185378
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161414_14_preprocess_ptbr.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:14:48.612787",
+    "model": "15_features_tfidf_daily",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.904797
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161440_15_features_tfidf_daily.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:15:04.462962",
+    "model": "logreg_l2",
+    "dataset": "tfidf_daily",
+    "metrics": {
+      "auc": 0.08333333333333331,
+      "mda": 0.3333333333333333
+    },
+    "extra": {
+      "dataset": "tfidf_daily",
+      "coverage": 0.75,
+      "n_obs": 12,
+      "auc_ci": [
+        0.0,
+        0.3338095238095234
+      ],
+      "mda_ci": [
+        0.08333333333333333,
+        0.5854166666666648
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:15:05.464605",
+    "model": "rf_200",
+    "dataset": "tfidf_daily",
+    "metrics": {
+      "auc": 0.4722222222222222,
+      "mda": 0.3333333333333333
+    },
+    "extra": {
+      "dataset": "tfidf_daily",
+      "coverage": 0.75,
+      "n_obs": 12,
+      "auc_ci": [
+        0.08571428571428573,
+        0.8518518518518519
+      ],
+      "mda_ci": [
+        0.08333333333333333,
+        0.5833333333333334
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:15:12.017003",
+    "model": "16_models_tfidf_baselines",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 23.191782
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161448_16_models_tfidf_baselines.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:15:25.760257",
+    "model": "logreg_l2",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": -0.6736317697045828,
+      "spearman_r": -0.7242068243779014
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 12,
+      "anova_p": 0.0026113151911219073
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:15:27.182596",
+    "model": "rf_200",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": 0.008708662471891131,
+      "spearman_r": -0.04836508334066744
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 12,
+      "anova_p": 0.7732036103639154
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:15:31.772851",
+    "model": "17_sentiment_validation",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 19.441072
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [7]\":\n---------------------------------------------------------------------------\nModuleNotFoundError                       Traceback (most recent call last)\nCell In[7], line 4\n      1 # 6. Séries temporais e gráficos interativos\n      2 plots = {}\n----> 4 scatter_fig = px.scatter(\n      5     df,\n      6     x=\"sentiment\",\n      7     y=\"ret_next\",\n      8     color=\"model\",\n      9     trendline=\"ols\",\n     10     hover_data={\"day\": True, \"signal_bucket\": True},\n     11     title=\"Sentimento (prob) vs Retorno D+1\",\n     12 )\n     13 plots[\"scatter\"] = scatter_fig\n     14 scatter_fig.show()\n\nFile ~\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\plotly\\express\\_chart_types.py:69, in scatter(data_frame, x, y, color, symbol, size, hover_name, hover_data, custom_data, text, facet_row, facet_col, facet_col_wrap, facet_row_spacing, facet_col_spacing, error_x, error_x_minus, error_y, error_y_minus, animation_frame, animation_group, category_orders, labels, orientation, color_discrete_sequence, color_discrete_map, color_continuous_scale, range_color, color_continuous_midpoint, symbol_sequence, symbol_map, opacity, size_max, marginal_x, marginal_y, trendline, trendline_options, trendline_color_override, trendline_scope, log_x, log_y, range_x, range_y, render_mode, title, subtitle, template, width, height)\n     14 def scatter(\n     15     data_frame=None,\n     16     x=None,\n   (...)     63     height=None,\n     64 ) -> go.Figure:\n     65     \"\"\"\n     66     In a scatter plot, each row of `data_frame` is represented by a symbol\n     67     mark in 2D space.\n     68     \"\"\"\n---> 69     return make_figure(args=locals(), constructor=go.Scatter)\n\nFile ~\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\plotly\\express\\_core.py:2682, in make_figure(args, constructor, trace_patch, layout_patch)\n   2679     elif args[\"ecdfnorm\"] == \"percent\":\n   2680         group = group.with_columns((nw.col(var) / group_sum) * 100.0)\n-> 2682 patch, fit_results = make_trace_kwargs(\n   2683     args, trace_spec, group, mapping_labels.copy(), sizeref\n   2684 )\n   2685 trace.update(patch)\n   2686 if fit_results is not None:\n\nFile ~\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\plotly\\express\\_core.py:430, in make_trace_kwargs(args, trace_spec, trace_data, mapping_labels, sizeref)\n    427     trace_patch[\"x\"] = trace_patch[\"x\"].to_numpy()\n    429 trendline_function = trendline_functions[attr_value]\n--> 430 y_out, hover_header, fit_results = trendline_function(\n    431     args[\"trendline_options\"],\n    432     sorted_trace_data.get_column(args[\"x\"]),  # narwhals series\n    433     x.to_numpy(),  # numpy array\n    434     y.to_numpy(),  # numpy array\n    435     args[\"x\"],\n    436     args[\"y\"],\n    437     non_missing.to_numpy(),  # numpy array\n    438 )\n    439 assert len(y_out) == len(trace_patch[\"x\"]), (\n    440     \"missing-data-handling failure in trendline code\"\n    441 )\n    442 trace_patch[\"y\"] = y_out\n\nFile ~\\anaconda3\\envs\\tcc_usp\\Lib\\site-packages\\plotly\\express\\trendline_functions\\__init__.py:42, in ols(trendline_options, x_raw, x, y, x_label, y_label, non_missing)\n     36     if k not in valid_options:\n     37         raise ValueError(\n     38             \"OLS trendline_options keys must be one of [%s] but got '%s'\"\n     39             % (\", \".join(valid_options), k)\n     40         )\n---> 42 import statsmodels.api as sm\n     44 add_constant = trendline_options.get(\"add_constant\", True)\n     45 log_x = trendline_options.get(\"log_x\", False)\n\nModuleNotFoundError: No module named 'statsmodels'\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:16:49.173321",
+    "model": "logreg_l2",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": -0.6736317697045828,
+      "spearman_r": -0.7242068243779014
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 12,
+      "anova_p": 0.0026113151911219073
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:16:51.084278",
+    "model": "rf_200",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": 0.008708662471891131,
+      "spearman_r": -0.04836508334066744
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 12,
+      "anova_p": 0.7732036103639154
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:17:05.070734",
+    "model": "17_sentiment_validation",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 26.610354
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161638_17_sentiment_validation.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:17:18.260788",
+    "model": "rf_200",
+    "dataset": "backtest_daily",
+    "metrics": {
+      "cagr": 0.04533982782553525,
+      "sharpe": 0.7587352611292212
+    },
+    "extra": {
+      "dataset": "backtest_daily",
+      "strategy": "long_short_sym",
+      "total_return": 0.002113755917247717,
+      "max_dd": -0.005749714378562754,
+      "hit_ratio": 0.3333333333333333,
+      "n_days": 12
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:17:21.254834",
+    "model": "logreg_l2",
+    "dataset": "backtest_daily",
+    "metrics": {
+      "cagr": -0.23623504573917575,
+      "sharpe": -8.110377977980114
+    },
+    "extra": {
+      "dataset": "backtest_daily",
+      "strategy": "long_short_sym",
+      "total_return": -0.012751111056080178,
+      "max_dd": -0.012751111056080178,
+      "hit_ratio": 0.0,
+      "n_days": 12
+    }
+  },
+  {
+    "timestamp": "2025-11-17T19:17:33.485292",
+    "model": "18_backtest_simulation",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 26.780539
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251117_161706_18_backtest_simulation.ipynb"
+    }
   }
 ]
