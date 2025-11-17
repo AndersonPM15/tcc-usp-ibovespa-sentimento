@@ -4,6 +4,14 @@
     "python-envs.defaultPackageManager": "ms-python.python:conda",
     "python-envs.pythonProjects": [],
     "cSpell.language": "en,pt,pt-BR",
+    "cSpell.ignorePaths": [
+        "**/.git/**",
+        "**/__pycache__/**",
+        "data/**",
+        "mlruns/**",
+        "notebooks/_runs/**",
+        "reports/logs/**"
+    ],
     "cSpell.words": [
         "papermill",
         "nbconvert",
