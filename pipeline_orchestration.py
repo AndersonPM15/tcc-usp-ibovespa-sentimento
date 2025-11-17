@@ -17,15 +17,19 @@ import logging
 import os
 import sys
 from datetime import datetime
+from importlib import import_module
 from pathlib import Path
+from types import ModuleType
 from typing import Iterable, List, Sequence
 
+pm: ModuleType | None
 try:
-    import papermill as pm
-
-    HAVE_PAPERMILL = True
-except ImportError:  # pragma: no cover - papermill optional
+    pm = import_module("papermill")
+except ModuleNotFoundError:  # pragma: no cover - papermill optional
+    pm = None
     HAVE_PAPERMILL = False
+else:
+    HAVE_PAPERMILL = True
 
 from src.config import loader as cfg
 from src.io import paths as path_utils
@@ -111,7 +115,7 @@ def _execute_notebook(
     logging.info("Executando %s", notebook_name)
     start = datetime.now()
     try:
-        if HAVE_PAPERMILL:
+        if HAVE_PAPERMILL and pm is not None:
             pm.execute_notebook(
                 input_path=str(src),
                 output_path=str(output),
