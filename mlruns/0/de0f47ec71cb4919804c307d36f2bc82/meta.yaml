@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/ander/OneDrive/TCC_USP/tcc-usp-ibovespa-sentimento/mlruns/0/de0f47ec71cb4919804c307d36f2bc82/artifacts
+end_time: 1763408973745
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: de0f47ec71cb4919804c307d36f2bc82
+run_name: 12_data_collection_multisource_pipeline
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1763408973575
+status: 3
+tags: []
+user_id: ander
