@@ -5036,5 +5036,377 @@
     "extra": {
       "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_011417_20_final_dashboard_analysis.ipynb"
     }
+  },
+  {
+    "timestamp": "2025-11-18T17:10:59.883604",
+    "model": "00_data_download",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 27.291971
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141032_00_data_download.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:11:42.666477",
+    "model": "01_preprocessing",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 40.266354
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141102_01_preprocessing.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:11:55.723229",
+    "model": "02_baseline_logit",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 12.630666
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141143_02_baseline_logit.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:12:18.357134",
+    "model": "03_tfidf_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 22.229833
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141156_03_tfidf_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:15:09.769038",
+    "model": "04_embeddings_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 171.046226
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141218_04_embeddings_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:15:21.716426",
+    "model": "05_data_collection_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 11.505899
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141510_05_data_collection_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:15:39.060346",
+    "model": "06_preprocessing_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 16.935974
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141522_06_preprocessing_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:15:56.037959",
+    "model": "07_tfidf_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 16.418109
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141539_07_tfidf_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:17:29.184422",
+    "model": "08_embeddings_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 92.066327
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141557_08_embeddings_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:19:11.496144",
+    "model": "09_lstm_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 102.109283
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141729_09_lstm_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:19:32.190331",
+    "model": "10_dashboard_results",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 20.2324
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141911_10_dashboard_results.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:19:42.651174",
+    "model": "11_event_study_latency",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 9.92436
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141932_11_event_study_latency.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:20:01.381262",
+    "model": "12_data_collection_multisource",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 18.300943
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_141943_12_data_collection_multisource.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:20:14.142408",
+    "model": "13_etl_dedup",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 12.248154
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_142001_13_etl_dedup.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:21:03.231212",
+    "model": "14_preprocess_ptbr",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 48.68129
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_142014_14_preprocess_ptbr.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:21:11.218670",
+    "model": "15_features_tfidf_daily",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.554078
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_142103_15_features_tfidf_daily.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:21:25.306164",
+    "model": "logreg_l2",
+    "dataset": "tfidf_daily",
+    "metrics": {
+      "auc": 0.08333333333333331,
+      "mda": 0.3333333333333333
+    },
+    "extra": {
+      "dataset": "tfidf_daily",
+      "coverage": 0.75,
+      "n_obs": 12,
+      "auc_ci": [
+        0.0,
+        0.3338095238095234
+      ],
+      "mda_ci": [
+        0.08333333333333333,
+        0.5854166666666648
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:21:26.378563",
+    "model": "rf_200",
+    "dataset": "tfidf_daily",
+    "metrics": {
+      "auc": 0.4722222222222222,
+      "mda": 0.3333333333333333
+    },
+    "extra": {
+      "dataset": "tfidf_daily",
+      "coverage": 0.75,
+      "n_obs": 12,
+      "auc_ci": [
+        0.08571428571428573,
+        0.8518518518518519
+      ],
+      "mda_ci": [
+        0.08333333333333333,
+        0.5833333333333334
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:21:35.922287",
+    "model": "16_models_tfidf_baselines",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 24.479298
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_142111_16_models_tfidf_baselines.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:21:52.355282",
+    "model": "logreg_l2",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": -0.6736317697045828,
+      "spearman_r": -0.7242068243779014
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 12,
+      "anova_p": 0.0026113151911219073
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:21:54.026384",
+    "model": "rf_200",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": 0.008708662471890881,
+      "spearman_r": -0.04836508334066744
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 12,
+      "anova_p": 0.7732036103639154
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:22:23.147130",
+    "model": "17_sentiment_validation",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 46.805927
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_142136_17_sentiment_validation.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:22:37.455101",
+    "model": "rf_200",
+    "dataset": "backtest_daily",
+    "metrics": {
+      "cagr": 0.04533982782553525,
+      "sharpe": 0.7587352611292212
+    },
+    "extra": {
+      "dataset": "backtest_daily",
+      "strategy": "long_short_sym",
+      "total_return": 0.002113755917247717,
+      "max_dd": -0.005749714378562754,
+      "hit_ratio": 0.3333333333333333,
+      "n_days": 12
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:22:39.117230",
+    "model": "logreg_l2",
+    "dataset": "backtest_daily",
+    "metrics": {
+      "cagr": -0.23623504573917575,
+      "sharpe": -8.110377977980114
+    },
+    "extra": {
+      "dataset": "backtest_daily",
+      "strategy": "long_short_sym",
+      "total_return": -0.012751111056080178,
+      "max_dd": -0.012751111056080178,
+      "hit_ratio": 0.0,
+      "n_days": 12
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:22:51.103397",
+    "model": "18_backtest_simulation",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 27.494793
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_142223_18_backtest_simulation.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:22:56.897620",
+    "model": "19_future_extension",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 5.368957
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_142251_19_future_extension.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:23:20.798568",
+    "model": "dashboard_summary",
+    "dataset": "dashboard_consolidado",
+    "metrics": {
+      "auc": 0.4722222222222222,
+      "mda": 0.3333333333333333
+    },
+    "extra": {
+      "dataset": "dashboard_consolidado",
+      "model": "rf_200",
+      "best_sharpe": 0.7587352611292212
+    }
+  },
+  {
+    "timestamp": "2025-11-18T17:23:24.577210",
+    "model": "20_final_dashboard_analysis",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 27.255673
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_142257_20_final_dashboard_analysis.ipynb"
+    }
   }
 ]
