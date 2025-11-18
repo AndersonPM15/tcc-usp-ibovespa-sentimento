@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 """
-Create sample data files for testing the dashboard and verification.
+Create SYNTHETIC sample data files for testing the dashboard and verification.
 This script generates minimal sample data covering the expected date range.
+
+⚠️  WARNING: This creates SYNTHETIC data for testing only!
+⚠️  Do NOT run this in production environments - it will overwrite real data!
+⚠️  Set ALLOW_SAMPLE_DATA_OVERWRITE=1 to explicitly allow overwriting.
 """
 
+import os
+import sys
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -12,6 +18,19 @@ import json
 
 from src.io import paths as path_utils
 from src.config import loader as cfg
+
+# Safety check to prevent accidental overwrite of real data
+if os.environ.get("ALLOW_SAMPLE_DATA_OVERWRITE") != "1":
+    print("❌ ERROR: Sample data generation is disabled by default.")
+    print("")
+    print("This script creates SYNTHETIC data that will OVERWRITE real files.")
+    print("")
+    print("To enable, set environment variable:")
+    print("  Windows CMD: set ALLOW_SAMPLE_DATA_OVERWRITE=1")
+    print("  PowerShell:  $env:ALLOW_SAMPLE_DATA_OVERWRITE=1")
+    print("  Linux/Mac:   export ALLOW_SAMPLE_DATA_OVERWRITE=1")
+    print("")
+    sys.exit(1)
 
 def create_sample_ibovespa():
     """Create sample Ibovespa data."""

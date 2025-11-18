@@ -143,6 +143,8 @@ def verify_data_coverage() -> Dict[str, Any]:
     ]
     
     results = []
+    validation_errors = []
+    
     for filename in files_to_check:
         file_path = processed_path / filename
         result = check_data_file_dates(file_path, date_cols)
@@ -152,19 +154,51 @@ def verify_data_coverage() -> Dict[str, Any]:
         if result["exists"]:
             if result["error"]:
                 logger.warning(f"  {filename}: ERRO - {result['error']}")
+                validation_errors.append(f"{filename}: {result['error']}")
             elif result["min_date"] and result["max_date"]:
                 in_range = (result["min_date"] >= expected_start and 
                            result["max_date"] <= expected_end)
                 status = "✓" if in_range else "✗"
                 logger.info(f"  {status} {filename}: {result['min_date']} → {result['max_date']} ({result['rows']} rows)")
+                
+                # CRITICAL: Validate date coverage matches expected range
+                if not in_range:
+                    msg = f"{filename}: Cobertura de datas FORA do período esperado {expected_start}→{expected_end}"
+                    validation_errors.append(msg)
+                
+                # CRITICAL: Check for suspiciously small datasets
+                if result["rows"] < 10:
+                    msg = f"{filename}: Dataset muito pequeno ({result['rows']} rows) - possível dado sintético/limitado"
+                    validation_errors.append(msg)
+                    logger.warning(f"  ⚠ {msg}")
+                    
+                # CRITICAL: Check for single-day datasets (common with API fallbacks)
+                if result["min_date"] == result["max_date"]:
+                    msg = f"{filename}: Dataset contém apenas um dia ({result['min_date']}) - provável fallback sintético"
+                    validation_errors.append(msg)
+                    logger.error(f"  ✗ {msg}")
             else:
                 logger.warning(f"  {filename}: Sem datas encontradas ({result['rows']} rows)")
+                validation_errors.append(f"{filename}: Sem datas encontradas")
         else:
             logger.warning(f"  {filename}: ARQUIVO NÃO ENCONTRADO")
+            # Don't fail for optional files
+            if filename in ["ibovespa_clean.csv", "labels_y_daily.csv"]:
+                validation_errors.append(f"{filename}: Arquivo crítico não encontrado")
+    
+    # Log summary of validation errors
+    if validation_errors:
+        logger.error("\n⚠️  VALIDAÇÃO FALHOU - Problemas encontrados:")
+        for err in validation_errors:
+            logger.error(f"    - {err}")
+    else:
+        logger.info("\n✅ Validação de cobertura de datas: PASSOU")
     
     return {
         "expected_range": f"{expected_start} → {expected_end}",
-        "files": results
+        "files": results,
+        "validation_errors": validation_errors,
+        "validation_passed": len(validation_errors) == 0
     }
 
 

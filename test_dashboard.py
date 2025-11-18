@@ -6,9 +6,20 @@ Test the dashboard loading and basic functionality.
 import sys
 from datetime import datetime
 
+# Import config to get expected date range
+from src.config import loader as cfg
+
 print("=" * 80)
 print("ITEM 4: Testando app_dashboard.py")
 print("=" * 80)
+
+# Get expected date range from config
+periodo = cfg.get_periodo_estudo()
+expected_start = periodo["start"]
+expected_end = periodo["end"]
+print(f"\nPeríodo esperado (config): {expected_start} → {expected_end}")
+
+validation_errors = []
 
 try:
     # Import dashboard components
@@ -26,26 +37,43 @@ try:
     print(f"  - RESULTS_DF: {len(RESULTS_DF)} linhas")
     print(f"  - LATENCY_DF: {len(LATENCY_DF)} linhas")
     
+    # CRITICAL: Validate minimum data requirements
+    if len(IBOV_DF) < 100:
+        msg = f"IBOV_DF muito pequeno ({len(IBOV_DF)} linhas) - esperado dados 2018-2025"
+        validation_errors.append(msg)
+        print(f"  ✗ {msg}")
+    
+    if len(SENTIMENT_DF) < 100:
+        msg = f"SENTIMENT_DF muito pequeno ({len(SENTIMENT_DF)} linhas) - esperado dados 2018-2025"
+        validation_errors.append(msg)
+        print(f"  ✗ {msg}")
+    
     # Check date range
     print(f"\nIntervalo de datas:")
     if DATE_MIN and DATE_MAX:
         print(f"  DatePicker: {DATE_MIN.strftime('%Y-%m-%d')} → {DATE_MAX.strftime('%Y-%m-%d')}")
         
-        # Check if it matches expected range
-        expected_start = "2018-01-01"
-        expected_end = "2025-01-31"
-        
         date_min_str = DATE_MIN.strftime('%Y-%m-%d')
         date_max_str = DATE_MAX.strftime('%Y-%m-%d')
         
-        if date_min_str == expected_start and date_max_str == expected_end:
-            print(f"  ✓ Intervalo correto: {expected_start} → {expected_end}")
+        # CRITICAL: Assert date range matches config
+        if date_min_str != expected_start:
+            msg = f"DATE_MIN ({date_min_str}) não corresponde ao esperado ({expected_start})"
+            validation_errors.append(msg)
+            print(f"  ✗ {msg}")
         else:
-            print(f"  ⚠ Intervalo difere do esperado")
-            print(f"    Esperado: {expected_start} → {expected_end}")
-            print(f"    Atual: {date_min_str} → {date_max_str}")
+            print(f"  ✓ DATE_MIN correto: {expected_start}")
+            
+        if date_max_str != expected_end:
+            msg = f"DATE_MAX ({date_max_str}) não corresponde ao esperado ({expected_end})"
+            validation_errors.append(msg)
+            print(f"  ✗ {msg}")
+        else:
+            print(f"  ✓ DATE_MAX correto: {expected_end}")
     else:
-        print("  ✗ DATE_MIN ou DATE_MAX não definidos")
+        msg = "DATE_MIN ou DATE_MAX não definidos"
+        validation_errors.append(msg)
+        print(f"  ✗ {msg}")
     
     # Check models
     print(f"\nModelos disponíveis: {len(MODEL_OPTIONS)}")
@@ -73,9 +101,17 @@ try:
     print(f"  Título: {app.title}")
     print(f"  Para testar: python app_dashboard.py")
     
+    # Final validation summary
     print("\n" + "=" * 80)
-    print("DASHBOARD: OK (sem avisos de arquivo ausente)")
-    print("=" * 80)
+    if validation_errors:
+        print("DASHBOARD: FALHOU - Problemas encontrados:")
+        for err in validation_errors:
+            print(f"  ✗ {err}")
+        print("=" * 80)
+        sys.exit(1)
+    else:
+        print("DASHBOARD: ✅ PASSOU - Todos os testes bem-sucedidos")
+        print("=" * 80)
     
 except Exception as e:
     print(f"\n✗ Erro ao carregar dashboard: {e}")
