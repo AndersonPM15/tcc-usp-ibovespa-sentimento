@@ -53,15 +53,7 @@ Foram solicitados 5 itens de verificação:
 - Observações finais
 - **Tempo de leitura:** ~10 minutos
 
-### 4️⃣ Relatórios Técnicos Automáticos
 
-**[verification_report_20251118_030937.md](./verification_report_20251118_030937.md)** (4KB)
-- Primeiro relatório automático gerado
-- Dados brutos de verificação
-
-**[verification_report_20251118_031159.md](./verification_report_20251118_031159.md)** (4KB)
-- Segundo relatório automático gerado
-- Dados atualizados após criação de amostras
 
 ---
 
