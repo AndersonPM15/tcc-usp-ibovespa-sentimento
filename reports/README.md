@@ -1,3 +1,6 @@
+<!-- cSpell:disable -->
+<!-- markdownlint-disable -->
+
 # 📋 Índice da Verificação Integral - TCC USP
 
 **Data:** 2025-11-18  

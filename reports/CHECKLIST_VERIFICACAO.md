@@ -1,3 +1,6 @@
+<!-- cSpell:disable -->
+<!-- markdownlint-disable -->
+
 # Checklist de Verificação Integral - Projeto TCC USP
 
 ## ✓ Verificações Realizadas
