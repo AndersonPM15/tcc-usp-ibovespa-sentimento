@@ -117,8 +117,8 @@
 
 **Documentos produzidos:**
 
-- [x] `reports/verification_report_20251118_030937.md` - Relatório automático inicial
 - [x] `reports/RELATORIO_FINAL_VERIFICACAO.md` - Relatório final consolidado
+- [x] `reports/RESUMO_EXECUTIVO.md` - Resumo executivo da verificação
 - [x] Este checklist - `reports/CHECKLIST_VERIFICACAO.md`
 
 **Conteúdo do relatório final:**
@@ -155,8 +155,8 @@
 1. `verify_project.py` - Script principal de verificação
 2. `test_dashboard.py` - Script de teste do dashboard
 3. `create_sample_data.py` - Script para criar dados de teste
-4. `reports/verification_report_20251118_030937.md` - Relatório inicial
-5. `reports/RELATORIO_FINAL_VERIFICACAO.md` - Relatório final consolidado
+4. `reports/RELATORIO_FINAL_VERIFICACAO.md` - Relatório final consolidado
+5. `reports/RESUMO_EXECUTIVO.md` - Resumo executivo da verificação
 6. `reports/CHECKLIST_VERIFICACAO.md` - Este checklist
 
 ---
