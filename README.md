@@ -75,6 +75,114 @@ Instale as dependências com:
 pip install -r requirements.txt
 ```
 
+### Dependências Principais
+- **pandas, numpy**: Manipulação de dados
+- **scikit-learn**: Machine Learning
+- **sentence-transformers**: Embeddings de texto
+- **yfinance**: Dados financeiros do Ibovespa
+- **feedparser, gnews, beautifulsoup4**: Coleta multisource de notícias
+- **vaderSentiment, langdetect**: Análise de sentimento PT-BR
+- **mlflow**: Rastreamento de experimentos
+- **plotly, matplotlib**: Visualizações
+
+---
+
+## 🚀 Como Usar
+
+### 1️⃣ Pipeline Completo (Recomendado)
+Execute o pipeline multisource completo (notebooks 12-15) com validações automáticas:
+
+```bash
+python run_pipeline_multisource.py
+```
+
+Este script irá:
+- ✅ Coletar notícias de 4 fontes (GDELT, GNews, RSS, NewsAPI)
+- ✅ Aplicar ETL e deduplicação
+- ✅ Preprocessar textos em PT-BR com sentiment analysis
+- ✅ Gerar features TF-IDF diárias e labels target
+- ✅ Validar volume, cobertura temporal e qualidade dos dados
+
+### 2️⃣ Notebooks Individuais
+Execute notebooks específicos:
+
+```bash
+# Pipeline multisource
+jupyter notebook notebooks/12_data_collection_multisource.ipynb
+jupyter notebook notebooks/13_etl_dedup.ipynb
+jupyter notebook notebooks/14_preprocess_ptbr.ipynb
+jupyter notebook notebooks/15_features_tfidf_daily.ipynb
+
+# Modelagem
+jupyter notebook notebooks/16_models_tfidf_baselines.ipynb
+```
+
+### 3️⃣ Orquestração via Python
+Execute notebooks programaticamente:
+
+```bash
+# Todos os notebooks
+python pipeline_orchestration.py
+
+# Apenas notebooks específicos
+python pipeline_orchestration.py --only 12 13 14 15
+
+# Continuar mesmo com erros
+python pipeline_orchestration.py --continue-on-fail
+```
+
+### 4️⃣ Validações Standalone
+Valide os dados sem executar o pipeline:
+
+```bash
+# Validação multisource (fontes, volume, cobertura)
+python -m src.validation.check_multisource --min-years 3 --min-volume 5000
+
+# Saúde geral do pipeline
+python -m src.validation.check_pipeline_health
+```
+
+---
+
+## 📊 Estrutura do Pipeline Multisource
+
+```
+┌─────────────────────────────────────────────────────┐
+│  NB 12: Coleta Multisource                          │
+│  - GDELT (2018-2025, histórico completo)            │
+│  - GNews (últimos 6 meses)                          │
+│  - RSS (6 fontes brasileiras em tempo real)         │
+│  - NewsAPI (últimos 30 dias, opcional)              │
+│  Output: news_multisource_raw_*.parquet             │
+└──────────────────┬──────────────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────────────┐
+│  NB 13: ETL e Deduplicação                          │
+│  - Dedup por URL, título+data, embeddings           │
+│  - Validação de campos obrigatórios                 │
+│  - Normalização de timezone                         │
+│  Output: news_multisource.parquet                   │
+└──────────────────┬──────────────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────────────┐
+│  NB 14: Preprocessamento PT-BR                      │
+│  - Limpeza avançada (HTML, URLs, stopwords)         │
+│  - Embeddings 768-dim (SentenceTransformer)         │
+│  - Sentiment (VADER + keywords financeiros)         │
+│  - Scores: credibilidade e novelty                  │
+│  Output: news_clean.parquet, bow_daily.parquet      │
+└──────────────────┬──────────────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────────────┐
+│  NB 15: Features TF-IDF Diário                      │
+│  - Download Ibovespa via yfinance                   │
+│  - Matriz TF-IDF com ngrams (1,2)                   │
+│  - Labels multi-horizonte (D+1, D+3, D+5)           │
+│  - Rolling features (volatilidade, sentiment)       │
+│  Output: tfidf_daily_matrix.npz, labels_y_daily.csv │
+└─────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## 🔑 Variáveis de Ambiente

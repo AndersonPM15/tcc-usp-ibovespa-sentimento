@@ -20,3 +20,9 @@ Unidecode
 nbformat
 pyyaml
 requests
+feedparser
+gnews
+beautifulsoup4
+lxml
+vaderSentiment
+langdetect
