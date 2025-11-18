@@ -77,6 +77,35 @@ pip install -r requirements.txt
 
 ---
 
+## 🚀 Getting Started
+
+### 1. Download dos Dados do Ibovespa
+
+Para começar, execute o notebook de download de dados:
+
+```bash
+python -m papermill notebooks/00_data_download.ipynb \
+    notebooks/_runs/$(date +%Y%m%d_%H%M%S)_00_data_download.ipynb \
+    -k python3
+```
+
+Este notebook:
+- Baixa dados históricos do Ibovespa (^BVSP) e BOVA11.SA via yfinance
+- Período: 2018-01-01 a 2025-01-31 (configurável em `configs/config_tcc.yaml`)
+- Inclui fallback automático para dados de amostra caso o download falhe
+- Gera arquivos CSV em `data_raw/`
+
+📖 **Consulte o guia completo:** [docs/00_data_download_guide.md](docs/00_data_download_guide.md)
+
+### 2. Próximos Notebooks
+
+Após o download, execute os notebooks seguintes na ordem:
+- `01_preprocessing.ipynb`: Limpeza e preparação dos dados
+- `02_baseline_logit.ipynb`: Modelos baseline
+- ... (demais notebooks conforme pipeline)
+
+---
+
 ## 🔑 Variáveis de Ambiente
 Crie um arquivo `.env` na raiz do projeto, baseado no modelo `.env.example`:  
 
