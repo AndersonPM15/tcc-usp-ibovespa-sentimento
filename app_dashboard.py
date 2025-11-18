@@ -28,17 +28,17 @@ from src.io import paths
 
 DATA_PATHS = paths.get_data_paths()
 PROJECT_PATHS = paths.get_project_paths()
-BASE_PATH = DATA_PATHS["base"]
+BASE_PATH = DATA_PATHS["data_processed"]  # Usar data_processed ao invés de base
 CONFIG = cfg.load_config()
 COL_DATE = cfg.get_colunas_data().get("ibov", "day")
 DATE_ALIASES = [COL_DATE, "day", "date", "data", "Data", "DATA"]
 
 # Arquivos principais
-IBOV_PATH = cfg.get_arquivo("ibov_clean", BASE_PATH)
-OOF_PATH = DATA_PATHS["data_processed"] / "16_oof_predictions.csv"
-RESULTS16_PATH = cfg.get_arquivo("tfidf_daily_matrix", BASE_PATH).with_name("results_16_models_tfidf.json")
-BACKTEST_PATH = DATA_PATHS["data_processed"] / "18_backtest_results.csv"
-LATENCY_PATH = cfg.get_arquivo("latency_events", BASE_PATH)
+IBOV_PATH = BASE_PATH / "ibov_clean.csv"
+OOF_PATH = BASE_PATH / "16_oof_predictions.csv"
+RESULTS16_PATH = BASE_PATH / "results_16_models_tfidf.json"
+BACKTEST_PATH = BASE_PATH / "18_backtest_results.csv"
+LATENCY_PATH = BASE_PATH / "latency_events.parquet"
 
 
 def _safe_read_csv(path: Path, **kwargs) -> pd.DataFrame:
@@ -120,12 +120,32 @@ def load_results_table() -> pd.DataFrame:
 
 
 def load_latency_events() -> pd.DataFrame:
-    df = _safe_read_csv(LATENCY_PATH)
+    df = pd.DataFrame()
+    if LATENCY_PATH.exists():
+        # Tentar ler como parquet primeiro, depois como CSV
+        try:
+            df = pd.read_parquet(LATENCY_PATH)
+        except:
+            try:
+                df = pd.read_csv(LATENCY_PATH)
+            except:
+                print(f"[aviso] Erro ao ler arquivo: {LATENCY_PATH}")
+                return df
+    
     if df.empty:
         return df
-    date_col = cfg.get_colunas_data().get("eventos", "event_day")
-    if date_col not in df.columns:
-        raise KeyError("Arquivo de eventos precisa ter coluna 'event_day'.")
+    
+    # Identificar coluna de data
+    date_col = None
+    for col in ["event_day", "day", "date", "data"]:
+        if col in df.columns:
+            date_col = col
+            break
+    
+    if date_col is None:
+        print("[aviso] Arquivo de eventos não tem coluna de data.")
+        return df
+    
     df["event_day"] = pd.to_datetime(df[date_col])
     return df
 

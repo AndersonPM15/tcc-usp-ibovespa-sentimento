@@ -5780,5 +5780,29 @@
     "extra": {
       "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_143855_20_final_dashboard_analysis.ipynb"
     }
+  },
+  {
+    "timestamp": "2025-11-18T20:07:16.262874",
+    "model": "00_data_download",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 30.880831
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251118_170645_00_data_download.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-18T20:08:19.430284",
+    "model": "01_preprocessing",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 59.297128
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [7]\":\n---------------------------------------------------------------------------\nNameError                                 Traceback (most recent call last)\nCell In[7], line 6\n      3 START_EXPECTED = pd.to_datetime(PERIODO[\"start\"])\n      4 END_EXPECTED = pd.to_datetime(PERIODO[\"end\"])\n----> 6 if \"data\" in df.columns:\n      7     min_date = pd.to_datetime(df[\"data\"].min())\n      8     max_date = pd.to_datetime(df[\"data\"].max())\n\nNameError: name 'df' is not defined\n"
+    }
   }
 ]
