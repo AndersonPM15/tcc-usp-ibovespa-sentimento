@@ -1,0 +1,13 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [3]":
+---------------------------------------------------------------------------
+ModuleNotFoundError                       Traceback (most recent call last)
+Cell In[3], line 3
+      1 # 2. Parametros globais e utilitarios
+      2 import pandas as pd
+----> 3 import yfinance as yf
+      4 from datetime import datetime
+      6 PERIODO = cfg.get_periodo_estudo()
+
+ModuleNotFoundError: No module named 'yfinance'
