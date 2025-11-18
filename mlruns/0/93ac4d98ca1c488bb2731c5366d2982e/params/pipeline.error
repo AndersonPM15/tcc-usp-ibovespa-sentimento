@@ -1,9 +1,0 @@
-
----------------------------------------------------------------------------
-Exception encountered at "In [8]":
----------------------------------------------------------------------------
-NameError                                 Traceback (most recent call last)
-Cell In[8], line 1
-----> 1 merges.check_intersection(oof, labels, col_left="day", col_right="day", min_days=90)
-
-NameError: name 'merges' is not defined
