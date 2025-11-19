@@ -61,22 +61,17 @@ def _colab_base() -> Path:
 
 
 def _local_base() -> Path:
-    """Infer the local base folder `.../OneDrive/TCC_USP`."""
+    """Infer the local base folder (parent of repository)."""
+    # Use repository parent as base - no hardcoded fallbacks
     repo_parent = _repo_root().parent
-    explicit = Path("C:/Users/ander/OneDrive/TCC_USP")
-    onedrive_default = Path.home() / "OneDrive" / "TCC_USP"
-
-    candidates = []
-    for candidate in (repo_parent, onedrive_default, explicit):
-        resolved = candidate.expanduser()
-        key = resolved.as_posix().lower()
-        if key not in {c.as_posix().lower() for c in candidates}:
-            candidates.append(resolved)
-
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate
-    return candidates[0]
+    
+    if not repo_parent.exists():
+        raise RuntimeError(
+            f"Base path {repo_parent} não existe. "
+            f"Configure TCC_USP_BASE environment variable ou verifique a estrutura do projeto."
+        )
+    
+    return repo_parent
 
 
 def get_base_path() -> Path:

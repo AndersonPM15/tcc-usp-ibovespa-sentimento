@@ -1,0 +1,13 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [7]":
+---------------------------------------------------------------------------
+NameError                                 Traceback (most recent call last)
+Cell In[7], line 6
+      3 START_EXPECTED = pd.to_datetime(PERIODO["start"])
+      4 END_EXPECTED = pd.to_datetime(PERIODO["end"])
+----> 6 if "data" in df.columns:
+      7     min_date = pd.to_datetime(df["data"].min())
+      8     max_date = pd.to_datetime(df["data"].max())
+
+NameError: name 'df' is not defined
