@@ -196,6 +196,49 @@ LLM_API_KEY=
 
 ---
 
+## 🔐 Ética, LGPD e Uso de Dados
+
+### **Conformidade com LGPD e Ética em Pesquisa**
+
+Este projeto segue rigorosamente as diretrizes da **Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018)** e princípios éticos de pesquisa acadêmica:
+
+#### **1. Fontes de Dados**
+- ✅ **Coleta exclusiva de fontes públicas**: Notícias de portais jornalísticos, APIs abertas (GDELT, RSS), e comunicados oficiais (CVM - Fatos Relevantes).
+- ✅ **Sem dados pessoais sensíveis**: Não coletamos, armazenamos ou processamos dados pessoais identificáveis (CPF, e-mail, endereços, etc.).
+- ✅ **Metadados apenas**: Armazenamos apenas título, data, fonte, URL e trechos textuais das notícias (não o conteúdo integral).
+
+#### **2. Uso de APIs e Termos de Serviço**
+- ⚠️ O usuário é responsável por:
+  - Obter suas próprias chaves de API (NewsAPI, etc.) respeitando os termos de uso de cada serviço.
+  - Não redistribuir conteúdo protegido por direitos autorais.
+  - Respeitar rate limits e políticas de acesso das fontes.
+
+#### **3. Finalidade Exclusivamente Acadêmica**
+- 📚 Este projeto é desenvolvido como **Trabalho de Conclusão de Curso (TCC)** no MBA em Business Intelligence & Analytics – ECA/USP.
+- 🚫 **Uso comercial não autorizado**: Os dados, modelos e resultados não devem ser usados para fins lucrativos sem autorização explícita.
+- 📖 Resultados podem ser publicados em meios acadêmicos (artigos, conferências) respeitando citações e direitos autorais.
+
+#### **4. Transparência e Reprodutibilidade**
+- 📊 Todo o pipeline é documentado e versionado (logs com timestamps, relatórios JSON).
+- 🔍 Não há "caixa-preta": Código aberto permite auditoria de métodos e dados.
+- ⚙️ Logs NÃO incluem dados pessoais, apenas estatísticas agregadas (contagens, fontes, períodos).
+
+#### **5. Limitações e Responsabilidade**
+- ⚠️ Os modelos preditivos desenvolvidos são para **fins educacionais e de pesquisa**, não constituindo recomendação de investimento.
+- ⚠️ O autor não se responsabiliza por uso indevido dos dados, modelos ou resultados por terceiros.
+- ⚠️ Dados de mercado (Ibovespa) são públicos via yfinance, mas sujeitos a termos da B3 e fornecedores.
+
+#### **6. Contato e Dúvidas**
+Para questões sobre privacidade, ética ou uso dos dados:
+- 📧 Contato: [Inserir e-mail institucional USP]
+- 🏛️ Instituição: MBA BI & Analytics – ECA/USP
+
+---
+
+**Declaração de Conformidade**: Este projeto foi desenvolvido em conformidade com as normas da LGPD, não processa dados pessoais sensíveis, e utiliza apenas informações públicas para fins de pesquisa acadêmica. O código está disponível para revisão e auditoria.
+
+---
+
 ## 📊 Metodologia
 - **Coleta de Dados:** notícias financeiras e séries históricas do Ibovespa.  
 - **Pré-processamento:** limpeza, normalização e tokenização de textos.  

@@ -284,3 +284,98 @@ def collect_newsapi(terms: List[str], days_back: int, stamp: str, api_key: Optio
     df = pd.DataFrame(all_articles)
     print(f"\n✅ NewsAPI Total: {len(df)} artigos")
     return df
+
+
+def collect_cvm_fatos_relevantes(start_date: pd.Timestamp, end_date: pd.Timestamp, stamp: str) -> pd.DataFrame:
+    """
+    Coleta Fatos Relevantes da CVM (Comissão de Valores Mobiliários).
+    
+    Fonte: Sistema de Informações Periódicas da CVM
+    Endpoint: https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FRE/DADOS/
+    
+    Args:
+        start_date: Data inicial da coleta
+        end_date: Data final da coleta
+        stamp: Timestamp da coleta
+    
+    Returns:
+        DataFrame com fatos relevantes no schema padrão
+    """
+    all_articles = []
+    
+    print(f"\n📥 Coletando CVM - Fatos Relevantes ({start_date.date()} → {end_date.date()})...")
+    
+    # A CVM disponibiliza arquivos por ano
+    # Formato: fre_cia_aberta_YYYY.csv
+    base_url = "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/FRE/DADOS"
+    
+    for year in range(start_date.year, end_date.year + 1):
+        try:
+            # URL do arquivo anual
+            file_url = f"{base_url}/fre_cia_aberta_{year}.csv"
+            
+            print(f"  📄 Tentando baixar: fre_cia_aberta_{year}.csv")
+            
+            # Baixar CSV com encoding latin1 (padrão CVM)
+            df_year = pd.read_csv(
+                file_url,
+                sep=';',
+                encoding='latin1',
+                decimal=',',
+                thousands='.',
+                low_memory=False
+            )
+            
+            # Converter data de referência
+            if 'DT_REFER' in df_year.columns:
+                df_year['DT_REFER'] = pd.to_datetime(df_year['DT_REFER'], format='%Y-%m-%d', errors='coerce')
+            
+            # Filtrar pelo período
+            df_year = df_year[
+                (df_year['DT_REFER'] >= start_date) & 
+                (df_year['DT_REFER'] <= end_date)
+            ]
+            
+            print(f"  ✓ CVM: {len(df_year)} fatos relevantes em {year}")
+            
+            # Processar cada fato relevante
+            for _, row in df_year.iterrows():
+                # Campos típicos do CSV da CVM
+                cnpj = row.get('CNPJ_CIA', '')
+                denom_cia = row.get('DENOM_CIA', 'Empresa não identificada')
+                data_refer = row.get('DT_REFER', '')
+                descricao = row.get('DESCRICAO_FATO', '')
+                
+                # Construir URL para visualização (se disponível)
+                # Formato típico: https://www.rad.cvm.gov.br/...
+                url_cvm = f"https://www.rad.cvm.gov.br/ENET/frmExibirArquivoIPEExterno.aspx?CNPJ={cnpj}"
+                
+                # Criar registro no schema padrão
+                all_articles.append({
+                    'id': f"cvm_fr_{hash(f'{cnpj}_{data_refer}_{descricao}')}",
+                    'source': 'CVM_FR',
+                    'title': f"Fato Relevante: {denom_cia}",
+                    'description': descricao[:500] if descricao else '',  # Limitar tamanho
+                    'content': descricao,
+                    'published_at': data_refer,
+                    'author': 'CVM',
+                    'url': url_cvm,
+                    'raw_text': f"{denom_cia} {descricao}",
+                    'scraped_text': descricao,
+                    'query_term': 'fato_relevante',
+                    'source_type': 'cvm',
+                    'language': 'pt',
+                    'collected_at': stamp
+                })
+            
+            time.sleep(1)  # Rate limiting cortesia
+            
+        except Exception as e:
+            print(f"  ✗ Erro ao coletar CVM {year}: {e}")
+            # Se falhar em um ano, continua para os próximos
+            continue
+    
+    df = pd.DataFrame(all_articles)
+    print(f"\n✅ CVM Total: {len(df)} fatos relevantes")
+    
+    return df

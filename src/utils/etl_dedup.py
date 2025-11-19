@@ -11,6 +11,15 @@ from urllib.parse import urlparse
 import json
 from datetime import datetime
 
+# Importar constantes globais
+try:
+    from src.config.constants import TIMEZONE_BR, PREGAO_START_HOUR, PREGAO_END_HOUR
+except ImportError:
+    # Fallback se constants não disponível
+    TIMEZONE_BR = "America/Sao_Paulo"
+    PREGAO_START_HOUR = 10
+    PREGAO_END_HOUR = 17
+
 
 def normalize_url(url: str) -> str:
     """
@@ -172,6 +181,68 @@ def normalize_timezone(df: pd.DataFrame, target_tz: str = 'America/Sao_Paulo') -
         df['published_at'] = pd.to_datetime(df['published_at'], utc=True, errors='coerce')
         df['published_at'] = df['published_at'].dt.tz_convert(target_tz)
         print(f"✅ Datas normalizadas para timezone: {target_tz}")
+    
+    return df
+
+
+def classify_trading_session(df: pd.DataFrame, 
+                             datetime_col: str = 'published_at',
+                             timezone: str = TIMEZONE_BR,
+                             pregao_start: int = PREGAO_START_HOUR,
+                             pregao_end: int = PREGAO_END_HOUR) -> pd.DataFrame:
+    """
+    Classifica notícias por horário de publicação: pregão vs extra-pregão.
+    
+    Usado no Estudo de Eventos para segmentar CAR por sessão de negociação.
+    
+    Horários (timezone America/Sao_Paulo):
+    - Pregão: 10:00 às 17:00 (horário oficial B3)
+    - Extra-pregão: demais horários (noite, madrugada, antes da abertura)
+    
+    Args:
+        df: DataFrame com coluna de datetime
+        datetime_col: Nome da coluna de timestamp
+        timezone: Timezone para conversão (padrão: America/Sao_Paulo)
+        pregao_start: Hora de início do pregão (padrão: 10)
+        pregao_end: Hora de fim do pregão (padrão: 17)
+    
+    Returns:
+        DataFrame com coluna adicional 'trading_session' = ['pregao', 'extra_pregao']
+    
+    Example:
+        >>> df = classify_trading_session(df_news)
+        >>> print(df['trading_session'].value_counts())
+        pregao          1234
+        extra_pregao     567
+    """
+    df = df.copy()
+    
+    # Garantir que coluna é datetime
+    if not pd.api.types.is_datetime64_any_dtype(df[datetime_col]):
+        df[datetime_col] = pd.to_datetime(df[datetime_col], errors='coerce')
+    
+    # Converter para timezone Brasil se necessário
+    if df[datetime_col].dt.tz is None:
+        # Assume UTC se não tiver timezone
+        df[datetime_col] = pd.to_datetime(df[datetime_col], utc=True)
+    
+    df[datetime_col] = df[datetime_col].dt.tz_convert(timezone)
+    
+    # Extrair hora (0-23)
+    df['hora_publicacao'] = df[datetime_col].dt.hour
+    
+    # Classificar sessão
+    df['trading_session'] = np.where(
+        df['hora_publicacao'].between(pregao_start, pregao_end, inclusive='left'),
+        'pregao',
+        'extra_pregao'
+    )
+    
+    # Estatísticas
+    session_counts = df['trading_session'].value_counts()
+    print(f"\n📊 Classificação por sessão de negociação:")
+    print(f"   Pregão (10h-17h): {session_counts.get('pregao', 0):,} notícias ({session_counts.get('pregao', 0)/len(df)*100:.1f}%)")
+    print(f"   Extra-pregão:     {session_counts.get('extra_pregao', 0):,} notícias ({session_counts.get('extra_pregao', 0)/len(df)*100:.1f}%)")
     
     return df
 

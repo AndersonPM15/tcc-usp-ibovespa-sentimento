@@ -15,20 +15,42 @@ import yfinance as yf
 from src.io import paths
 from src.config import loader as cfg
 
+# Importar constantes globais (PLANO DE PESQUISA)
+try:
+    from src.config.constants import (
+        START_DATE_STR, END_DATE_STR,
+        TFIDF_MIN_DF, TFIDF_MAX_DF, TFIDF_NGRAM_RANGE, TFIDF_MAX_FEATURES
+    )
+except ImportError:
+    # Fallback para compatibilidade
+    START_DATE_STR = "2018-01-02"
+    END_DATE_STR = "2025-12-31"
+    TFIDF_MIN_DF = 2
+    TFIDF_MAX_DF = 0.95
+    TFIDF_NGRAM_RANGE = (1, 2)
+    TFIDF_MAX_FEATURES = 5000
 
-def download_ibovespa_data(start_date="2018-01-01", end_date=None):
+
+def download_ibovespa_data(start_date=None, end_date=None):
     """
-    Baixa dados históricos do Ibovespa via yfinance
+    Baixa dados históricos do Ibovespa via yfinance.
     
     Args:
-        start_date: Data inicial (formato YYYY-MM-DD)
-        end_date: Data final (formato YYYY-MM-DD), None para hoje
+        start_date: Data inicial (formato YYYY-MM-DD), usa START_DATE_STR se None
+        end_date: Data final (formato YYYY-MM-DD), usa END_DATE_STR se None
     
     Returns:
         DataFrame com colunas: date, open, high, low, close, volume
     """
+    # Usar constantes globais se não especificado
+    if start_date is None:
+        start_date = START_DATE_STR
+    if end_date is None:
+        end_date = END_DATE_STR
+    
     print(f"\n📊 Baixando dados do Ibovespa (^BVSP)...")
-    print(f"   Período: {start_date} → {end_date or 'hoje'}")
+    print(f"   Período: {start_date} → {end_date}")
+    print(f"   (Conforme PLANO DE PESQUISA: {START_DATE_STR} a {END_DATE_STR})")
     
     try:
         ibov = yf.download("^BVSP", start=start_date, end=end_date, progress=False)
@@ -103,24 +125,35 @@ def prepare_daily_documents(df_news, group_by_source=False):
     return docs
 
 
-def create_tfidf_features(docs, min_df=2, max_df=0.95, ngram_range=(1, 2), max_features=5000):
+def create_tfidf_features(docs, min_df=None, max_df=None, ngram_range=None, max_features=None):
     """
     Cria matriz TF-IDF a partir dos documentos
     
     Args:
         docs: DataFrame com coluna 'doc'
-        min_df: Min document frequency
-        max_df: Max document frequency (proporção)
-        ngram_range: Range de n-gramas (ex: (1,2) = unigram + bigram)
-        max_features: Máximo de features (None = sem limite)
+        min_df: Min document frequency (usa TFIDF_MIN_DF se None)
+        max_df: Max document frequency (usa TFIDF_MAX_DF se None)
+        ngram_range: Range de n-gramas (usa TFIDF_NGRAM_RANGE se None)
+        max_features: Máximo de features (usa TFIDF_MAX_FEATURES se None)
     
     Returns:
         X: Matriz TF-IDF (sparse)
         vectorizer: Objeto TfidfVectorizer fitted
         vocab: Lista ordenada de termos
     """
+    # Usar constantes globais se não especificado (PLANO DE PESQUISA)
+    if min_df is None:
+        min_df = TFIDF_MIN_DF
+    if max_df is None:
+        max_df = TFIDF_MAX_DF
+    if ngram_range is None:
+        ngram_range = TFIDF_NGRAM_RANGE
+    if max_features is None:
+        max_features = TFIDF_MAX_FEATURES
+    
     print(f"\n🔢 Criando matriz TF-IDF...")
     print(f"   Parâmetros: min_df={min_df}, max_df={max_df}, ngram={ngram_range}, max_features={max_features}")
+    print(f"   (Valores do PLANO DE PESQUISA)")
     
     vectorizer = TfidfVectorizer(
         min_df=min_df,

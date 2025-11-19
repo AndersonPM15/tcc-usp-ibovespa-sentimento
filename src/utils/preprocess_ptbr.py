@@ -1,18 +1,39 @@
 """
 Pipeline de preprocessamento avançado para textos em português brasileiro.
-Inclui limpeza, normalização, sentiment analysis e feature engineering.
+Inclui limpeza, normalização, lematização com spaCy, e feature engineering.
 
 Utilizado por notebooks/14_preprocess_ptbr.ipynb
+
+Requer:
+    pip install spacy
+    python -m spacy download pt_core_news_lg
 """
 
 import re
 import pandas as pd
 import numpy as np
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 import unicodedata
 from bs4 import BeautifulSoup
 import warnings
 warnings.filterwarnings('ignore')
+
+# spaCy para lematização PT-BR
+_SPACY_MODEL = None  # Carregado sob demanda
+
+def _load_spacy_model():
+    """Carrega modelo spaCy pt_core_news_lg (lazy loading)."""
+    global _SPACY_MODEL
+    if _SPACY_MODEL is None:
+        try:
+            import spacy
+            _SPACY_MODEL = spacy.load('pt_core_news_lg')
+            print("✅ Modelo spaCy pt_core_news_lg carregado")
+        except OSError:
+            print("❌ Modelo spaCy pt_core_news_lg não encontrado!")
+            print("   Execute: python -m spacy download pt_core_news_lg")
+            raise
+    return _SPACY_MODEL
 
 
 def clean_html(text: str) -> str:
@@ -80,16 +101,74 @@ def clean_text_advanced(text: str) -> str:
     return text.strip()
 
 
-def preprocess_pipeline(df: pd.DataFrame, remove_stopwords: bool = True) -> pd.DataFrame:
+def lemmatize_text_spacy(text: str, remove_stopwords: bool = True, remove_punct: bool = True) -> str:
     """
-    Pipeline completo de preprocessamento.
+    Aplica lematização em texto PT-BR usando spaCy pt_core_news_lg.
+    
+    Esta função deve ser usada APÓS a limpeza básica (clean_text_advanced).
+    
+    Args:
+        text: Texto já limpo (lowercase, sem URLs, etc.)
+        remove_stopwords: Se True, remove stopwords durante lematização
+        remove_punct: Se True, remove pontuação
+    
+    Returns:
+        Texto lematizado
+        
+    Example:
+        >>> text = "os gatos estavam correndo pelos jardins"
+        >>> lemmatize_text_spacy(text)
+        'gato estar correr jardim'
+    """
+    if pd.isna(text) or not text.strip():
+        return ""
+    
+    nlp = _load_spacy_model()
+    
+    # Processar com spaCy
+    doc = nlp(text)
+    
+    # Coletar lemas
+    lemmas = []
+    for token in doc:
+        # Filtros opcionais
+        if remove_stopwords and token.is_stop:
+            continue
+        if remove_punct and token.is_punct:
+            continue
+        if token.is_space:
+            continue
+        
+        # Adicionar lema (já vem em lowercase do spaCy)
+        lemma = token.lemma_.strip()
+        if lemma and len(lemma) > 1:  # Ignorar tokens de 1 caractere
+            lemmas.append(lemma)
+    
+    return ' '.join(lemmas)
+
+
+def preprocess_pipeline(df: pd.DataFrame, 
+                       remove_stopwords: bool = True,
+                       use_lemmatization: bool = True) -> pd.DataFrame:
+    """
+    Pipeline completo de preprocessamento PT-BR.
+    
+    Etapas:
+    1. Limpeza HTML
+    2. Remoção de URLs
+    3. Normalização unicode
+    4. Limpeza avançada (lowercase, caracteres especiais)
+    5. Remoção de stopwords (opcional)
+    6. Lematização com spaCy (opcional, RECOMENDADO)
+    7. Tokenização
     
     Args:
         df: DataFrame com coluna 'raw_text'
         remove_stopwords: Se True, remove stopwords PT
+        use_lemmatization: Se True, aplica lematização spaCy (PLANO DE PESQUISA)
     
     Returns:
-        DataFrame com colunas adicionais: clean_text, tokens
+        DataFrame com colunas adicionais: clean_text, lemmatized_text, tokens
     """
     import nltk
     
@@ -120,25 +199,45 @@ def preprocess_pipeline(df: pd.DataFrame, remove_stopwords: bool = True) -> pd.D
     # 5. Limpeza avançada
     df['clean_text'] = df['text_normalized'].apply(clean_text_advanced)
     
-    # 6. Remover stopwords (opcional)
-    if remove_stopwords:
+    # 6. Remover stopwords (opcional) - se não usar lematização
+    if remove_stopwords and not use_lemmatization:
         df['clean_text'] = df['clean_text'].apply(lambda x: remove_stopwords_pt(x, stop_pt))
     
-    # 7. Tokenização
+    # 7. LEMATIZAÇÃO COM spaCy (NOVO - PLANO DE PESQUISA)
+    if use_lemmatization:
+        print("🔤 Aplicando lematização com spaCy pt_core_news_lg...")
+        print("   (Isso pode demorar alguns minutos...)")
+        
+        # Lematizar com spaCy (já remove stopwords internamente)
+        df['lemmatized_text'] = df['clean_text'].apply(
+            lambda x: lemmatize_text_spacy(x, remove_stopwords=remove_stopwords)
+        )
+        
+        # Usar texto lematizado como texto final
+        df['clean_text'] = df['lemmatized_text']
+        
+        print("✅ Lematização concluída")
+    
+    # 8. Tokenização
     df['tokens'] = df['clean_text'].apply(lambda x: x.split() if x else [])
     df['token_count'] = df['tokens'].apply(len)
     
-    # 8. Remover textos muito curtos (< 5 tokens)
+    # 9. Remover textos muito curtos (< 5 tokens)
     initial_count = len(df)
     df = df[df['token_count'] >= 5].copy()
     removed = initial_count - len(df)
     
-    print(f"✅ Limpeza concluída")
+    lematizacao_status = "COM lematização spaCy" if use_lemmatization else "SEM lematização"
+    print(f"✅ Limpeza concluída ({lematizacao_status})")
     print(f"   Textos muito curtos removidos: {removed:,}")
     print(f"   Registros válidos: {len(df):,}")
     
     # Limpar colunas intermediárias
-    df = df.drop(columns=['text_no_html', 'text_no_urls', 'text_normalized'], errors='ignore')
+    if use_lemmatization:
+        # Manter lemmatized_text para referência
+        df = df.drop(columns=['text_no_html', 'text_no_urls', 'text_normalized'], errors='ignore')
+    else:
+        df = df.drop(columns=['text_no_html', 'text_no_urls', 'text_normalized'], errors='ignore')
     
     return df
 
