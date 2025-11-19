@@ -135,9 +135,20 @@ SENTIMENT_DF = load_sentiment()
 RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
 
+<<<<<<< HEAD
 # Usar constantes do plano de pesquisa como limites (2018-01-02 a 2025-12-31)
 DATE_MIN = pd.Timestamp(START_DATE)
 DATE_MAX = pd.Timestamp(END_DATE)
+=======
+<<<<<<< HEAD
+# Usar constantes do plano de pesquisa como limites (2018-01-02 a 2025-12-31)
+DATE_MIN = pd.Timestamp(START_DATE) if not IBOV_DF.empty else pd.Timestamp(START_DATE)
+DATE_MAX = pd.Timestamp(END_DATE) if not IBOV_DF.empty else pd.Timestamp(END_DATE)
+=======
+DATE_MIN = IBOV_DF["day"].min() if not IBOV_DF.empty else pd.Timestamp("2018-01-01")
+DATE_MAX = IBOV_DF["day"].max() if not IBOV_DF.empty else pd.Timestamp("2025-01-31")
+>>>>>>> 252efe8bec3c17c732a0656b344ace51a2d6bc2b
+>>>>>>> bcf47c7404e5e2ee7cafdd3847c793883353119b
 
 MODEL_OPTIONS = sorted(RESULTS_DF["model"].dropna().unique()) if not RESULTS_DF.empty and "model" in RESULTS_DF.columns else []
 METRIC_OPTIONS = [
