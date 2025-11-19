@@ -212,6 +212,7 @@ app.layout = html.Div(
             ],
         ),
         html.H2("Comparativo de Modelos"),
+        dcc.Graph(id="model-comparison-graph"),
         dash_table.DataTable(
             id="model-table",
             columns=[
@@ -248,6 +249,7 @@ def _filter_by_period(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
 @app.callback(
     Output("ibov-graph", "figure"),
     Output("sentiment-graph", "figure"),
+    Output("model-comparison-graph", "figure"),
     Output("model-table", "data"),
     Input("date-range", "start_date"),
     Input("date-range", "end_date"),
@@ -314,15 +316,51 @@ def update_dashboard(start_date, end_date, selected_models, metric):
         hovermode="x unified",
     )
 
-    # Tabela de modelos
+    # Gráfico de comparação de modelos
+    comparison_fig = go.Figure()
     table_df = RESULTS_DF.copy()
+    
+    # Filtrar por modelos selecionados
     if selected_models:
         table_df = table_df[table_df["model"].isin(selected_models)]
+    
+    # Ordenar pela métrica selecionada
+    if metric in {"auc", "mda", "sharpe"} and metric in table_df.columns:
+        table_df_sorted = table_df.dropna(subset=[metric]).sort_values(metric, ascending=False)
+        
+        if not table_df_sorted.empty:
+            # Mapear labels das métricas
+            metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
+            
+            comparison_fig.add_trace(
+                go.Bar(
+                    x=table_df_sorted["model"],
+                    y=table_df_sorted[metric],
+                    text=table_df_sorted[metric].round(3),
+                    textposition="auto",
+                    name=metric_labels.get(metric, metric.upper()),
+                    marker=dict(
+                        color=table_df_sorted[metric],
+                        colorscale="Viridis",
+                        showscale=True,
+                    ),
+                )
+            )
+            
+            comparison_fig.update_layout(
+                title=f"Comparação de Modelos por {metric_labels.get(metric, metric.upper())}",
+                xaxis_title="Modelo",
+                yaxis_title=metric_labels.get(metric, metric.upper()),
+                hovermode="x unified",
+                showlegend=False,
+            )
+    
+    # Ordenar tabela pela métrica
     if metric in {"auc", "mda", "sharpe"} and metric in table_df.columns:
         table_df = table_df.sort_values(metric, ascending=False, na_position="last")
     table_df = table_df.fillna("")
 
-    return ibov_fig, sentiment_fig, table_df.to_dict("records")
+    return ibov_fig, sentiment_fig, comparison_fig, table_df.to_dict("records")
 
 
 # ------------------------------------------------------------------------------
