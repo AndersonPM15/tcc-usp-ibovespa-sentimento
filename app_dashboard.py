@@ -136,6 +136,7 @@ RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
 
 # Usar constantes do plano de pesquisa como limites (2018-01-02 a 2025-12-31)
+# FIXO: nunca mais mudar esses valores automaticamente
 DATE_MIN = pd.Timestamp(START_DATE)
 DATE_MAX = pd.Timestamp(END_DATE)
 

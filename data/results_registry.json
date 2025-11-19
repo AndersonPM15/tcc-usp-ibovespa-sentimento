@@ -3218,5 +3218,65 @@
     "extra": {
       "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251119_132701_03_tfidf_models.ipynb"
     }
+  },
+  {
+    "timestamp": "2025-11-19T16:29:03.241930",
+    "model": "04_embeddings_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 105.19477
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251119_132718_04_embeddings_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-19T16:29:16.635372",
+    "model": "05_data_collection_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 13.016915
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251119_132903_05_data_collection_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-19T16:29:24.124040",
+    "model": "06_preprocessing_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.323686
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251119_132916_06_preprocessing_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-19T16:29:30.524852",
+    "model": "07_tfidf_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 6.263811
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251119_132924_07_tfidf_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-19T16:30:15.326320",
+    "model": "08_embeddings_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 44.630705
+    },
+    "extra": {
+      "output_notebook": "C:\\Users\\ander\\OneDrive\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251119_132930_08_embeddings_real.ipynb"
+    }
   }
 ]
