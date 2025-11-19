@@ -145,55 +145,67 @@ class GDELTCollector:
         - language: Código do idioma
         - sourcecountry: País da fonte
         
-        Schema unificado:
-        - date: datetime normalizado
+        Schema unificado (RÍGIDO - TCC):
+        - date: datetime normalizado UTC, sem timezone (date only)
         - source: nome do domínio
         - title: título do artigo
         - url: link do artigo
-        - text_full: vazio (GDELT não fornece texto completo na API)
+        - text_full: título (GDELT não fornece texto completo via API)
         """
         if df.empty:
             return pd.DataFrame(columns=["date", "source", "title", "url", "text_full"])
         
-        # Parse seendate (formato: "20250115120000" → datetime)
-        # Tentar múltiplos formatos caso GDELT retorne formato diferente
+        # CRÍTICO: Parse robusto de seendate
         if "seendate" in df.columns:
-            # Converte para string primeiro para garantir formato consistente
-            df["seendate_str"] = df["seendate"].astype(str)
+            # Converte para string e limpa
+            df["seendate_str"] = df["seendate"].astype(str).str.strip()
             
-            # Tenta parser direto com formato GDELT padrão
+            # Tenta formato GDELT padrão: YYYYMMDDHHMMSS (14 dígitos)
             df["date"] = pd.to_datetime(df["seendate_str"], format="%Y%m%d%H%M%S", errors="coerce")
             
-            # Se não funcionou, tenta outros formatos comuns
-            if df["date"].isna().all():
-                df["date"] = pd.to_datetime(df["seendate"], errors="coerce")
+            # Fallback: se não funcionou, tenta parse genérico
+            mask_failed = df["date"].isna()
+            if mask_failed.any():
+                print(f"⚠️ {mask_failed.sum()} datas falharam no parse GDELT - tentando fallback...")
+                # Parse fallback com normalização UTC imediata
+                dates_fallback = pd.to_datetime(df.loc[mask_failed, "seendate"], errors="coerce")
+                # Normalizar e remover timezone ANTES de atribuir
+                dates_fallback = dates_fallback.dt.normalize().dt.tz_localize(None)
+                df.loc[mask_failed, "date"] = dates_fallback
+            
+            # Verificação final
+            still_failed = df["date"].isna().sum()
+            if still_failed > 0:
+                print(f"❌ {still_failed} datas inválidas após todos os parsers - serão removidas")
         else:
-            print("⚠️ Coluna 'seendate' não encontrada - usando data atual")
-            df["date"] = pd.Timestamp.now()
+            raise ValueError("GDELT retornou dados sem coluna 'seendate' - coleta inválida")
         
-        # Normalizar para meia-noite
+        # Normalizar para meia-noite UTC (remove hora, mantém apenas date)
+        # Já fizemos isso no fallback, mas garantir para datas que passaram no parse principal
+        if df["date"].dt.tz is not None:
+            df["date"] = df["date"].dt.tz_localize(None)
         df["date"] = df["date"].dt.normalize()
         
         # Source: usar domínio como identificador
-        df["source"] = df.get("domain", "gdelt_unknown")
+        df["source"] = df.get("domain", "gdelt_unknown").fillna("gdelt_unknown")
         
         # Title
-        df["title"] = df.get("title", "")
+        df["title"] = df.get("title", "").fillna("")
         
         # URL
-        df["url"] = df.get("url", "")
+        df["url"] = df.get("url", "").fillna("")
         
-        # Text: GDELT não fornece texto completo via API
-        # Alternativa: web scraping posterior ou usar apenas título
-        df["text_full"] = df["title"]  # Por enquanto, usa título como texto
+        # Text: GDELT API não fornece texto completo, apenas título
+        df["text_full"] = df["title"]  # Título é o melhor disponível
         
         # Selecionar colunas finais
         result = df[["date", "source", "title", "url", "text_full"]].copy()
         
-        # Remover vazios e duplicatas
-        result = result.dropna(subset=["title", "date"])
-        result = result[result["title"].str.len() > 10]
-        result = result.drop_duplicates(subset=["url", "title"])
+        # Filtros de qualidade
+        result = result.dropna(subset=["date", "title"])  # Data e título obrigatórios
+        result = result[result["title"].str.len() >= 15]  # Títulos muito curtos são inválidos
+        result = result[result["url"].str.len() > 0]  # URL obrigatória
+        result = result.drop_duplicates(subset=["url"])  # URL única (primário)
         
         return result.reset_index(drop=True)
     
@@ -217,22 +229,31 @@ class GDELTCollector:
 def collect_gdelt_historical(
     start_date: str,
     end_date: str,
+    query: str = "(Ibovespa OR Bovespa OR B3 OR 'Bolsa de valores' OR ações OR mercado) sourcelang:por",
     output_path: Optional[Path] = None,
     checkpoint_interval: int = 30,
+    min_days_threshold: int = 200,
 ) -> pd.DataFrame:
     """
-    Função auxiliar para coleta histórica com checkpoints.
+    Função auxiliar para coleta histórica GDELT com checkpoints e validação.
     
-    Como a coleta de anos pode levar horas, salvamos checkpoints incrementais.
+    CHECAGENS OBRIGATÓRIAS (TCC):
+    - Mínimo de dias distintos configurável (padrão: 200)
+    - Erro fatal se base resultante for insuficiente
     
     Args:
         start_date: Data inicial (formato "YYYY-MM-DD")
         end_date: Data final (formato "YYYY-MM-DD")
+        query: Query GDELT com termos financeiros PT-BR
         output_path: Caminho para salvar resultado final
         checkpoint_interval: Salvar checkpoint a cada N dias
+        min_days_threshold: Mínimo de dias distintos aceitável (padrão: 200)
         
     Returns:
         DataFrame consolidado
+        
+    Raises:
+        RuntimeError: Se base resultante tiver menos de min_days_threshold dias
     """
     collector = GDELTCollector()
     
@@ -241,6 +262,8 @@ def collect_gdelt_historical(
     
     print(f"\n{'='*80}")
     print(f"COLETA HISTÓRICA GDELT: {start_date} → {end_date}")
+    print(f"Query: {query[:60]}...")
+    print(f"Checagem mínima: {min_days_threshold} dias distintos")
     print(f"{'='*80}\n")
     
     # Coleta com checkpoint
@@ -257,7 +280,7 @@ def collect_gdelt_historical(
         df_chunk = collector.collect_by_date_range(
             start_date=current,
             end_date=chunk_end,
-            query="(Ibovespa OR Bovespa OR bolsa OR ações OR Vale OR Petrobras OR economia OR dólar) sourcelang:por",
+            query=query,
             max_records=250,
         )
         
@@ -267,36 +290,55 @@ def collect_gdelt_historical(
         checkpoint_counter += chunk_days
         
         # Checkpoint a cada intervalo
-        if checkpoint_counter >= checkpoint_interval and output_path:
+        if checkpoint_counter >= checkpoint_interval and output_path and len(all_data) > 0:
             df_temp = pd.concat(all_data, ignore_index=True)
+            df_temp = df_temp.drop_duplicates(subset=["url"])
             checkpoint_file = output_path.parent / f"{output_path.stem}_checkpoint.parquet"
             df_temp.to_parquet(checkpoint_file, index=False)
-            print(f"💾 Checkpoint salvo: {len(df_temp)} artigos em {checkpoint_file.name}")
+            print(f"💾 Checkpoint: {len(df_temp):,} artigos ({df_temp['date'].nunique():,} dias) → {checkpoint_file.name}")
         
         current = chunk_end + timedelta(days=1)
     
     # Consolidar resultado final
     if not all_data:
-        print("⚠️ Nenhum dado coletado")
-        return pd.DataFrame()
+        raise RuntimeError(
+            f"[GDELT] ERRO CRÍTICO: Nenhum dado coletado no período {start_date} → {end_date}. "
+            f"Verifique conexão, query ou limitações da API GDELT."
+        )
     
     df_final = pd.concat(all_data, ignore_index=True)
-    df_final = df_final.drop_duplicates(subset=["url", "title"])
+    df_final = df_final.drop_duplicates(subset=["url"])
     df_final = df_final.sort_values("date").reset_index(drop=True)
+    
+    # CHECAGEM OBRIGATÓRIA
+    n_days = df_final["date"].nunique()
+    n_news = len(df_final)
     
     print(f"\n{'='*80}")
     print(f"✅ COLETA CONCLUÍDA")
-    print(f"   Total: {len(df_final)} artigos únicos")
-    print(f"   Período: {df_final['date'].min()} → {df_final['date'].max()}")
-    print(f"   Dias distintos: {df_final['date'].nunique()}")
-    print(f"   Fontes: {df_final['source'].nunique()}")
+    print(f"   Total: {n_news:,} artigos únicos")
+    print(f"   Período: {df_final['date'].min().date()} → {df_final['date'].max().date()}")
+    print(f"   Dias distintos: {n_days:,}")
+    print(f"   Fontes: {df_final['source'].nunique():,}")
+    print(f"   Média: {n_news / n_days:.1f} artigos/dia")
     print(f"{'='*80}\n")
+    
+    # Validação de limiar mínimo
+    if n_days < min_days_threshold:
+        raise RuntimeError(
+            f"[GDELT] Base de notícias INSUFICIENTE para TCC:\n"
+            f"   Dias coletados: {n_days}\n"
+            f"   Mínimo exigido: {min_days_threshold}\n"
+            f"   Período solicitado: {start_date} → {end_date}\n"
+            f"   AÇÃO: Revisar query, período ou limitações do GDELT para idioma PT-BR."
+        )
     
     # Salvar resultado final
     if output_path:
         output_path.parent.mkdir(parents=True, exist_ok=True)
         df_final.to_parquet(output_path, index=False)
-        print(f"💾 Salvo em: {output_path}")
+        print(f"💾 Arquivo salvo: {output_path}")
+        print(f"   Tamanho: {output_path.stat().st_size / 1024 / 1024:.2f} MB\n")
     
     return df_final
 
