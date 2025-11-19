@@ -68,6 +68,39 @@ O estudo visa gerar contribuições relevantes para a **literatura acadêmica** 
 
 ---
 
+## 📓 Organização dos Notebooks
+
+### **Notebooks Oficiais (Pipeline TCC)**
+Estes notebooks fazem parte do fluxo oficial de análise do TCC e são executados pelo `pipeline_orchestration.py`:
+
+- **00_data_download.ipynb** - Download e validação inicial dos dados
+- **01_preprocessing.ipynb** - Pré-processamento básico
+- **13_etl_dedup.ipynb** - ETL e deduplicação de notícias multisource
+- **14_preprocess_ptbr.ipynb** - Lematização e processamento de texto PT-BR
+- **15_features_tfidf_daily.ipynb** - Construção de features TF-IDF agregadas por dia
+- **16_models_tfidf_baselines.ipynb** - Modelagem principal (Logistic Regression, Random Forest)
+- **18_backtest_simulation.ipynb** - Simulação de estratégias de trading
+- **20_final_dashboard_analysis.ipynb** - Preparação dos dados para o dashboard
+
+### **Notebooks Experimentais**
+Estes notebooks foram utilizados em fases exploratórias e experimentos preliminares, mas **não fazem parte do pipeline final do TCC**:
+
+- **02_baseline_logit.ipynb** - Experimento preliminar de baseline
+- **03_tfidf_models.ipynb** - Testes iniciais de TF-IDF (substituído pelo 16)
+- **04_embeddings_models.ipynb** - Experimentos com embeddings (abordagem alternativa)
+- **05_data_collection_real.ipynb** - Coleta antiga de dados reais (substituído pelo 12)
+- **06_preprocessing_real.ipynb** - Pré-processamento antigo (substituído pelo 14)
+- **07_tfidf_real.ipynb** - TF-IDF preliminar (substituído pelo 15+16)
+- **08_embeddings_real.ipynb** - Embeddings em dados reais (não usado no TCC final)
+- **09_lstm_real.ipynb** - Experimentos com LSTM (não incluído no TCC final)
+- **10_dashboard_results.ipynb** - Análise preliminar (substituído pelo 20)
+- **11_event_study_latency.ipynb** - Estudo de eventos e latência (análise complementar)
+- **12_data_collection_multisource.ipynb** - Coleta multisource (preparatória para o 13)
+- **17_sentiment_validation.ipynb** - Validação exploratória de sentimento
+- **19_future_extension.ipynb** - Planejamento de trabalhos futuros
+
+---
+
 ## ⚙️ Requisitos
 Instale as dependências com:  
 
