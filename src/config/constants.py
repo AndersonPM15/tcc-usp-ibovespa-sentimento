@@ -41,13 +41,16 @@ TIMEZONE_BR = "America/Sao_Paulo"
 # FONTES DE NOTÍCIAS
 # ==============================================================================
 
+# Fontes implementadas e em uso na pipeline oficial
 NEWS_SOURCES = [
     "GDELT",
     "GNews",
     "RSS",
     "NewsAPI",
-    "CVM_FR"  # CVM Fatos Relevantes (5ª fonte)
 ]
+
+# Fonte planejada mas NÃO implementada (trabalho futuro)
+# "CVM_FR"  # CVM Fatos Relevantes - requer integração com API CVM
 
 # ==============================================================================
 # TF-IDF E FEATURES
