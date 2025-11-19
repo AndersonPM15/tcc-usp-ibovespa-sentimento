@@ -141,6 +141,10 @@ DATE_MIN = pd.Timestamp(START_DATE)
 DATE_MAX = pd.Timestamp(END_DATE)
 
 MODEL_OPTIONS = sorted(RESULTS_DF["model"].dropna().unique()) if not RESULTS_DF.empty and "model" in RESULTS_DF.columns else []
+print(f"[DEBUG] MODEL_OPTIONS carregados: {MODEL_OPTIONS}")
+print(f"[DEBUG] RESULTS_DF shape: {RESULTS_DF.shape}")
+print(f"[DEBUG] IBOV_DF shape: {IBOV_DF.shape}")
+print(f"[DEBUG] SENTIMENT_DF shape: {SENTIMENT_DF.shape}")
 METRIC_OPTIONS = [
     {"label": "AUC", "value": "auc"},
     {"label": "MDA", "value": "mda"},
@@ -233,6 +237,18 @@ app.layout = html.Div(
         # Card 1: Controles
         _build_controls(),
         
+        # Indicadores de Filtros Ativos
+        html.Div(
+            id="active-filters-indicator",
+            style={
+                "backgroundColor": "#e3f2fd",
+                "padding": "15px 20px",
+                "borderRadius": "8px",
+                "marginBottom": "25px",
+                "borderLeft": "4px solid #2196f3",
+            },
+        ),
+        
         # Card 2: Ibovespa
         html.Div(
             style={
@@ -243,7 +259,11 @@ app.layout = html.Div(
                 "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
             },
             children=[
-                html.H3("Ibovespa com Eventos", style={"marginTop": "0", "color": "#2c3e50"}),
+                html.Div([
+                    html.H3("Ibovespa com Eventos", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
+                    html.P("Evolução do índice Bovespa com marcadores de eventos relevantes", 
+                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
+                ]),
                 dcc.Graph(id="ibov-graph", config={"displayModeBar": True}),
             ],
         ),
@@ -258,7 +278,11 @@ app.layout = html.Div(
                 "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
             },
             children=[
-                html.H3("Sentimento Médio Diário", style={"marginTop": "0", "color": "#2c3e50"}),
+                html.Div([
+                    html.H3("Sentimento Médio Diário", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
+                    html.P("Sentimento agregado das notícias (escala -1 a +1, onde valores positivos indicam otimismo)", 
+                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
+                ]),
                 dcc.Graph(id="sentiment-graph", config={"displayModeBar": True}),
             ],
         ),
@@ -273,7 +297,20 @@ app.layout = html.Div(
                 "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
             },
             children=[
-                html.H3("Comparativo de Modelos", style={"marginTop": "0", "marginBottom": "20px", "color": "#2c3e50"}),
+                html.Div(
+                    style={"display": "flex", "justifyContent": "space-between", "alignItems": "center", "marginBottom": "20px"},
+                    children=[
+                        html.H3("Comparativo de Modelos", style={"marginTop": "0", "marginBottom": "0", "color": "#2c3e50"}),
+                        html.Span(id="metric-badge", style={
+                            "backgroundColor": "#4caf50",
+                            "color": "white",
+                            "padding": "8px 16px",
+                            "borderRadius": "20px",
+                            "fontSize": "0.9em",
+                            "fontWeight": "bold",
+                        }),
+                    ],
+                ),
                 dcc.Graph(id="model-comparison-graph", config={"displayModeBar": True}),
                 html.Hr(style={"margin": "30px 0"}),
                 html.H4("Detalhamento das Métricas", style={"marginBottom": "15px", "color": "#34495e"}),
@@ -334,12 +371,16 @@ def _filter_by_period(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
     Output("sentiment-graph", "figure"),
     Output("model-comparison-graph", "figure"),
     Output("model-table", "data"),
+    Output("active-filters-indicator", "children"),
+    Output("metric-badge", "children"),
     Input("date-range", "start_date"),
     Input("date-range", "end_date"),
     Input("model-filter", "value"),
     Input("metric-filter", "value"),
 )
 def update_dashboard(start_date, end_date, selected_models, metric):
+    print(f"[DEBUG] Callback acionado: start={start_date}, end={end_date}, models={selected_models}, metric={metric}")
+    
     # Gráfico do Ibovespa
     ibov_filtered = _filter_by_period(IBOV_DF, start_date, end_date)
 
@@ -503,7 +544,44 @@ def update_dashboard(start_date, end_date, selected_models, metric):
         table_df = table_df.sort_values(metric, ascending=False, na_position="last")
     table_df = table_df.fillna("")
 
-    return ibov_fig, sentiment_fig, comparison_fig, table_df.to_dict("records")
+    # Criar indicadores visuais de filtros ativos
+    metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
+    
+    # Calcular janela temporal
+    days_count = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days + 1
+    ibov_days = len(ibov_filtered) if not ibov_filtered.empty else 0
+    sentiment_days = len(sentiment_filtered) if not sentiment_filtered.empty else 0
+    
+    # Criar lista de modelos selecionados
+    models_text = ", ".join(selected_models) if selected_models else "Nenhum modelo selecionado"
+    if selected_models and len(selected_models) == len(MODEL_OPTIONS):
+        models_text = f"Todos os modelos ({len(MODEL_OPTIONS)})"
+    
+    indicator_content = html.Div(
+        style={"display": "flex", "flexWrap": "wrap", "gap": "20px", "alignItems": "center"},
+        children=[
+            html.Div([
+                html.Strong("📅 Período: ", style={"color": "#1976d2"}),
+                html.Span(f"{start_date} a {end_date} ({days_count} dias)"),
+            ]),
+            html.Div([
+                html.Strong("📊 Dados: ", style={"color": "#1976d2"}),
+                html.Span(f"Ibovespa: {ibov_days} dias | Sentimento: {sentiment_days} dias"),
+            ]),
+            html.Div([
+                html.Strong("🤖 Modelos: ", style={"color": "#1976d2"}),
+                html.Span(models_text),
+            ]),
+            html.Div([
+                html.Strong("📈 Métrica: ", style={"color": "#1976d2"}),
+                html.Span(metric_labels.get(metric, metric.upper()), style={"fontWeight": "600", "color": "#2e7d32"}),
+            ]),
+        ],
+    )
+
+    metric_badge_text = f"📊 Métrica: {metric_labels.get(metric, metric.upper())}"
+    
+    return ibov_fig, sentiment_fig, comparison_fig, table_df.to_dict("records"), indicator_content, metric_badge_text
 
 
 # ------------------------------------------------------------------------------
