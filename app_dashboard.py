@@ -157,78 +157,161 @@ app.title = "Dashboard Sentimento x Ibovespa"
 
 def _build_controls():
     return html.Div(
-        className="controls",
+        style={
+            "backgroundColor": "#f8f9fa",
+            "padding": "20px",
+            "borderRadius": "8px",
+            "marginBottom": "25px",
+            "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
+        },
         children=[
+            html.H3("Controles de Análise", style={"marginTop": "0", "marginBottom": "20px", "color": "#2c3e50"}),
             html.Div(
-                [
-                    html.Label("Período"),
-                    dcc.DatePickerRange(
-                        id="date-range",
-                        min_date_allowed=DATE_MIN,
-                        max_date_allowed=DATE_MAX,
-                        start_date=DATE_MIN,
-                        end_date=DATE_MAX,
-                        display_format="YYYY-MM-DD",
+                style={"display": "grid", "gridTemplateColumns": "repeat(auto-fit, minmax(250px, 1fr))", "gap": "20px"},
+                children=[
+                    html.Div(
+                        [
+                            html.Label("Período de Análise", style={"fontWeight": "bold", "marginBottom": "8px", "display": "block"}),
+                            dcc.DatePickerRange(
+                                id="date-range",
+                                min_date_allowed=DATE_MIN,
+                                max_date_allowed=DATE_MAX,
+                                start_date=DATE_MIN,
+                                end_date=DATE_MAX,
+                                display_format="YYYY-MM-DD",
+                            ),
+                        ]
                     ),
-                ]
-            ),
-            html.Div(
-                [
-                    html.Label("Modelos"),
-                    dcc.Dropdown(
-                        id="model-filter",
-                        options=[{"label": m, "value": m} for m in MODEL_OPTIONS],
-                        value=MODEL_OPTIONS,
-                        multi=True,
-                        placeholder="Selecione modelos",
+                    html.Div(
+                        [
+                            html.Label("Selecione os Modelos", style={"fontWeight": "bold", "marginBottom": "8px", "display": "block"}),
+                            dcc.Dropdown(
+                                id="model-filter",
+                                options=[{"label": m, "value": m} for m in MODEL_OPTIONS],
+                                value=MODEL_OPTIONS,
+                                multi=True,
+                                placeholder="Escolha um ou mais modelos...",
+                            ),
+                        ]
                     ),
-                ]
-            ),
-            html.Div(
-                [
-                    html.Label("Métrica"),
-                    dcc.Dropdown(
-                        id="metric-filter",
-                        options=METRIC_OPTIONS,
-                        value="auc",
-                        clearable=False,
+                    html.Div(
+                        [
+                            html.Label("Métrica de Avaliação", style={"fontWeight": "bold", "marginBottom": "8px", "display": "block"}),
+                            dcc.Dropdown(
+                                id="metric-filter",
+                                options=METRIC_OPTIONS,
+                                value="auc",
+                                clearable=False,
+                                placeholder="Selecione AUC, MDA ou Sharpe",
+                            ),
+                        ]
                     ),
-                ]
+                ],
             ),
         ],
     )
 
 
 app.layout = html.Div(
-    className="container",
+    style={"fontFamily": "Arial, sans-serif", "maxWidth": "1400px", "margin": "0 auto", "padding": "20px"},
     children=[
-        html.H1("Sentimento de Notícias x Ibovespa"),
-        _build_controls(),
+        # Cabeçalho
         html.Div(
-            className="charts",
+            style={"textAlign": "center", "marginBottom": "30px"},
             children=[
-                dcc.Graph(id="ibov-graph"),
-                dcc.Graph(id="sentiment-graph"),
+                html.H1(
+                    "Sentimento de Notícias x Ibovespa",
+                    style={"fontSize": "2.5em", "color": "#1a1a1a", "marginBottom": "10px", "fontWeight": "600"}
+                ),
+                html.P(
+                    "Análise Preditiva com Modelos de Machine Learning | TCC USP",
+                    style={"fontSize": "1.1em", "color": "#666", "marginTop": "0"}
+                ),
             ],
         ),
-        html.H2("Comparativo de Modelos"),
-        dcc.Graph(id="model-comparison-graph"),
-        dash_table.DataTable(
-            id="model-table",
-            columns=[
-                {"name": "Modelo", "id": "model"},
-                {"name": "Dataset", "id": "dataset"},
-                {"name": "AUC", "id": "auc", "type": "numeric", "format": {"specifier": ".3f"}},
-                {"name": "MDA", "id": "mda", "type": "numeric", "format": {"specifier": ".3f"}},
-                {"name": "Estratégia", "id": "strategy"},
-                {"name": "CAGR", "id": "cagr", "type": "numeric", "format": {"specifier": ".3%"}},
-                {"name": "Sharpe", "id": "sharpe", "type": "numeric", "format": {"specifier": ".2f"}},
+        
+        # Card 1: Controles
+        _build_controls(),
+        
+        # Card 2: Ibovespa
+        html.Div(
+            style={
+                "backgroundColor": "white",
+                "padding": "20px",
+                "borderRadius": "8px",
+                "marginBottom": "25px",
+                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
+            },
+            children=[
+                html.H3("Ibovespa com Eventos", style={"marginTop": "0", "color": "#2c3e50"}),
+                dcc.Graph(id="ibov-graph", config={"displayModeBar": True}),
             ],
-            data=[],
-            sort_action="native",
-            filter_action="native",
-            page_size=10,
-            style_table={"overflowX": "auto"},
+        ),
+        
+        # Card 3: Sentimento
+        html.Div(
+            style={
+                "backgroundColor": "white",
+                "padding": "20px",
+                "borderRadius": "8px",
+                "marginBottom": "25px",
+                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
+            },
+            children=[
+                html.H3("Sentimento Médio Diário", style={"marginTop": "0", "color": "#2c3e50"}),
+                dcc.Graph(id="sentiment-graph", config={"displayModeBar": True}),
+            ],
+        ),
+        
+        # Card 4: Comparativo de Modelos
+        html.Div(
+            style={
+                "backgroundColor": "white",
+                "padding": "20px",
+                "borderRadius": "8px",
+                "marginBottom": "25px",
+                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
+            },
+            children=[
+                html.H3("Comparativo de Modelos", style={"marginTop": "0", "marginBottom": "20px", "color": "#2c3e50"}),
+                dcc.Graph(id="model-comparison-graph", config={"displayModeBar": True}),
+                html.Hr(style={"margin": "30px 0"}),
+                html.H4("Detalhamento das Métricas", style={"marginBottom": "15px", "color": "#34495e"}),
+                dash_table.DataTable(
+                    id="model-table",
+                    columns=[
+                        {"name": "Modelo", "id": "model"},
+                        {"name": "Dataset", "id": "dataset"},
+                        {"name": "AUC", "id": "auc", "type": "numeric", "format": {"specifier": ".3f"}},
+                        {"name": "MDA", "id": "mda", "type": "numeric", "format": {"specifier": ".3f"}},
+                        {"name": "Estratégia", "id": "strategy"},
+                        {"name": "CAGR", "id": "cagr", "type": "numeric", "format": {"specifier": "+.2%"}},
+                        {"name": "Sharpe", "id": "sharpe", "type": "numeric", "format": {"specifier": ".2f"}},
+                    ],
+                    data=[],
+                    sort_action="native",
+                    filter_action="native",
+                    page_size=10,
+                    style_table={"overflowX": "auto"},
+                    style_header={
+                        "backgroundColor": "#2c3e50",
+                        "color": "white",
+                        "fontWeight": "bold",
+                        "textAlign": "center",
+                    },
+                    style_cell={
+                        "textAlign": "center",
+                        "padding": "10px",
+                    },
+                    style_data_conditional=[
+                        {
+                            "if": {"row_index": 0},
+                            "backgroundColor": "#e8f5e9",
+                            "fontWeight": "600",
+                        }
+                    ],
+                ),
+            ],
         ),
     ],
 )
@@ -267,7 +350,8 @@ def update_dashboard(start_date, end_date, selected_models, metric):
                 x=ibov_filtered["day"],
                 y=ibov_filtered["close"],
                 mode="lines",
-                name="Ibovespa (close)",
+                name="Ibovespa",
+                line=dict(color="#1f77b4", width=2.5),
             )
         )
     event_filtered = LATENCY_DF.copy()
@@ -289,31 +373,65 @@ def update_dashboard(start_date, end_date, selected_models, metric):
                 )
             )
     ibov_fig.update_layout(
-        title="Ibovespa com eventos",
         xaxis_title="Data",
-        yaxis_title="Preço",
+        yaxis_title="Preço do Ibovespa (pontos)",
         hovermode="x unified",
+        template="plotly_white",
+        font=dict(size=12),
+        xaxis=dict(
+            tickformat="%b %d\n%Y",
+            showgrid=True,
+            gridcolor="rgba(0,0,0,0.1)",
+        ),
+        yaxis=dict(
+            showgrid=True,
+            gridcolor="rgba(0,0,0,0.1)",
+            tickformat=",.0f",
+        ),
+        margin=dict(l=60, r=20, t=40, b=60),
     )
 
     # Gráfico de sentimento
     sentiment_filtered = _filter_by_period(SENTIMENT_DF, start_date, end_date)
     sentiment_fig = go.Figure()
     if not sentiment_filtered.empty:
+        # Criar cores condicionais (positivo vs negativo)
+        colors = ["rgba(76, 175, 80, 0.3)" if s >= 0 else "rgba(244, 67, 54, 0.3)" 
+                  for s in sentiment_filtered["sentiment"]]
+        line_colors = ["#4caf50" if s >= 0 else "#f44336" 
+                       for s in sentiment_filtered["sentiment"]]
+        
         sentiment_fig.add_trace(
             go.Scatter(
                 x=sentiment_filtered["day"],
                 y=sentiment_filtered["sentiment"],
                 mode="lines",
                 fill="tozeroy",
-                name="Sentimento médio",
+                name="Sentimento",
+                line=dict(color="#666", width=2),
+                fillcolor="rgba(100, 100, 100, 0.2)",
             )
         )
-        sentiment_fig.add_hline(y=0, line_dash="dash", line_color="gray")
+        sentiment_fig.add_hline(y=0, line_dash="dash", line_color="rgba(0,0,0,0.3)", line_width=1)
     sentiment_fig.update_layout(
-        title="Sentimento médio diário",
         xaxis_title="Data",
-        yaxis_title="Sentimento (escala -1/+1)",
+        yaxis_title="Sentimento (escala -1 a +1)",
         hovermode="x unified",
+        template="plotly_white",
+        font=dict(size=12),
+        xaxis=dict(
+            tickformat="%b %d\n%Y",
+            showgrid=True,
+            gridcolor="rgba(0,0,0,0.1)",
+        ),
+        yaxis=dict(
+            showgrid=True,
+            gridcolor="rgba(0,0,0,0.1)",
+            zeroline=True,
+            zerolinecolor="rgba(0,0,0,0.3)",
+            zerolinewidth=2,
+        ),
+        margin=dict(l=60, r=20, t=40, b=60),
     )
 
     # Gráfico de comparação de modelos
@@ -330,29 +448,54 @@ def update_dashboard(start_date, end_date, selected_models, metric):
         
         if not table_df_sorted.empty:
             # Mapear labels das métricas
-            metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
+            metric_labels = {"auc": "AUC", "mda": "MDA (%)", "sharpe": "Sharpe Ratio"}
+            metric_formats = {"auc": ".3f", "mda": ".3f", "sharpe": ".2f"}
+            
+            # Identificar melhor modelo (primeira posição após ordenação)
+            best_model = table_df_sorted.iloc[0]["model"]
+            colors = ["#2ecc71" if model == best_model else "#3498db" 
+                      for model in table_df_sorted["model"]]
+            
+            # Formatar texto nas barras
+            if metric in {"auc", "mda"}:
+                text_values = [f"{v:.3f}" for v in table_df_sorted[metric]]
+            else:  # sharpe
+                text_values = [f"{v:.2f}" for v in table_df_sorted[metric]]
             
             comparison_fig.add_trace(
                 go.Bar(
                     x=table_df_sorted["model"],
                     y=table_df_sorted[metric],
-                    text=table_df_sorted[metric].round(3),
-                    textposition="auto",
+                    text=text_values,
+                    textposition="outside",
                     name=metric_labels.get(metric, metric.upper()),
                     marker=dict(
-                        color=table_df_sorted[metric],
-                        colorscale="Viridis",
-                        showscale=True,
+                        color=colors,
+                        line=dict(
+                            color=["#27ae60" if model == best_model else "#2980b9" 
+                                   for model in table_df_sorted["model"]],
+                            width=2,
+                        ),
                     ),
                 )
             )
             
             comparison_fig.update_layout(
-                title=f"Comparação de Modelos por {metric_labels.get(metric, metric.upper())}",
                 xaxis_title="Modelo",
                 yaxis_title=metric_labels.get(metric, metric.upper()),
                 hovermode="x unified",
                 showlegend=False,
+                template="plotly_white",
+                font=dict(size=12),
+                xaxis=dict(
+                    showgrid=False,
+                    tickangle=-45,
+                ),
+                yaxis=dict(
+                    showgrid=True,
+                    gridcolor="rgba(0,0,0,0.1)",
+                ),
+                margin=dict(l=60, r=20, t=40, b=100),
             )
     
     # Ordenar tabela pela métrica
