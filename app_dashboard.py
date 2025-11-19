@@ -136,8 +136,8 @@ RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
 
 # Usar constantes do plano de pesquisa como limites (2018-01-02 a 2025-12-31)
-DATE_MIN = pd.Timestamp(START_DATE) if not IBOV_DF.empty else pd.Timestamp(START_DATE)
-DATE_MAX = pd.Timestamp(END_DATE) if not IBOV_DF.empty else pd.Timestamp(END_DATE)
+DATE_MIN = pd.Timestamp(START_DATE)
+DATE_MAX = pd.Timestamp(END_DATE)
 
 MODEL_OPTIONS = sorted(RESULTS_DF["model"].dropna().unique()) if not RESULTS_DF.empty and "model" in RESULTS_DF.columns else []
 METRIC_OPTIONS = [
