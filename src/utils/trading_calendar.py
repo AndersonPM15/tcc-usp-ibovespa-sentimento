@@ -62,21 +62,22 @@ def _obter_feriados_moveis(ano: int) -> List[tuple]:
     Returns:
         Lista de tuplas (data, nome_feriado)
     """
+    from datetime import timedelta
     pascoa = _calcular_pascoa(ano)
     
     feriados_moveis = []
     
     # Carnaval: 47 dias antes da Páscoa (terça-feira)
-    carnaval = pascoa - pd.Timedelta(days=47)
-    feriados_moveis.append((carnaval.date(), "Carnaval"))
+    carnaval = pascoa - timedelta(days=47)
+    feriados_moveis.append((carnaval, "Carnaval"))
     
     # Sexta-feira Santa: 2 dias antes da Páscoa
-    sexta_santa = pascoa - pd.Timedelta(days=2)
-    feriados_moveis.append((sexta_santa.date(), "Sexta-feira Santa"))
+    sexta_santa = pascoa - timedelta(days=2)
+    feriados_moveis.append((sexta_santa, "Sexta-feira Santa"))
     
     # Corpus Christi: 60 dias após a Páscoa (quinta-feira)
-    corpus_christi = pascoa + pd.Timedelta(days=60)
-    feriados_moveis.append((corpus_christi.date(), "Corpus Christi"))
+    corpus_christi = pascoa + timedelta(days=60)
+    feriados_moveis.append((corpus_christi, "Corpus Christi"))
     
     return feriados_moveis
 
