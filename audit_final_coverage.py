@@ -70,7 +70,7 @@ def main():
         DATA_INTERIM / "news_clean_multisource.parquet",
         DATA_PROC / "news_clean.parquet",
         DATA_PROC / "tfidf_daily_index.csv",
-        DATA_PROC / "ibovespa_clean.csv"
+        DATA_PROC / "ibov_clean.csv"  # Nome correto usado pelo dashboard
     ]
     
     results = []
@@ -109,7 +109,7 @@ def main():
     MIN_DAYS = 200
     news_multisource = df_report[df_report["arquivo"] == "news_multisource.parquet"]
     tfidf_index = df_report[df_report["arquivo"] == "tfidf_daily_index.csv"]
-    ibov_clean = df_report[df_report["arquivo"] == "ibovespa_clean.csv"]
+    ibov_clean = df_report[df_report["arquivo"] == "ibov_clean.csv"]
     
     status_ok = True
     
