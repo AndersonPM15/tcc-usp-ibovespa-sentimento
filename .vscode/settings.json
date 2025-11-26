@@ -1,17 +1,10 @@
 {
-    "python.defaultInterpreterPath": "C:/Users/ander/anaconda3/envs/tcc_usp/python.exe",
-    "python-envs.defaultEnvManager": "ms-python.python:conda",
-    "python-envs.defaultPackageManager": "ms-python.python:conda",
+    "python.defaultInterpreterPath": "${workspaceFolder}/venv/Scripts/python.exe",
+    "python.terminal.activateEnvironment": true,
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "python-envs.defaultPackageManager": "ms-python.python:pip",
     "python-envs.pythonProjects": [],
     "cSpell.language": "en,pt,pt-BR",
-    "cSpell.ignorePaths": [
-        "**/.git/**",
-        "**/__pycache__/**",
-        "data/**",
-        "mlruns/**",
-        "notebooks/_runs/**",
-        "reports/logs/**"
-    ],
     "cSpell.words": [
         "papermill",
         "nbconvert",

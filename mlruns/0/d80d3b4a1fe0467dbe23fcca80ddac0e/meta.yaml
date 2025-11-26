@@ -1,0 +1,14 @@
+artifact_uri: ./mlruns/0/d80d3b4a1fe0467dbe23fcca80ddac0e/artifacts
+end_time: 1764183820647
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: d80d3b4a1fe0467dbe23fcca80ddac0e
+run_name: 01_preprocessing_pipeline
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764183820516
+status: 3
+tags: []
+user_id: ander
