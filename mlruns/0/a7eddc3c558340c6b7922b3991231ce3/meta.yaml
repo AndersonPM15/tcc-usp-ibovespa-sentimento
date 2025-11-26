@@ -1,0 +1,14 @@
+artifact_uri: ./mlruns/0/a7eddc3c558340c6b7922b3991231ce3/artifacts
+end_time: 1764183782204
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: a7eddc3c558340c6b7922b3991231ce3
+run_name: 00_data_download_pipeline
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764183782101
+status: 3
+tags: []
+user_id: ander
