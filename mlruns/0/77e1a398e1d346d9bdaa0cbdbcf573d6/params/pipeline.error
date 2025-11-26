@@ -1,0 +1,69 @@
+
+---------------------------------------------------------------------------
+Exception encountered at "In [7]":
+---------------------------------------------------------------------------
+ModuleNotFoundError                       Traceback (most recent call last)
+Cell In[7], line 4
+      1 # 6. Séries temporais e gráficos interativos
+      2 plots = {}
+----> 4 scatter_fig = px.scatter(
+      5     df,
+      6     x="sentiment",
+      7     y="ret_next",
+      8     color="model",
+      9     trendline="ols",
+     10     hover_data={"day": True, "signal_bucket": True},
+     11     title="Sentimento (prob) vs Retorno D+1",
+     12 )
+     13 plots["scatter"] = scatter_fig
+     14 scatter_fig.show()
+
+File C:\TCC_USP\tcc-usp-ibovespa-sentimento\venv\Lib\site-packages\plotly\express\_chart_types.py:69, in scatter(data_frame, x, y, color, symbol, size, hover_name, hover_data, custom_data, text, facet_row, facet_col, facet_col_wrap, facet_row_spacing, facet_col_spacing, error_x, error_x_minus, error_y, error_y_minus, animation_frame, animation_group, category_orders, labels, orientation, color_discrete_sequence, color_discrete_map, color_continuous_scale, range_color, color_continuous_midpoint, symbol_sequence, symbol_map, opacity, size_max, marginal_x, marginal_y, trendline, trendline_options, trendline_color_override, trendline_scope, log_x, log_y, range_x, range_y, render_mode, title, subtitle, template, width, height)
+     14 def scatter(
+     15     data_frame=None,
+     16     x=None,
+   (...)     63     height=None,
+     64 ) -> go.Figure:
+     65     """
+     66     In a scatter plot, each row of `data_frame` is represented by a symbol
+     67     mark in 2D space.
+     68     """
+---> 69     return make_figure(args=locals(), constructor=go.Scatter)
+
+File C:\TCC_USP\tcc-usp-ibovespa-sentimento\venv\Lib\site-packages\plotly\express\_core.py:2682, in make_figure(args, constructor, trace_patch, layout_patch)
+   2679     elif args["ecdfnorm"] == "percent":
+   2680         group = group.with_columns((nw.col(var) / group_sum) * 100.0)
+-> 2682 patch, fit_results = make_trace_kwargs(
+   2683     args, trace_spec, group, mapping_labels.copy(), sizeref
+   2684 )
+   2685 trace.update(patch)
+   2686 if fit_results is not None:
+
+File C:\TCC_USP\tcc-usp-ibovespa-sentimento\venv\Lib\site-packages\plotly\express\_core.py:430, in make_trace_kwargs(args, trace_spec, trace_data, mapping_labels, sizeref)
+    427     trace_patch["x"] = trace_patch["x"].to_numpy()
+    429 trendline_function = trendline_functions[attr_value]
+--> 430 y_out, hover_header, fit_results = trendline_function(
+    431     args["trendline_options"],
+    432     sorted_trace_data.get_column(args["x"]),  # narwhals series
+    433     x.to_numpy(),  # numpy array
+    434     y.to_numpy(),  # numpy array
+    435     args["x"],
+    436     args["y"],
+    437     non_missing.to_numpy(),  # numpy array
+    438 )
+    439 assert len(y_out) == len(trace_patch["x"]), (
+    440     "missing-data-handling failure in trendline code"
+    441 )
+    442 trace_patch["y"] = y_out
+
+File C:\TCC_USP\tcc-usp-ibovespa-sentimento\venv\Lib\site-packages\plotly\express\trendline_functions\__init__.py:42, in ols(trendline_options, x_raw, x, y, x_label, y_label, non_missing)
+     36     if k not in valid_options:
+     37         raise ValueError(
+     38             "OLS trendline_options keys must be one of [%s] but got '%s'"
+     39             % (", ".join(valid_options), k)
+     40         )
+---> 42 import statsmodels.api as sm
+     44 add_constant = trendline_options.get("add_constant", True)
+     45 log_x = trendline_options.get("log_x", False)
+
+ModuleNotFoundError: No module named 'statsmodels'
