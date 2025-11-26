@@ -454,11 +454,11 @@ Contribuições são bem-vindas! Para contribuir:
 
 | | |
 |---|---|
-| **Aluno** | Anderson P. M. |
+| **Aluno** | Anderson Pantoja Machado |
 | **Curso** | MBA em Business Intelligence & Analytics |
 | **Instituição** | ECA/USP – Escola de Comunicações e Artes |
 | **Modalidade** | Projeto Aplicado em Business Intelligence e Analytics |
-| **Orientador** | _(a ser definido pela USP)_ |
+| **Orientador** | Vinícius Rocha Bíscaro |
 | **Repositório** | [github.com/AndersonPM15/tcc-usp-ibovespa-sentimento](https://github.com/AndersonPM15/tcc-usp-ibovespa-sentimento) |
 
 ---
