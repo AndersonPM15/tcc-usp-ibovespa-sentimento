@@ -1,0 +1,14 @@
+artifact_uri: ./mlruns/0/e11270c19c0d482aaf0f496a773b1d88/artifacts
+end_time: 1764184764981
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: e11270c19c0d482aaf0f496a773b1d88
+run_name: 09_lstm_real_pipeline
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764184764915
+status: 3
+tags: []
+user_id: ander
