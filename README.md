@@ -45,7 +45,7 @@ O projeto adota uma abordagem de **baselines transparentes e reprodutíveis**, p
 
 ### Resumo Técnico
 
-O projeto processa **notícias financeiras em português brasileiro** coletadas de múltiplas fontes (GDELT, portais de notícias) no período de **2018 a 2025**, totalizando aproximadamente **2.771 dias de cobertura**.
+O projeto processa **notícias financeiras em português brasileiro** coletadas de múltiplas fontes (GDELT, portais de notícias) no período de **2018 a 2024**, totalizando aproximadamente **2.556 dias de cobertura**.
 
 O pipeline transforma texto bruto em uma **matriz TF-IDF esparsa** agregada por dia, que alimenta modelos de classificação binária (alta/baixa do Ibovespa). A avaliação utiliza **validação walk-forward** com janelas expansíveis, simulando um cenário realista de previsão.
 
@@ -288,7 +288,7 @@ C:\TCC_USP\
 |---------|-----------|
 | `ibovespa.csv` | Série histórica do Ibovespa (yfinance) |
 | `news_multisource.parquet` | Notícias consolidadas de múltiplas fontes |
-| `gdelt_historical.parquet` | Dados históricos do GDELT (2018-2025) |
+| `gdelt_historical.parquet` | Dados históricos do GDELT (2018-2024) |
 
 ### `data_interim/` — Dados Intermediários
 
