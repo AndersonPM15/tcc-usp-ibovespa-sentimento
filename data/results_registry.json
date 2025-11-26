@@ -3422,5 +3422,17 @@
     "extra": {
       "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_151135_11_event_study_latency.ipynb"
     }
+  },
+  {
+    "timestamp": "2025-11-26T18:51:13.751765",
+    "model": "00_data_download",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.862503
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_155105_00_data_download.ipynb"
+    }
   }
 ]
