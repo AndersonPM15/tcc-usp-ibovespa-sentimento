@@ -1,4 +1,17 @@
 # Configurações principais do TCC USP (sentimento x Ibovespa)
+# ---------------------------------------------------------------
+# Revisão 26/11/2025: Adicionados caminhos base padronizados
+#   - BASE_PATH, DATA_RAW, DATA_PROCESSED, DATA_INTERIM, REPORTS_PATH
+#   - Caminhos dos arquivos_chave agora são relativos às pastas base
+# ---------------------------------------------------------------
+
+# Caminhos base do projeto
+paths:
+  BASE_PATH: "C:/TCC_USP"
+  DATA_RAW: "C:/TCC_USP/data_raw"
+  DATA_PROCESSED: "C:/TCC_USP/data_processed"
+  DATA_INTERIM: "C:/TCC_USP/data_interim"
+  REPORTS_PATH: "C:/TCC_USP/reports"
 
 periodo_estudo:
   start: "2018-01-01"
@@ -10,14 +23,14 @@ colunas_data:
   eventos: "event_day"
 
 arquivos_chave:
-  ibov_clean: data_processed/ibovespa_clean.csv
-  ibov_raw: data_raw/ibovespa.csv
-  news_clean: data_processed/news_clean.parquet
-  news_multisource: data_processed/news_multisource.parquet
-  tfidf_daily_matrix: data_processed/tfidf_daily_matrix.npz
-  tfidf_daily_vocab: data_processed/tfidf_daily_vocab.json
-  tfidf_daily_index: data_processed/tfidf_daily_index.csv
-  labels_y_daily: data_processed/labels_y_daily.csv
-  backtest_results: data_processed/18_backtest_results.csv
-  latency_events: data_processed/event_study_latency.csv
-  dashboard_final: data_processed/20_final_dashboard.html
+  ibov_clean: ibovespa_clean.csv
+  ibov_raw: ibovespa.csv
+  news_clean: news_clean.parquet
+  news_multisource: news_multisource.parquet
+  tfidf_daily_matrix: tfidf_daily_matrix.npz
+  tfidf_daily_vocab: tfidf_daily_vocab.json
+  tfidf_daily_index: tfidf_daily_index.csv
+  labels_y_daily: labels_y_daily.csv
+  backtest_results: 18_backtest_results.csv
+  latency_events: event_study_latency.csv
+  dashboard_final: 20_final_dashboard.html
