@@ -3482,5 +3482,549 @@
     "extra": {
       "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [3]\":\n---------------------------------------------------------------------------\nKeyError                                  Traceback (most recent call last)\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\indexes\\base.py:3812, in Index.get_loc(self, key)\n   3811 try:\n-> 3812     return self._engine.get_loc(casted_key)\n   3813 except KeyError as err:\n\nFile pandas/_libs/index.pyx:167, in pandas._libs.index.IndexEngine.get_loc()\n\nFile pandas/_libs/index.pyx:196, in pandas._libs.index.IndexEngine.get_loc()\n\nFile pandas/_libs/hashtable_class_helper.pxi:7088, in pandas._libs.hashtable.PyObjectHashTable.get_item()\n\nFile pandas/_libs/hashtable_class_helper.pxi:7096, in pandas._libs.hashtable.PyObjectHashTable.get_item()\n\nKeyError: 'data'\n\nThe above exception was the direct cause of the following exception:\n\nKeyError                                  Traceback (most recent call last)\nCell In[3], line 11\n      8 df_news = pd.read_csv(os.path.join(PROC_PATH, \"noticias_clean.csv\"))\n     10 # corrigir nomes das colunas\n---> 11 df_ibov[\"data\"] = pd.to_datetime(df_ibov[\"data\"])\n     12 df_news[\"data\"] = pd.to_datetime(df_news[\"data\"])\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\frame.py:4113, in DataFrame.__getitem__(self, key)\n   4111 if self.columns.nlevels > 1:\n   4112     return self._getitem_multilevel(key)\n-> 4113 indexer = self.columns.get_loc(key)\n   4114 if is_integer(indexer):\n   4115     indexer = [indexer]\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\indexes\\base.py:3819, in Index.get_loc(self, key)\n   3814     if isinstance(casted_key, slice) or (\n   3815         isinstance(casted_key, abc.Iterable)\n   3816         and any(isinstance(x, slice) for x in casted_key)\n   3817     ):\n   3818         raise InvalidIndexError(key)\n-> 3819     raise KeyError(key) from err\n   3820 except TypeError:\n   3821     # If we have a listlike key, _check_indexing_error will raise\n   3822     #  InvalidIndexError. Otherwise we fall through and re-raise\n   3823     #  the TypeError.\n   3824     self._check_indexing_error(key)\n\nKeyError: 'data'\n"
     }
+  },
+  {
+    "timestamp": "2025-11-26T19:16:29.245833",
+    "model": "00_data_download",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 6.325139
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_161622_00_data_download.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:16:37.636390",
+    "model": "01_preprocessing",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.731828
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_161629_01_preprocessing.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:16:47.937554",
+    "model": "02_baseline_logit",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 10.184933
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [3]\":\n---------------------------------------------------------------------------\nKeyError                                  Traceback (most recent call last)\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\indexes\\base.py:3812, in Index.get_loc(self, key)\n   3811 try:\n-> 3812     return self._engine.get_loc(casted_key)\n   3813 except KeyError as err:\n\nFile pandas/_libs/index.pyx:167, in pandas._libs.index.IndexEngine.get_loc()\n\nFile pandas/_libs/index.pyx:196, in pandas._libs.index.IndexEngine.get_loc()\n\nFile pandas/_libs/hashtable_class_helper.pxi:7088, in pandas._libs.hashtable.PyObjectHashTable.get_item()\n\nFile pandas/_libs/hashtable_class_helper.pxi:7096, in pandas._libs.hashtable.PyObjectHashTable.get_item()\n\nKeyError: 'data'\n\nThe above exception was the direct cause of the following exception:\n\nKeyError                                  Traceback (most recent call last)\nCell In[3], line 11\n      8 df_news = pd.read_csv(os.path.join(PROC_PATH, \"noticias_clean.csv\"))\n     10 # corrigir nomes das colunas\n---> 11 df_ibov[\"data\"] = pd.to_datetime(df_ibov[\"data\"])\n     12 df_news[\"data\"] = pd.to_datetime(df_news[\"data\"])\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\frame.py:4113, in DataFrame.__getitem__(self, key)\n   4111 if self.columns.nlevels > 1:\n   4112     return self._getitem_multilevel(key)\n-> 4113 indexer = self.columns.get_loc(key)\n   4114 if is_integer(indexer):\n   4115     indexer = [indexer]\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\indexes\\base.py:3819, in Index.get_loc(self, key)\n   3814     if isinstance(casted_key, slice) or (\n   3815         isinstance(casted_key, abc.Iterable)\n   3816         and any(isinstance(x, slice) for x in casted_key)\n   3817     ):\n   3818         raise InvalidIndexError(key)\n-> 3819     raise KeyError(key) from err\n   3820 except TypeError:\n   3821     # If we have a listlike key, _check_indexing_error will raise\n   3822     #  InvalidIndexError. Otherwise we fall through and re-raise\n   3823     #  the TypeError.\n   3824     self._check_indexing_error(key)\n\nKeyError: 'data'\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:16:56.215443",
+    "model": "03_tfidf_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 8.166538
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [3]\":\n---------------------------------------------------------------------------\nKeyError                                  Traceback (most recent call last)\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\indexes\\base.py:3812, in Index.get_loc(self, key)\n   3811 try:\n-> 3812     return self._engine.get_loc(casted_key)\n   3813 except KeyError as err:\n\nFile pandas/_libs/index.pyx:167, in pandas._libs.index.IndexEngine.get_loc()\n\nFile pandas/_libs/index.pyx:196, in pandas._libs.index.IndexEngine.get_loc()\n\nFile pandas/_libs/hashtable_class_helper.pxi:7088, in pandas._libs.hashtable.PyObjectHashTable.get_item()\n\nFile pandas/_libs/hashtable_class_helper.pxi:7096, in pandas._libs.hashtable.PyObjectHashTable.get_item()\n\nKeyError: 'data'\n\nThe above exception was the direct cause of the following exception:\n\nKeyError                                  Traceback (most recent call last)\nCell In[3], line 7\n      4 df_ibov = pd.read_csv(os.path.join(PROC_PATH, \"ibovespa_clean.csv\"))\n      5 df_news = pd.read_csv(os.path.join(PROC_PATH, \"noticias_clean.csv\"))\n----> 7 df_ibov[\"data\"] = pd.to_datetime(df_ibov[\"data\"])\n      8 df_news[\"data\"] = pd.to_datetime(df_news[\"data\"])\n     10 print(\"IBOV:\", df_ibov.shape, \"NEWS:\", df_news.shape)\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\frame.py:4113, in DataFrame.__getitem__(self, key)\n   4111 if self.columns.nlevels > 1:\n   4112     return self._getitem_multilevel(key)\n-> 4113 indexer = self.columns.get_loc(key)\n   4114 if is_integer(indexer):\n   4115     indexer = [indexer]\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\indexes\\base.py:3819, in Index.get_loc(self, key)\n   3814     if isinstance(casted_key, slice) or (\n   3815         isinstance(casted_key, abc.Iterable)\n   3816         and any(isinstance(x, slice) for x in casted_key)\n   3817     ):\n   3818         raise InvalidIndexError(key)\n-> 3819     raise KeyError(key) from err\n   3820 except TypeError:\n   3821     # If we have a listlike key, _check_indexing_error will raise\n   3822     #  InvalidIndexError. Otherwise we fall through and re-raise\n   3823     #  the TypeError.\n   3824     self._check_indexing_error(key)\n\nKeyError: 'data'\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:17:02.028946",
+    "model": "04_embeddings_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 5.713767
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [3]\":\n---------------------------------------------------------------------------\nKeyError                                  Traceback (most recent call last)\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\indexes\\base.py:3812, in Index.get_loc(self, key)\n   3811 try:\n-> 3812     return self._engine.get_loc(casted_key)\n   3813 except KeyError as err:\n\nFile pandas/_libs/index.pyx:167, in pandas._libs.index.IndexEngine.get_loc()\n\nFile pandas/_libs/index.pyx:196, in pandas._libs.index.IndexEngine.get_loc()\n\nFile pandas/_libs/hashtable_class_helper.pxi:7088, in pandas._libs.hashtable.PyObjectHashTable.get_item()\n\nFile pandas/_libs/hashtable_class_helper.pxi:7096, in pandas._libs.hashtable.PyObjectHashTable.get_item()\n\nKeyError: 'data'\n\nThe above exception was the direct cause of the following exception:\n\nKeyError                                  Traceback (most recent call last)\nCell In[3], line 7\n      4 df_ibov = pd.read_csv(os.path.join(PROC_PATH, \"ibovespa_clean.csv\"))\n      5 df_news = pd.read_csv(os.path.join(PROC_PATH, \"noticias_clean.csv\"))\n----> 7 df_ibov[\"data\"] = pd.to_datetime(df_ibov[\"data\"])\n      8 df_news[\"data\"] = pd.to_datetime(df_news[\"data\"])\n     10 print(\"IBOV:\", df_ibov.shape, \"NEWS:\", df_news.shape)\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\frame.py:4113, in DataFrame.__getitem__(self, key)\n   4111 if self.columns.nlevels > 1:\n   4112     return self._getitem_multilevel(key)\n-> 4113 indexer = self.columns.get_loc(key)\n   4114 if is_integer(indexer):\n   4115     indexer = [indexer]\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\indexes\\base.py:3819, in Index.get_loc(self, key)\n   3814     if isinstance(casted_key, slice) or (\n   3815         isinstance(casted_key, abc.Iterable)\n   3816         and any(isinstance(x, slice) for x in casted_key)\n   3817     ):\n   3818         raise InvalidIndexError(key)\n-> 3819     raise KeyError(key) from err\n   3820 except TypeError:\n   3821     # If we have a listlike key, _check_indexing_error will raise\n   3822     #  InvalidIndexError. Otherwise we fall through and re-raise\n   3823     #  the TypeError.\n   3824     self._check_indexing_error(key)\n\nKeyError: 'data'\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:17:06.512770",
+    "model": "05_data_collection_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 4.384893
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_161702_05_data_collection_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:17:13.291837",
+    "model": "06_preprocessing_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 6.678431
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_161706_06_preprocessing_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:17:23.272405",
+    "model": "07_tfidf_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 9.859024
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_161713_07_tfidf_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:18:48.342815",
+    "model": "08_embeddings_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 84.968947
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_161723_08_embeddings_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:19:24.882608",
+    "model": "09_lstm_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 36.440549
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [8]\":\n---------------------------------------------------------------------------\nIndexError                                Traceback (most recent call last)\nCell In[8], line 5\n      2 from tensorflow.keras.models import Sequential\n      3 from tensorflow.keras.layers import LSTM, Dense, Dropout\n----> 5 timesteps, features = X_seq.shape[1], X_seq.shape[2]\n      7 model = Sequential([\n      8     LSTM(64, input_shape=(timesteps, features)),\n      9     Dropout(0.3),\n   (...)     12     Dense(1, activation=\"sigmoid\")\n     13 ])\n     15 model.compile(optimizer=\"adam\", loss=\"binary_crossentropy\", metrics=[\"accuracy\"])\n\nIndexError: tuple index out of range\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:19:33.165600",
+    "model": "10_dashboard_results",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 8.177078
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_161924_10_dashboard_results.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:19:42.475274",
+    "model": "11_event_study_latency",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 9.20909
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [7]\":\n---------------------------------------------------------------------------\nValueError                                Traceback (most recent call last)\nCell In[7], line 38\n     32 else:\n     33     agg_fonte = (\n     34         df_events.groupby(\"fonte\", as_index=False)[\"t_half\"]\n     35         .agg([\"count\",\"median\",\"mean\"]).reset_index()\n     36         .rename(columns={\"count\":\"n_eventos\",\"median\":\"t_half_mediana\",\"mean\":\"t_half_media\"})\n     37     )\n---> 38     agg_fonte.columns = [\"fonte\",\"n_eventos\",\"t_half_mediana\",\"t_half_media\"]\n     40     agg_daypart = (\n     41         df_events.groupby(\"daypart\", as_index=False)[\"t_half\"]\n     42         .agg([\"count\",\"median\",\"mean\"]).reset_index()\n     43         .rename(columns={\"count\":\"n_eventos\",\"median\":\"t_half_mediana\",\"mean\":\"t_half_media\"})\n     44     )\n     45     agg_daypart.columns = [\"daypart\",\"n_eventos\",\"t_half_mediana\",\"t_half_media\"]\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\generic.py:6335, in NDFrame.__setattr__(self, name, value)\n   6333 try:\n   6334     object.__getattribute__(self, name)\n-> 6335     return object.__setattr__(self, name, value)\n   6336 except AttributeError:\n   6337     pass\n\nFile pandas/_libs/properties.pyx:69, in pandas._libs.properties.AxisProperty.__set__()\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\generic.py:817, in NDFrame._set_axis(self, axis, labels)\n    812 \"\"\"\n    813 This is called from the cython code when we set the `index` attribute\n    814 directly, e.g. `series.index = [1, 2, 3]`.\n    815 \"\"\"\n    816 labels = ensure_index(labels)\n--> 817 self._mgr.set_axis(axis, labels)\n    818 self._clear_item_cache()\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\internals\\managers.py:238, in BaseBlockManager.set_axis(self, axis, new_labels)\n    236 def set_axis(self, axis: AxisInt, new_labels: Index) -> None:\n    237     # Caller is responsible for ensuring we have an Index object.\n--> 238     self._validate_set_axis(axis, new_labels)\n    239     self.axes[axis] = new_labels\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\pandas\\core\\internals\\base.py:98, in DataManager._validate_set_axis(self, axis, new_labels)\n     95     pass\n     97 elif new_len != old_len:\n---> 98     raise ValueError(\n     99         f\"Length mismatch: Expected axis has {old_len} elements, new \"\n    100         f\"values have {new_len} elements\"\n    101     )\n\nValueError: Length mismatch: Expected axis has 5 elements, new values have 4 elements\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:38:10.281267",
+    "model": "00_data_download",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 4.951466
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_163805_00_data_download.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:38:19.017244",
+    "model": "01_preprocessing",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.994194
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_163811_01_preprocessing.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:38:24.318804",
+    "model": "02_baseline_logit",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 5.205364
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_163819_02_baseline_logit.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:38:33.624724",
+    "model": "03_tfidf_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 9.207347
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_163824_03_tfidf_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:39:23.366122",
+    "model": "04_embeddings_models",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 49.643285
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_163833_04_embeddings_models.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:39:29.638202",
+    "model": "05_data_collection_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 6.175508
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_163923_05_data_collection_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:39:36.860014",
+    "model": "06_preprocessing_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.044705
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_163929_06_preprocessing_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:39:42.100337",
+    "model": "07_tfidf_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 5.123892
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_163936_07_tfidf_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:40:16.726919",
+    "model": "08_embeddings_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 34.519545
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_163942_08_embeddings_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:40:51.252942",
+    "model": "09_lstm_real",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 34.428242
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_164016_09_lstm_real.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:40:59.108958",
+    "model": "10_dashboard_results",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 7.752423
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_164051_10_dashboard_results.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:41:03.897687",
+    "model": "11_event_study_latency",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 4.683965
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_164059_11_event_study_latency.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:54:33.319468",
+    "model": "13_etl_dedup",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 27.438037
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_165405_13_etl_dedup.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:55:31.021803",
+    "model": "14_preprocess_ptbr",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 56.706695
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_165434_14_preprocess_ptbr.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:55:44.078146",
+    "model": "15_features_tfidf_daily",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 12.921419
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_165531_15_features_tfidf_daily.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:07.475084",
+    "model": "logreg_l2",
+    "dataset": "tfidf_daily",
+    "metrics": {
+      "auc": 0.5015378221113882,
+      "mda": 0.5025773195876289
+    },
+    "extra": {
+      "dataset": "tfidf_daily",
+      "coverage": 0.7991761071060762,
+      "n_obs": 1552,
+      "auc_ci": [
+        0.4739878216337317,
+        0.5319980068370906
+      ],
+      "mda_ci": [
+        0.4800257731958763,
+        0.5277061855670103
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:08.006895",
+    "model": "rf_200",
+    "dataset": "tfidf_daily",
+    "metrics": {
+      "auc": 0.4912635078969243,
+      "mda": 0.5115979381443299
+    },
+    "extra": {
+      "dataset": "tfidf_daily",
+      "coverage": 0.7991761071060762,
+      "n_obs": 1552,
+      "auc_ci": [
+        0.46285592310485124,
+        0.5211218602628767
+      ],
+      "mda_ci": [
+        0.48838595360824744,
+        0.5341494845360825
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:14.865086",
+    "model": "16_models_tfidf_baselines",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 30.676281
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_165544_16_models_tfidf_baselines.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:21.364604",
+    "model": "logreg_l2",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": 0.012212402149714224,
+      "spearman_r": 0.01820983000600259
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 1552,
+      "anova_p": 0.18832324058973432
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:21.937402",
+    "model": "rf_200",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": -0.0068195680874665945,
+      "spearman_r": -0.00545422933284055
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 1552,
+      "anova_p": 0.466111321912718
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:28.250612",
+    "model": "17_sentiment_validation",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 0,
+      "duration_s": 13.274111
+    },
+    "extra": {
+      "error": "\n---------------------------------------------------------------------------\nException encountered at \"In [7]\":\n---------------------------------------------------------------------------\nModuleNotFoundError                       Traceback (most recent call last)\nCell In[7], line 4\n      1 # 6. Séries temporais e gráficos interativos\n      2 plots = {}\n----> 4 scatter_fig = px.scatter(\n      5     df,\n      6     x=\"sentiment\",\n      7     y=\"ret_next\",\n      8     color=\"model\",\n      9     trendline=\"ols\",\n     10     hover_data={\"day\": True, \"signal_bucket\": True},\n     11     title=\"Sentimento (prob) vs Retorno D+1\",\n     12 )\n     13 plots[\"scatter\"] = scatter_fig\n     14 scatter_fig.show()\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\plotly\\express\\_chart_types.py:69, in scatter(data_frame, x, y, color, symbol, size, hover_name, hover_data, custom_data, text, facet_row, facet_col, facet_col_wrap, facet_row_spacing, facet_col_spacing, error_x, error_x_minus, error_y, error_y_minus, animation_frame, animation_group, category_orders, labels, orientation, color_discrete_sequence, color_discrete_map, color_continuous_scale, range_color, color_continuous_midpoint, symbol_sequence, symbol_map, opacity, size_max, marginal_x, marginal_y, trendline, trendline_options, trendline_color_override, trendline_scope, log_x, log_y, range_x, range_y, render_mode, title, subtitle, template, width, height)\n     14 def scatter(\n     15     data_frame=None,\n     16     x=None,\n   (...)     63     height=None,\n     64 ) -> go.Figure:\n     65     \"\"\"\n     66     In a scatter plot, each row of `data_frame` is represented by a symbol\n     67     mark in 2D space.\n     68     \"\"\"\n---> 69     return make_figure(args=locals(), constructor=go.Scatter)\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\plotly\\express\\_core.py:2682, in make_figure(args, constructor, trace_patch, layout_patch)\n   2679     elif args[\"ecdfnorm\"] == \"percent\":\n   2680         group = group.with_columns((nw.col(var) / group_sum) * 100.0)\n-> 2682 patch, fit_results = make_trace_kwargs(\n   2683     args, trace_spec, group, mapping_labels.copy(), sizeref\n   2684 )\n   2685 trace.update(patch)\n   2686 if fit_results is not None:\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\plotly\\express\\_core.py:430, in make_trace_kwargs(args, trace_spec, trace_data, mapping_labels, sizeref)\n    427     trace_patch[\"x\"] = trace_patch[\"x\"].to_numpy()\n    429 trendline_function = trendline_functions[attr_value]\n--> 430 y_out, hover_header, fit_results = trendline_function(\n    431     args[\"trendline_options\"],\n    432     sorted_trace_data.get_column(args[\"x\"]),  # narwhals series\n    433     x.to_numpy(),  # numpy array\n    434     y.to_numpy(),  # numpy array\n    435     args[\"x\"],\n    436     args[\"y\"],\n    437     non_missing.to_numpy(),  # numpy array\n    438 )\n    439 assert len(y_out) == len(trace_patch[\"x\"]), (\n    440     \"missing-data-handling failure in trendline code\"\n    441 )\n    442 trace_patch[\"y\"] = y_out\n\nFile C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\venv\\Lib\\site-packages\\plotly\\express\\trendline_functions\\__init__.py:42, in ols(trendline_options, x_raw, x, y, x_label, y_label, non_missing)\n     36     if k not in valid_options:\n     37         raise ValueError(\n     38             \"OLS trendline_options keys must be one of [%s] but got '%s'\"\n     39             % (\", \".join(valid_options), k)\n     40         )\n---> 42 import statsmodels.api as sm\n     44 add_constant = trendline_options.get(\"add_constant\", True)\n     45 log_x = trendline_options.get(\"log_x\", False)\n\nModuleNotFoundError: No module named 'statsmodels'\n"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:33.878353",
+    "model": "logreg_l2",
+    "dataset": "backtest_daily",
+    "metrics": {
+      "cagr": 0.008903946076112002,
+      "sharpe": 0.741343669693607
+    },
+    "extra": {
+      "dataset": "backtest_daily",
+      "strategy": "long_only_60",
+      "total_return": 0.05611207146539554,
+      "max_dd": -0.0024818540879758544,
+      "hit_ratio": 0.002577319587628866,
+      "n_days": 1552
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:34.442655",
+    "model": "rf_200",
+    "dataset": "backtest_daily",
+    "metrics": {
+      "cagr": -0.03205542009232054,
+      "sharpe": -0.13276655896854556
+    },
+    "extra": {
+      "dataset": "backtest_daily",
+      "strategy": "long_only_55",
+      "total_return": -0.18180466277426743,
+      "max_dd": -0.3456373103446889,
+      "hit_ratio": 0.057345360824742266,
+      "n_days": 1552
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:39.693704",
+    "model": "18_backtest_simulation",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 11.325119
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_165628_18_backtest_simulation.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:42.142106",
+    "model": "19_future_extension",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 2.319694
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_165639_19_future_extension.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:54.040887",
+    "model": "dashboard_summary",
+    "dataset": "dashboard_consolidado",
+    "metrics": {
+      "auc": 0.5015378221113882,
+      "mda": 0.5025773195876289
+    },
+    "extra": {
+      "dataset": "dashboard_consolidado",
+      "model": "logreg_l2",
+      "best_sharpe": 0.741343669693607
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:56:57.329724",
+    "model": "20_final_dashboard_analysis",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 15.083752
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_165642_20_final_dashboard_analysis.ipynb"
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:59:46.646621",
+    "model": "logreg_l2",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": 0.012212402149714224,
+      "spearman_r": 0.01820983000600259
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 1552,
+      "anova_p": 0.18832324058973432
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:59:47.488317",
+    "model": "rf_200",
+    "dataset": "sentiment_validation",
+    "metrics": {
+      "pearson_r": -0.0068195680874665945,
+      "spearman_r": -0.00545422933284055
+    },
+    "extra": {
+      "dataset": "sentiment_validation",
+      "n_obs": 1552,
+      "anova_p": 0.466111321912718
+    }
+  },
+  {
+    "timestamp": "2025-11-26T19:59:59.727417",
+    "model": "17_sentiment_validation",
+    "dataset": "pipeline",
+    "metrics": {
+      "status": 1,
+      "duration_s": 24.68208
+    },
+    "extra": {
+      "output_notebook": "C:\\TCC_USP\\tcc-usp-ibovespa-sentimento\\notebooks\\_runs\\20251126_165935_17_sentiment_validation.ipynb"
+    }
   }
 ]
