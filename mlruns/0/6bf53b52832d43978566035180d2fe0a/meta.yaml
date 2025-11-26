@@ -1,0 +1,14 @@
+artifact_uri: ./mlruns/0/6bf53b52832d43978566035180d2fe0a/artifacts
+end_time: 1764185904411
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 6bf53b52832d43978566035180d2fe0a
+run_name: 02_baseline_logit_pipeline
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764185904352
+status: 3
+tags: []
+user_id: ander

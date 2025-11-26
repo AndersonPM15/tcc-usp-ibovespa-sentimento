@@ -11,13 +11,13 @@ from datetime import date
 # ==============================================================================
 
 START_DATE = date(2018, 1, 2)    # Primeiro pregão de 2018
-END_DATE = date(2025, 12, 31)    # Último pregão de 2025
+END_DATE = date(2024, 12, 31)    # Último pregão do período oficial
 
 # Formatos auxiliares para diferentes APIs/bibliotecas
 START_DATE_STR = "2018-01-02"
-END_DATE_STR = "2025-12-31"
+END_DATE_STR = "2024-12-31"
 START_DATE_GDELT = "20180102000000"  # GDELT format
-END_DATE_GDELT = "20251231235959"
+END_DATE_GDELT = "20241231235959"
 
 # ==============================================================================
 # PARÂMETROS DE MODELAGEM

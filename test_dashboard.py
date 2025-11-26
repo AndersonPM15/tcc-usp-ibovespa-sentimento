@@ -32,8 +32,8 @@ try:
         print(f"  DatePicker: {DATE_MIN.strftime('%Y-%m-%d')} → {DATE_MAX.strftime('%Y-%m-%d')}")
         
         # Check if it matches expected range
-        expected_start = "2018-01-01"
-        expected_end = "2025-01-31"
+        expected_start = "2018-01-02"
+        expected_end = "2024-12-31"
         
         date_min_str = DATE_MIN.strftime('%Y-%m-%d')
         date_max_str = DATE_MAX.strftime('%Y-%m-%d')

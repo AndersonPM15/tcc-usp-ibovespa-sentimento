@@ -1,0 +1,14 @@
+artifact_uri: ./mlruns/0/9c2f0d038a1844ef9ca32c75c3d3c991/artifacts
+end_time: 1764185963455
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 9c2f0d038a1844ef9ca32c75c3d3c991
+run_name: 04_embeddings_models_pipeline
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764185963399
+status: 3
+tags: []
+user_id: ander

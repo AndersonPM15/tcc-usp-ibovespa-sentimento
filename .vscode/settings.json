@@ -42,5 +42,6 @@
         "após",
         "encontrado",
         "levelname"
-    ]
+    ],
+    "chatgpt.openOnStartup": true
 }

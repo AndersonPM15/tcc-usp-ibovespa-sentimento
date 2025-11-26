@@ -1,0 +1,14 @@
+artifact_uri: ./mlruns/0/4d9981e2a6304c639966c0c08b658fbe/artifacts
+end_time: 1764184782572
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 4d9981e2a6304c639966c0c08b658fbe
+run_name: 11_event_study_latency_pipeline
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1764184782515
+status: 3
+tags: []
+user_id: ander
