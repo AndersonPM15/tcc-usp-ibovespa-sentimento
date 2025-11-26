@@ -22,15 +22,28 @@ colunas_data:
   noticias: "day"
   eventos: "event_day"
 
+# ---------------------------------------------------------------
+# arquivos_chave: Caminhos RELATIVOS a BASE_PATH (C:/TCC_USP)
+# ---------------------------------------------------------------
+# IMPORTANTE: Os notebooks do pipeline salvam em data_processed/ ou data_raw/.
+# A função get_arquivo() concatena BASE_PATH + caminho abaixo.
+# Portanto, os caminhos devem incluir a subpasta correta.
+#
+# Exemplo: ibov_clean → BASE_PATH/data_processed/ibovespa_clean.csv
+#                     → C:/TCC_USP/data_processed/ibovespa_clean.csv
+# ---------------------------------------------------------------
 arquivos_chave:
-  ibov_clean: ibovespa_clean.csv
-  ibov_raw: ibovespa.csv
-  news_clean: news_clean.parquet
-  news_multisource: news_multisource.parquet
-  tfidf_daily_matrix: tfidf_daily_matrix.npz
-  tfidf_daily_vocab: tfidf_daily_vocab.json
-  tfidf_daily_index: tfidf_daily_index.csv
-  labels_y_daily: labels_y_daily.csv
-  backtest_results: 18_backtest_results.csv
-  latency_events: event_study_latency.csv
-  dashboard_final: 20_final_dashboard.html
+  # Dados processados (gerados pelo pipeline, usados pelo dashboard)
+  ibov_clean: data_processed/ibovespa_clean.csv
+  news_clean: data_processed/news_clean.parquet
+  news_multisource: data_processed/news_multisource_clean.parquet
+  tfidf_daily_matrix: data_processed/tfidf_daily_matrix.npz
+  tfidf_daily_vocab: data_processed/tfidf_daily_vocab.json
+  tfidf_daily_index: data_processed/tfidf_daily_index.csv
+  labels_y_daily: data_processed/labels_y_daily.csv
+  backtest_results: data_processed/18_backtest_results.csv
+  latency_events: data_processed/event_study_latency.csv
+  dashboard_final: data_processed/20_final_dashboard.html
+  
+  # Dados brutos (downloads originais)
+  ibov_raw: data_raw/ibovespa.csv
