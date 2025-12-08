@@ -18,3 +18,4 @@ xgboost
 sentence-transformers
 tf-keras
 Unidecode
+pytest

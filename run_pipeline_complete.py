@@ -107,12 +107,13 @@ def run_notebook(notebook_path: Path, description: str, step_num: int) -> bool:
     start_time = datetime.now()
     
     cmd = [
-        "jupyter", "nbconvert",
-        "--to", "notebook",
-        "--execute",
-        "--inplace",
-        f"--ExecutePreprocessor.timeout={NOTEBOOK_TIMEOUT}",
-        str(notebook_path)
+        sys.executable,
+        "-m",
+        "papermill",
+        str(notebook_path),
+        str(notebook_path),
+        "-k",
+        "python3",
     ]
     
     try:
