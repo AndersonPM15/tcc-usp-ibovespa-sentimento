@@ -131,10 +131,222 @@ def load_latency_events() -> pd.DataFrame:
     return df
 
 
+def build_corr_sentiment_return_fig(start_date: str, end_date: str) -> go.Figure:
+    ibov_df = _filter_by_period(IBOV_DF, start_date, end_date)
+    oof_df = _safe_read_csv(OOF_PATH, parse_dates=["day"])
+
+    if ibov_df.empty or oof_df.empty:
+        return go.Figure().add_annotation(text="Dados insuficientes para calcular a correlação", showarrow=False)
+
+    ibov_df = ibov_df.sort_values("day").copy()
+    if "return_1d" not in ibov_df.columns:
+        if "return" in ibov_df.columns:
+            ibov_df["return_1d"] = ibov_df["return"]
+        else:
+            ibov_df["return_1d"] = ibov_df["close"].pct_change()
+    ibov_df = ibov_df[["day", "return_1d"]].dropna()
+
+    prob_candidates = [c for c in ["proba", "prob", "score"] if c in oof_df.columns]
+    prob_col = prob_candidates[0] if prob_candidates else None
+    if prob_col is None:
+        prob_col = next((c for c in oof_df.columns if c not in {"day", "model", "fold"} and pd.api.types.is_numeric_dtype(oof_df[c])), None)
+    if prob_col is None:
+        return go.Figure().add_annotation(text="Dados insuficientes para calcular a correlação", showarrow=False)
+
+    oof_df = oof_df.copy()
+    oof_df["day"] = pd.to_datetime(oof_df["day"])
+    if start_date and end_date:
+        oof_df = oof_df[(oof_df["day"] >= pd.to_datetime(start_date)) & (oof_df["day"] <= pd.to_datetime(end_date))]
+    sentiment_daily = (
+        oof_df.groupby("day")[prob_col]
+        .mean()
+        .reset_index()
+        .rename(columns={prob_col: "sentiment_score"})
+    )
+
+    merged = pd.merge(ibov_df, sentiment_daily, on="day", how="inner").dropna()
+    if merged.empty or len(merged) < 3:
+        return go.Figure().add_annotation(text="Dados insuficientes para calcular a correlação", showarrow=False)
+
+    corr_value = merged["return_1d"].corr(merged["sentiment_score"])
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=merged["sentiment_score"],
+            y=merged["return_1d"],
+            mode="markers",
+            marker=dict(color="#1f77b4", size=8, opacity=0.7),
+            name="Observações diárias",
+            hovertemplate="Sentimento=%{x:.3f}<br>Retorno=%{y:.3%}<extra></extra>",
+        )
+    )
+    fig.add_annotation(
+        xref="paper",
+        yref="paper",
+        x=0,
+        y=1.05,
+        showarrow=False,
+        text=f"Correlação de Pearson: {corr_value:.3f}" if pd.notna(corr_value) else "Correlação não disponível",
+        font=dict(color="#444", size=12),
+    )
+    fig.update_layout(
+        title="Correlação entre sentimento diário e retorno do Ibovespa",
+        xaxis_title="Sentimento médio diário",
+        yaxis_title="Retorno diário do Ibovespa",
+        template="plotly_white",
+        margin=dict(l=60, r=20, t=70, b=60),
+    )
+    return fig
+
+
+def build_latency_fig(start_date: str, end_date: str) -> go.Figure:
+    df = LATENCY_DF.copy()
+    if df.empty:
+        return go.Figure().add_annotation(text="Dados de latência não disponíveis", showarrow=False)
+
+    date_col = "event_day" if "event_day" in df.columns else None
+    if date_col and start_date and end_date:
+        df = df[
+            (pd.to_datetime(df[date_col]) >= pd.to_datetime(start_date))
+            & (pd.to_datetime(df[date_col]) <= pd.to_datetime(end_date))
+        ]
+    if df.empty:
+        return go.Figure().add_annotation(text="Dados de latência não disponíveis", showarrow=False)
+
+    metric_candidates = ["t_half_mediana", "t_half_media", "t_half", "latency", "car", "car_mean", "impact"]
+    metric = next((c for c in metric_candidates if c in df.columns), None)
+    if metric is None:
+        return go.Figure().add_annotation(text="Dados de latência não disponíveis", showarrow=False)
+
+    group_cols = []
+    if "fonte" in df.columns:
+        group_cols.append("fonte")
+    if "daypart" in df.columns:
+        group_cols.append("daypart")
+    if not group_cols:
+        return go.Figure().add_annotation(text="Dados de latência não disponíveis", showarrow=False)
+
+    fig = go.Figure()
+    label_y = f"Média de {metric}"
+    if len(group_cols) == 1:
+        agg = df.groupby(group_cols)[metric].mean().reset_index()
+        if agg.empty:
+            return go.Figure().add_annotation(text="Dados de latência não disponíveis", showarrow=False)
+        fig.add_trace(
+            go.Bar(
+                x=agg[group_cols[0]],
+                y=agg[metric],
+                marker_color="#3498db",
+                name=label_y,
+            )
+        )
+    else:
+        agg = df.groupby(group_cols)[metric].mean().reset_index()
+        if agg.empty:
+            return go.Figure().add_annotation(text="Dados de latência não disponíveis", showarrow=False)
+        for daypart, subdf in agg.groupby("daypart"):
+            fig.add_trace(
+                go.Bar(
+                    x=subdf["fonte"],
+                    y=subdf[metric],
+                    name=daypart,
+                )
+            )
+        fig.update_layout(barmode="group")
+
+    fig.update_layout(
+        title="Latência informacional por fonte de notícia",
+        xaxis_title="Fonte",
+        yaxis_title=label_y,
+        template="plotly_white",
+        margin=dict(l=60, r=20, t=60, b=60),
+    )
+    return fig
+
+
+def _pick_equity_columns(df: pd.DataFrame) -> tuple[str | None, str | None]:
+    strategy_candidates = [
+        "equity_strategy",
+        "strategy_equity",
+        "strategy",
+        "equity",
+        "portfolio",
+    ]
+    benchmark_candidates = [
+        "benchmark_equity",
+        "benchmark",
+        "buy_hold",
+        "bh",
+        "ibov_equity",
+    ]
+    strat_col = next((c for c in strategy_candidates if c in df.columns), None)
+    bench_col = next((c for c in benchmark_candidates if c in df.columns), None)
+    if strat_col and bench_col:
+        return strat_col, bench_col
+    numeric_cols = [c for c in df.columns if pd.api.types.is_numeric_dtype(df[c])]
+    for drop_col in ["cagr", "sharpe", "mdd", "vol"]:
+        if drop_col in numeric_cols:
+            numeric_cols.remove(drop_col)
+    if len(numeric_cols) >= 2:
+        return numeric_cols[0], numeric_cols[1]
+    return None, None
+
+
+def build_backtest_fig(model_value: str | None) -> go.Figure:
+    df = _safe_read_csv(BACKTEST_PATH)
+    if df.empty:
+        return go.Figure().add_annotation(text="Resultados de backtest não disponíveis", showarrow=False)
+
+    date_col = next((c for c in ["date", "day", "Data", "data"] if c in df.columns), None)
+    if date_col is None:
+        return go.Figure().add_annotation(text="Resultados de backtest não disponíveis", showarrow=False)
+    df[date_col] = pd.to_datetime(df[date_col])
+
+    if "model" in df.columns:
+        chosen_model = model_value or (df["model"].dropna().iloc[0] if not df["model"].dropna().empty else None)
+        if chosen_model:
+            df = df[df["model"] == chosen_model]
+
+    strat_col, bench_col = _pick_equity_columns(df)
+    if strat_col is None or bench_col is None:
+        return go.Figure().add_annotation(text="Resultados de backtest não disponíveis", showarrow=False)
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=df[date_col],
+            y=df[strat_col],
+            mode="lines",
+            name="Estratégia (sentimento)",
+            line=dict(color="#2c3e50", width=2),
+        )
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=df[date_col],
+            y=df[bench_col],
+            mode="lines",
+            name="Benchmark",
+            line=dict(color="#e67e22", width=2, dash="dash"),
+        )
+    )
+    fig.update_layout(
+        title="Curva de patrimônio – estratégia de sentimento vs. benchmark",
+        xaxis_title="Data",
+        yaxis_title="Valor normalizado da carteira",
+        template="plotly_white",
+        legend=dict(orientation="h", y=1.1, x=0),
+        margin=dict(l=60, r=20, t=70, b=60),
+    )
+    return fig
+
+
 IBOV_DF = load_ibov()
 SENTIMENT_DF = load_sentiment()
 RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
+backtest_df_for_models = _safe_read_csv(BACKTEST_PATH)
+BACKTEST_MODELS = sorted(backtest_df_for_models["model"].dropna().unique()) if not backtest_df_for_models.empty and "model" in backtest_df_for_models.columns else []
 
 # Usar constantes do plano de pesquisa como limites (2018-01-02 a 2024-12-31)
 # FIXO: nunca mais mudar esses valores automaticamente
@@ -349,6 +561,60 @@ app.layout = html.Div(
                         }
                     ],
                 ),
+            ],
+        ),
+
+        # Card 5: Análises adicionais
+        html.Div(
+            style={
+                "backgroundColor": "white",
+                "padding": "20px",
+                "borderRadius": "8px",
+                "marginBottom": "25px",
+                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
+            },
+            children=[
+                html.Div([
+                    html.H3("Correlação Sentimento × Retorno Diário", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
+                    html.P("Relação entre o sentimento médio diário das notícias e o retorno diário do Ibovespa.",
+                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
+                ]),
+                dcc.Graph(id="scatter-sentiment-return", config={"displayModeBar": True}),
+                html.Hr(style={"margin": "30px 0"}),
+                html.Div([
+                    html.H3("Latência Informacional", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
+                    html.P("Métrica de latência/impacto agregada por fonte (e faixa de horário, se disponível).",
+                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
+                ]),
+                dcc.Graph(id="bar-latency-source", config={"displayModeBar": True}),
+            ],
+        ),
+
+        # Card 6: Backtest
+        html.Div(
+            style={
+                "backgroundColor": "white",
+                "padding": "20px",
+                "borderRadius": "8px",
+                "marginBottom": "25px",
+                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
+            },
+            children=[
+                html.Div(
+                    style={"display": "flex", "justifyContent": "space-between", "alignItems": "center", "marginBottom": "15px"},
+                    children=[
+                        html.H3("Backtest – Curva de Patrimônio", style={"marginTop": "0", "marginBottom": "0", "color": "#2c3e50"}),
+                        dcc.Dropdown(
+                            id="backtest-model-dropdown",
+                            options=[{"label": m, "value": m} for m in BACKTEST_MODELS],
+                            value=BACKTEST_MODELS[0] if BACKTEST_MODELS else None,
+                            placeholder="Selecione o modelo do backtest",
+                            style={"width": "280px"},
+                            clearable=True,
+                        ),
+                    ],
+                ),
+                dcc.Graph(id="line-backtest-equity", config={"displayModeBar": True}),
             ],
         ),
     ],
@@ -583,6 +849,21 @@ def update_dashboard(start_date, end_date, selected_models, metric):
     metric_badge_text = f"📊 Métrica: {metric_labels.get(metric, metric.upper())}"
     
     return ibov_fig, sentiment_fig, comparison_fig, table_df.to_dict("records"), indicator_content, metric_badge_text
+
+
+@app.callback(
+    Output("scatter-sentiment-return", "figure"),
+    Output("bar-latency-source", "figure"),
+    Output("line-backtest-equity", "figure"),
+    Input("date-range", "start_date"),
+    Input("date-range", "end_date"),
+    Input("backtest-model-dropdown", "value"),
+)
+def update_additional_graphs(start_date, end_date, backtest_model):
+    corr_fig = build_corr_sentiment_return_fig(start_date, end_date)
+    latency_fig = build_latency_fig(start_date, end_date)
+    backtest_fig = build_backtest_fig(backtest_model)
+    return corr_fig, latency_fig, backtest_fig
 
 
 # ------------------------------------------------------------------------------
