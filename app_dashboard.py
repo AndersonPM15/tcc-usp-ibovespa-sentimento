@@ -12,15 +12,19 @@ and exposes interactive filters for period, modelo e métrica.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import List, Tuple
 
 import pandas as pd
 import plotly.graph_objects as go
-from dash import Dash, Input, Output, dash_table, dcc, html
+from dash import Dash, Input, Output, State, dash_table, dcc, html, callback_context
 
 from src.config import loader as cfg
 from src.config.constants import START_DATE, END_DATE
+
+# Porta configurável via variável de ambiente
+DASH_PORT = int(os.getenv("DASH_PORT", "8050"))
 from src.io import paths
 
 # ------------------------------------------------------------------------------
@@ -134,169 +138,207 @@ def load_latency_events() -> pd.DataFrame:
 
 
 def build_corr_sentiment_return_fig(start_date: str, end_date: str) -> go.Figure:
-    """Scatter de correlacao entre sentimento diario e retorno do Ibovespa."""
+    """Scatter de correlação entre sentimento diário e retorno do Ibovespa."""
     if IBOV_DF.empty:
-        return go.Figure().add_annotation(text="Dados insuficientes para calcular a correlacao", showarrow=False)
+        return _empty_figure_with_message("Dados do Ibovespa não disponíveis para correlação")
 
     ibov_df = IBOV_DF.copy()
-    if "date" not in ibov_df.columns:
-        return go.Figure().add_annotation(text="Coluna 'date' nao encontrada no Ibovespa", showarrow=False)
-    if "close" not in ibov_df.columns and "adj_close" not in ibov_df.columns:
-        return go.Figure().add_annotation(text="Preco de fechamento ausente no Ibovespa", showarrow=False)
+    
+    # Garantir coluna close
     if "close" not in ibov_df.columns and "adj_close" in ibov_df.columns:
         ibov_df["close"] = ibov_df["adj_close"]
-
-    ibov_df["date"] = pd.to_datetime(ibov_df["date"], errors="coerce")
-    ibov_df = ibov_df.dropna(subset=["date"])
-    if start_date and end_date:
-        ibov_df = ibov_df[(ibov_df["date"] >= pd.to_datetime(start_date)) & (ibov_df["date"] <= pd.to_datetime(end_date))]
-    ibov_df = ibov_df.sort_values("date")
+    if "close" not in ibov_df.columns:
+        return _empty_figure_with_message("Preço de fechamento ausente no Ibovespa")
+    
+    # Garantir coluna day
+    if "day" not in ibov_df.columns and "date" in ibov_df.columns:
+        ibov_df["day"] = pd.to_datetime(ibov_df["date"], errors="coerce")
+    if "day" not in ibov_df.columns:
+        return _empty_figure_with_message("Coluna de data não encontrada no Ibovespa")
+    
+    ibov_df["day"] = pd.to_datetime(ibov_df["day"], errors="coerce")
+    ibov_df = ibov_df.dropna(subset=["day"])
+    
+    # Filtrar por período com proteção anti-2025
+    start_dt = pd.to_datetime(start_date) if start_date else pd.Timestamp(START_DATE)
+    end_dt = pd.to_datetime(end_date) if end_date else pd.Timestamp(END_DATE)
+    hard_cap = pd.Timestamp(END_DATE)
+    if end_dt > hard_cap:
+        end_dt = hard_cap
+    
+    ibov_df = ibov_df[(ibov_df["day"] >= start_dt) & (ibov_df["day"] <= end_dt)]
+    ibov_df = ibov_df.sort_values("day")
+    
     if ibov_df.empty:
-        return go.Figure().add_annotation(text="Dados insuficientes para calcular a correlacao", showarrow=False)
+        return _empty_figure_with_message("Sem dados do Ibovespa no período selecionado")
 
-    if "return_1d" not in ibov_df.columns:
-        ibov_df["return_1d"] = ibov_df["close"].pct_change()
-    ibov_df["day"] = ibov_df["date"].dt.normalize()
-    ibov_df = ibov_df[["day", "return_1d"]].dropna()
-    if ibov_df.empty:
-        return go.Figure().add_annotation(text="Dados insuficientes para calcular a correlacao", showarrow=False)
+    # Calcular retorno diário
+    ibov_df["return_1d"] = ibov_df["close"].pct_change()
+    ibov_ret = ibov_df[["day", "return_1d"]].dropna()
+    
+    if ibov_ret.empty:
+        return _empty_figure_with_message("Dados insuficientes para calcular retornos")
 
-    oof_df = _safe_read_csv(OOF_PATH)
-    if oof_df.empty:
-        return go.Figure().add_annotation(text="Dados insuficientes para calcular a correlacao", showarrow=False)
+    # Carregar sentimento
+    if SENTIMENT_DF.empty:
+        return _empty_figure_with_message("Dados de sentimento não disponíveis para correlação")
+    
+    sentiment_df = SENTIMENT_DF.copy()
+    sentiment_df["day"] = pd.to_datetime(sentiment_df["day"], errors="coerce")
+    sentiment_df = sentiment_df[(sentiment_df["day"] >= start_dt) & (sentiment_df["day"] <= end_dt)]
+    
+    if sentiment_df.empty:
+        return _empty_figure_with_message("Sem dados de sentimento no período selecionado")
 
-    if "day" in oof_df.columns:
-        oof_df["day"] = pd.to_datetime(oof_df["day"], errors="coerce").dt.normalize()
-        date_col = "day"
-    elif "date" in oof_df.columns:
-        oof_df["day"] = pd.to_datetime(oof_df["date"], errors="coerce").dt.normalize()
-        date_col = "day"
-    else:
-        return go.Figure().add_annotation(text="Coluna de data nao encontrada no OOF de sentimento", showarrow=False)
-
-    prob_candidates = [c for c in ["proba", "prob", "score"] if c in oof_df.columns]
-    prob_col = prob_candidates[0] if prob_candidates else None
-    if prob_col is None:
-        prob_col = next(
-            (c for c in oof_df.columns if c not in {"day", "model", "fold", "date"} and pd.api.types.is_numeric_dtype(oof_df[c])),
-            None,
-        )
-    if prob_col is None:
-        return go.Figure().add_annotation(text="Colunas de probabilidade de sentimento nao encontradas", showarrow=False)
-
-    oof_df = oof_df.dropna(subset=[date_col])
-    if start_date and end_date:
-        oof_df = oof_df[(oof_df[date_col] >= pd.to_datetime(start_date)) & (oof_df[date_col] <= pd.to_datetime(end_date))]
-    if oof_df.empty:
-        return go.Figure().add_annotation(text="Dados insuficientes para calcular a correlacao", showarrow=False)
-
-    sentiment_daily = (
-        oof_df.groupby("day")[prob_col]
-        .mean()
-        .reset_index()
-        .rename(columns={prob_col: "sentiment_score"})
-    )
-
-    merged = pd.merge(ibov_df, sentiment_daily, on="day", how="inner").dropna()
+    # Merge por dia
+    merged = pd.merge(ibov_ret, sentiment_df[["day", "sentiment"]], on="day", how="inner").dropna()
+    
     if merged.empty or len(merged) < 3:
-        return go.Figure().add_annotation(text="Dados insuficientes para calcular a correlacao", showarrow=False)
+        return _empty_figure_with_message("Dados insuficientes para calcular a correlação (mínimo 3 observações)")
 
-    corr_value = merged["return_1d"].corr(merged["sentiment_score"])
+    corr_value = merged["return_1d"].corr(merged["sentiment"])
+    
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
-            x=merged["sentiment_score"],
+            x=merged["sentiment"],
             y=merged["return_1d"],
             mode="markers",
             marker=dict(color="#1f77b4", size=8, opacity=0.7),
-            name="Observacoes diarias",
+            name="Observações diárias",
             hovertemplate="Sentimento=%{x:.3f}<br>Retorno=%{y:.3%}<extra></extra>",
         )
     )
+    
+    # Linha de tendência simples (regressão linear)
+    if len(merged) >= 5:
+        import numpy as np
+        z = np.polyfit(merged["sentiment"], merged["return_1d"], 1)
+        p = np.poly1d(z)
+        x_line = [merged["sentiment"].min(), merged["sentiment"].max()]
+        y_line = [p(x) for x in x_line]
+        fig.add_trace(
+            go.Scatter(
+                x=x_line,
+                y=y_line,
+                mode="lines",
+                line=dict(color="#e74c3c", width=2, dash="dash"),
+                name="Tendência",
+            )
+        )
+    
+    corr_text = f"r = {corr_value:.3f}" if pd.notna(corr_value) else "r = N/A"
+    n_obs = len(merged)
+    
     fig.add_annotation(
-        xref="paper",
-        yref="paper",
-        x=0,
-        y=1.05,
+        xref="paper", yref="paper",
+        x=0.02, y=0.98,
         showarrow=False,
-        text=f"Correlacao de Pearson: {corr_value:.3f}" if pd.notna(corr_value) else "Correlacao nao disponivel",
-        font=dict(color="#444", size=12),
+        text=f"Correlação de Pearson: {corr_text}<br>N = {n_obs} observações",
+        font=dict(color="#2c3e50", size=12),
+        bgcolor="rgba(255,255,255,0.8)",
+        borderpad=4,
+        align="left",
     )
+    
     fig.update_layout(
-        title="Correlacao entre sentimento diario e retorno do Ibovespa",
-        xaxis_title="Sentimento medio diario",
-        yaxis_title="Retorno diario do Ibovespa",
+        title="Correlação entre Sentimento Diário e Retorno do Ibovespa",
+        xaxis_title="Sentimento Médio Diário",
+        yaxis_title="Retorno Diário do Ibovespa",
         template="plotly_white",
         margin=dict(l=60, r=20, t=70, b=60),
+        showlegend=True,
+        legend=dict(orientation="h", y=-0.15, x=0),
     )
     return fig
 
 
 
 def build_latency_fig(start_date: str, end_date: str) -> go.Figure:
-    """Barra de latencia informacional por fonte/daypart."""
+    """Barra de latência informacional por fonte/daypart."""
     df = LATENCY_DF.copy()
     if df.empty:
-        return go.Figure().add_annotation(text="Dados de latencia nao disponiveis", showarrow=False)
+        return _empty_figure_with_message("Arquivo de latência não disponível.\nRode o notebook 11 ou o pipeline para gerar os dados.")
 
+    # Identificar coluna de data e aplicar filtro anti-2025
     date_col = next((c for c in ["event_day", "date", "day"] if c in df.columns), None)
     if date_col:
         df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
         df = df.dropna(subset=[date_col])
-        if start_date and end_date:
-            df = df[(df[date_col] >= pd.to_datetime(start_date)) & (df[date_col] <= pd.to_datetime(end_date))]
-    else:
-        # Dataset nao tem coluna de data clara; nenhum filtro temporal aplicado.
-        pass
+        
+        start_dt = pd.to_datetime(start_date) if start_date else pd.Timestamp(START_DATE)
+        end_dt = pd.to_datetime(end_date) if end_date else pd.Timestamp(END_DATE)
+        hard_cap = pd.Timestamp(END_DATE)
+        if end_dt > hard_cap:
+            end_dt = hard_cap
+        
+        df = df[(df[date_col] >= start_dt) & (df[date_col] <= end_dt)]
 
     if df.empty:
-        return go.Figure().add_annotation(text="Dados de latencia nao disponiveis", showarrow=False)
+        return _empty_figure_with_message("Sem dados de latência no período selecionado")
 
+    # Identificar métrica de latência
     metric_candidates = ["t_half_mediana", "t_half_media", "t_half", "latency", "car", "car_mean", "impact"]
-    metric = next((c for c in metric_candidates if c in df.columns), None)
-    if metric is None:
-        return go.Figure().add_annotation(text="Dados de latencia nao disponiveis", showarrow=False)
+    metric_col = next((c for c in metric_candidates if c in df.columns), None)
+    if metric_col is None:
+        return _empty_figure_with_message("Métrica de latência não encontrada no arquivo")
 
+    # Identificar colunas de agrupamento
     group_cols: list[str] = []
     if "fonte" in df.columns:
         group_cols.append("fonte")
+    elif "source" in df.columns:
+        df["fonte"] = df["source"]
+        group_cols.append("fonte")
     if "daypart" in df.columns:
         group_cols.append("daypart")
+    
     if not group_cols:
-        return go.Figure().add_annotation(text="Dados de latencia nao disponiveis", showarrow=False)
+        return _empty_figure_with_message("Colunas de agrupamento (fonte/daypart) não encontradas")
 
-    agg = df.groupby(group_cols, dropna=False)[metric].mean().reset_index()
+    agg = df.groupby(group_cols, dropna=False)[metric_col].mean().reset_index()
     if agg.empty:
-        return go.Figure().add_annotation(text="Dados de latencia nao disponiveis", showarrow=False)
+        return _empty_figure_with_message("Sem dados agregados de latência")
 
     fig = go.Figure()
-    label_y = f"Media de {metric}"
+    metric_label = metric_col.replace("_", " ").title()
+    
     if len(group_cols) == 1:
+        # Ordenar por valor para melhor visualização
+        agg_sorted = agg.sort_values(metric_col, ascending=False)
         fig.add_trace(
             go.Bar(
-                x=agg[group_cols[0]],
-                y=agg[metric],
+                x=agg_sorted[group_cols[0]],
+                y=agg_sorted[metric_col],
                 marker_color="#3498db",
-                name=label_y,
+                name=metric_label,
+                text=[f"{v:.2f}" for v in agg_sorted[metric_col]],
+                textposition="outside",
             )
         )
     else:
+        # Múltiplos grupos (fonte + daypart)
         for daypart, subdf in agg.groupby("daypart"):
+            subdf_sorted = subdf.sort_values(metric_col, ascending=False)
             fig.add_trace(
                 go.Bar(
-                    x=subdf["fonte"],
-                    y=subdf[metric],
-                    name=daypart,
+                    x=subdf_sorted["fonte"],
+                    y=subdf_sorted[metric_col],
+                    name=str(daypart),
+                    text=[f"{v:.2f}" for v in subdf_sorted[metric_col]],
+                    textposition="outside",
                 )
             )
         fig.update_layout(barmode="group")
 
     fig.update_layout(
-        title="Latencia informacional por fonte de noticia",
+        title="Latência Informacional por Fonte de Notícia",
         xaxis_title="Fonte",
-        yaxis_title=label_y,
+        yaxis_title=f"Média de {metric_label}",
         template="plotly_white",
-        margin=dict(l=60, r=20, t=60, b=60),
+        margin=dict(l=60, r=20, t=60, b=80),
+        xaxis=dict(tickangle=-45),
+        showlegend=len(group_cols) > 1,
     )
     return fig
 
@@ -330,62 +372,132 @@ def _pick_equity_columns(df: pd.DataFrame) -> tuple[str | None, str | None]:
 
 
 
-def build_backtest_fig(model_value: str | None) -> go.Figure:
-    """Curva de patrimonio da estrategia de sentimento versus benchmark."""
+def build_backtest_fig(model_value: str | None, start_date: str = None, end_date: str = None) -> go.Figure:
+    """Curva de patrimônio da estratégia de sentimento versus benchmark."""
     df = _safe_read_csv(BACKTEST_PATH)
     if df.empty:
-        return go.Figure().add_annotation(text="Resultados de backtest nao disponiveis", showarrow=False)
+        return _empty_figure_with_message("Backtest não disponível.\nRode o notebook 18 para gerar os dados.")
 
+    # Identificar coluna de data
     date_col = next((c for c in ["date", "day", "Data", "data"] if c in df.columns), None)
     if date_col is None:
-        return go.Figure().add_annotation(text="Resultados de backtest nao disponiveis", showarrow=False)
+        # Arquivo existe mas não tem série temporal (apenas métricas agregadas)
+        return _empty_figure_with_message(
+            "Arquivo de backtest contém apenas métricas agregadas.\n"
+            "Para visualizar curvas de patrimônio, gere um arquivo\n"
+            "com colunas: date, equity_strategy, benchmark."
+        )
 
     df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
     df = df.dropna(subset=[date_col])
+    
+    # Aplicar filtro anti-2025
+    start_dt = pd.to_datetime(start_date) if start_date else pd.Timestamp(START_DATE)
+    end_dt = pd.to_datetime(end_date) if end_date else pd.Timestamp(END_DATE)
+    hard_cap = pd.Timestamp(END_DATE)
+    if end_dt > hard_cap:
+        end_dt = hard_cap
+    
+    df = df[(df[date_col] >= start_dt) & (df[date_col] <= end_dt)]
+    
     if df.empty:
-        return go.Figure().add_annotation(text="Resultados de backtest nao disponiveis", showarrow=False)
+        return _empty_figure_with_message("Sem dados de backtest no período selecionado")
 
+    # Filtrar por modelo se especificado
+    chosen_model = None
     if "model" in df.columns:
-        chosen_model = model_value or (df["model"].dropna().iloc[0] if not df["model"].dropna().empty else None)
-        if chosen_model is not None:
+        available_models = df["model"].dropna().unique().tolist()
+        if model_value and model_value in available_models:
+            chosen_model = model_value
+        elif available_models:
+            chosen_model = available_models[0]
+        
+        if chosen_model:
             df = df[df["model"] == chosen_model]
             if df.empty:
-                return go.Figure().add_annotation(text="Resultados de backtest nao disponiveis", showarrow=False)
+                return _empty_figure_with_message(f"Sem dados para o modelo '{chosen_model}'")
 
     strat_col, bench_col = _pick_equity_columns(df)
     if strat_col is None or bench_col is None:
-        return go.Figure().add_annotation(text="Resultados de backtest nao disponiveis", showarrow=False)
+        return _empty_figure_with_message("Colunas de patrimônio não encontradas no backtest")
 
-    curves = df[[date_col, strat_col, bench_col]].dropna(how="all")
+    curves = df[[date_col, strat_col, bench_col]].dropna(how="all").sort_values(date_col)
     if curves.empty:
-        return go.Figure().add_annotation(text="Resultados de backtest nao disponiveis", showarrow=False)
+        return _empty_figure_with_message("Sem dados de curva de patrimônio")
 
     fig = go.Figure()
+    
+    # Normalizar para base 100 para comparação
+    if len(curves) > 0:
+        strat_base = curves[strat_col].iloc[0]
+        bench_base = curves[bench_col].iloc[0]
+        
+        if strat_base != 0 and bench_base != 0:
+            curves["strat_norm"] = (curves[strat_col] / strat_base) * 100
+            curves["bench_norm"] = (curves[bench_col] / bench_base) * 100
+            strat_col_plot = "strat_norm"
+            bench_col_plot = "bench_norm"
+            y_title = "Valor da Carteira (base 100)"
+        else:
+            strat_col_plot = strat_col
+            bench_col_plot = bench_col
+            y_title = "Valor da Carteira"
+    else:
+        strat_col_plot = strat_col
+        bench_col_plot = bench_col
+        y_title = "Valor da Carteira"
+    
     fig.add_trace(
         go.Scatter(
             x=curves[date_col],
-            y=curves[strat_col],
+            y=curves[strat_col_plot],
             mode="lines",
-            name="Estrategia (sentimento)",
-            line=dict(color="#2c3e50", width=2),
+            name="Estratégia (Sentimento)",
+            line=dict(color="#2c3e50", width=2.5),
+            hovertemplate="%{x|%Y-%m-%d}<br>Estratégia: %{y:.2f}<extra></extra>",
         )
     )
     fig.add_trace(
         go.Scatter(
             x=curves[date_col],
-            y=curves[bench_col],
+            y=curves[bench_col_plot],
             mode="lines",
-            name="Benchmark",
-            line=dict(color="#e67e22", width=2, dash="dash"),
+            name="Benchmark (Buy & Hold)",
+            line=dict(color="#e67e22", width=2.5, dash="dash"),
+            hovertemplate="%{x|%Y-%m-%d}<br>Benchmark: %{y:.2f}<extra></extra>",
         )
     )
+    
+    # Calcular retorno acumulado final
+    if len(curves) > 1:
+        strat_final = curves[strat_col_plot].iloc[-1]
+        bench_final = curves[bench_col_plot].iloc[-1]
+        strat_ret = ((strat_final / 100) - 1) * 100 if strat_col_plot == "strat_norm" else 0
+        bench_ret = ((bench_final / 100) - 1) * 100 if bench_col_plot == "bench_norm" else 0
+        
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=0.02, y=0.98,
+            showarrow=False,
+            text=f"Retorno Acumulado:<br>Estratégia: {strat_ret:+.1f}%<br>Benchmark: {bench_ret:+.1f}%",
+            font=dict(color="#2c3e50", size=11),
+            bgcolor="rgba(255,255,255,0.9)",
+            borderpad=4,
+            align="left",
+        )
+    
+    title = "Curva de Patrimônio - Estratégia de Sentimento vs. Benchmark"
+    if chosen_model:
+        title += f" ({chosen_model})"
+    
     fig.update_layout(
-        title="Curva de patrimonio - estrategia de sentimento vs. benchmark",
+        title=title,
         xaxis_title="Data",
-        yaxis_title="Valor normalizado da carteira",
+        yaxis_title=y_title,
         template="plotly_white",
-        legend=dict(orientation="h", y=1.1, x=0),
-        margin=dict(l=60, r=20, t=70, b=60),
+        legend=dict(orientation="h", y=-0.15, x=0),
+        margin=dict(l=60, r=20, t=70, b=80),
+        hovermode="x unified",
     )
     return fig
 
@@ -411,17 +523,13 @@ METRIC_OPTIONS = [
     {"label": "Sharpe", "value": "sharpe"},
 ]
 
-# Pequeno log de sanidade para intervalos e contagens de dados
-if not IBOV_DF.empty:
-    print(
-        f"[DEBUG] IBOV_DF range: {IBOV_DF['day'].min().date()} -> {IBOV_DF['day'].max().date()} ({len(IBOV_DF)} linhas)"
-    )
-if not SENTIMENT_DF.empty:
-    print(
-        f"[DEBUG] SENTIMENT_DF range: {SENTIMENT_DF['day'].min().date()} -> {SENTIMENT_DF['day'].max().date()} ({len(SENTIMENT_DF)} linhas)"
-    )
+# ------------------------------------------------------------------------------
+# Dash App
+# ------------------------------------------------------------------------------
 
 app = Dash(__name__)
+app.title = "Dashboard Sentimento x Ibovespa"
+
 
 def _build_controls():
     return html.Div(
@@ -494,6 +602,29 @@ app.layout = html.Div(
                 html.P(
                     "Análise Preditiva com Modelos de Machine Learning | TCC USP",
                     style={"fontSize": "1.1em", "color": "#666", "marginTop": "0"}
+                ),
+            ],
+        ),
+        
+        # Painel de Depuração (visível para diagnóstico)
+        html.Details(
+            open=False,
+            style={
+                "backgroundColor": "#fff3cd",
+                "padding": "15px 20px",
+                "borderRadius": "8px",
+                "marginBottom": "20px",
+                "border": "1px solid #ffc107",
+            },
+            children=[
+                html.Summary(
+                    "🔧 Painel de Depuração (clique para expandir)",
+                    style={"cursor": "pointer", "fontWeight": "bold", "color": "#856404"}
+                ),
+                html.Div(
+                    id="debug-panel",
+                    style={"marginTop": "15px", "fontFamily": "monospace", "fontSize": "0.85em"},
+                    children=[html.Span("Aguardando primeiro callback...", style={"color": "#666"})]
                 ),
             ],
         ),
@@ -678,11 +809,65 @@ app.layout = html.Div(
 
 
 def _filter_by_period(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
-    if df.empty or start is None or end is None:
+    """
+    Filtra DataFrame por período temporal com proteção anti-2025.
+    
+    - Usa coluna 'day' se existir, senão 'date'
+    - Aplica hard cap em END_DATE (2024-12-31) independente do DatePicker
+    - Retorna cópia do DataFrame filtrado
+    """
+    if df.empty:
         return df
-    mask = (df["day"] >= pd.to_datetime(start)) & (df["day"] <= pd.to_datetime(end))
+    
+    # Identificar coluna de data
+    date_col = None
+    if "day" in df.columns:
+        date_col = "day"
+    elif "date" in df.columns:
+        date_col = "date"
+    else:
+        # Sem coluna de data, retornar sem filtro
+        return df
+    
+    # Garantir que a coluna é datetime
+    df = df.copy()
+    df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
+    
+    # Converter limites
+    start_dt = pd.to_datetime(start) if start else pd.Timestamp(START_DATE)
+    end_dt = pd.to_datetime(end) if end else pd.Timestamp(END_DATE)
+    
+    # HARD CAP: nunca passar de END_DATE (proteção anti-2025)
+    hard_cap = pd.Timestamp(END_DATE)
+    if end_dt > hard_cap:
+        end_dt = hard_cap
+    
+    # Aplicar filtro
+    mask = (df[date_col] >= start_dt) & (df[date_col] <= end_dt)
     return df.loc[mask].copy()
 
+
+def _empty_figure_with_message(msg: str) -> go.Figure:
+    """Retorna figura vazia com mensagem centralizada (evita gráficos em branco)."""
+    fig = go.Figure()
+    fig.add_annotation(
+        text=msg,
+        xref="paper", yref="paper",
+        x=0.5, y=0.5,
+        showarrow=False,
+        font=dict(size=16, color="#666"),
+        align="center",
+    )
+    fig.update_layout(
+        xaxis=dict(visible=False),
+        yaxis=dict(visible=False),
+        template="plotly_white",
+        margin=dict(l=20, r=20, t=40, b=20),
+    )
+    return fig
+
+
+print("[DEBUG] Registrando callbacks...")
 
 @app.callback(
     Output("ibov-graph", "figure"),
@@ -691,17 +876,25 @@ def _filter_by_period(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
     Output("model-table", "data"),
     Output("active-filters-indicator", "children"),
     Output("metric-badge", "children"),
+    Output("debug-panel", "children"),
     Input("date-range", "start_date"),
     Input("date-range", "end_date"),
     Input("model-filter", "value"),
     Input("metric-filter", "value"),
 )
 def update_dashboard(start_date, end_date, selected_models, metric):
+    # Capturar informações de debug
+    ctx = callback_context
+    triggered_by = ctx.triggered[0]["prop_id"] if ctx.triggered else "Nenhum"
+    
     print(f"[DEBUG] Callback acionado: start={start_date}, end={end_date}, models={selected_models}, metric={metric}")
+    print(f"[DEBUG] IBOV_DF shape: {IBOV_DF.shape if not IBOV_DF.empty else 'VAZIO'}")
+    print(f"[DEBUG] SENTIMENT_DF shape: {SENTIMENT_DF.shape if not SENTIMENT_DF.empty else 'VAZIO'}")
     metric_map = {"auc": "AUC", "mda": "MDA (%)", "sharpe": "Sharpe Ratio"}
     
     # Gráfico do Ibovespa
     ibov_filtered = _filter_by_period(IBOV_DF, start_date, end_date)
+    print(f"[DEBUG] ibov_filtered shape: {ibov_filtered.shape if not ibov_filtered.empty else 'VAZIO'}")
 
     ibov_fig = go.Figure()
     if not ibov_filtered.empty:
@@ -751,9 +944,11 @@ def update_dashboard(start_date, end_date, selected_models, metric):
         ),
         margin=dict(l=60, r=20, t=40, b=60),
     )
+    print(f"[DEBUG] ibov_fig traces: {len(ibov_fig.data)}")
 
     # Gráfico de sentimento
     sentiment_filtered = _filter_by_period(SENTIMENT_DF, start_date, end_date)
+    print(f"[DEBUG] sentiment_filtered shape: {sentiment_filtered.shape if not sentiment_filtered.empty else 'VAZIO'}")
     sentiment_fig = go.Figure()
     if not sentiment_filtered.empty:
         # Criar cores condicionais (positivo vs negativo)
@@ -899,7 +1094,39 @@ def update_dashboard(start_date, end_date, selected_models, metric):
 
     metric_badge_text = f"📊 Métrica: {metric_labels.get(metric_value, metric_value.upper())}"
     
-    return ibov_fig, sentiment_fig, comparison_fig, table_df.to_dict("records"), indicator_content, metric_badge_text
+    # Painel de depuração
+    table_rows_count = len(table_df) if not table_df.empty else 0
+    debug_content = html.Div([
+        html.Div([
+            html.Strong("🔔 Último trigger: "),
+            html.Code(triggered_by, style={"backgroundColor": "#f5f5f5", "padding": "2px 6px", "borderRadius": "4px"}),
+        ], style={"marginBottom": "8px"}),
+        html.Div([
+            html.Strong("📅 Valores atuais: "),
+            html.Span(f"start_date={start_date}, end_date={end_date}"),
+        ], style={"marginBottom": "8px"}),
+        html.Div([
+            html.Strong("🤖 Modelos selecionados: "),
+            html.Span(str(selected_models) if selected_models else "[]"),
+        ], style={"marginBottom": "8px"}),
+        html.Div([
+            html.Strong("📈 Métrica: "),
+            html.Span(f"{metric} → {metric_value}"),
+        ], style={"marginBottom": "8px"}),
+        html.Div([
+            html.Strong("📊 Contagens pós-filtro: "),
+            html.Span(f"ibov_filtered={ibov_days}, sentiment_filtered={sentiment_days}, table_df={table_rows_count}"),
+        ], style={"marginBottom": "8px"}),
+        html.Div([
+            html.Strong("⚠️ Avisos: "),
+            html.Span(
+                "Nenhum" if ibov_days > 0 and sentiment_days > 0 else 
+                f"{'IBOV vazio! ' if ibov_days == 0 else ''}{'Sentimento vazio!' if sentiment_days == 0 else ''}"
+            , style={"color": "#d32f2f" if ibov_days == 0 or sentiment_days == 0 else "#388e3c"}),
+        ]),
+    ])
+    
+    return ibov_fig, sentiment_fig, comparison_fig, table_df.to_dict("records"), indicator_content, metric_badge_text, debug_content
 
 
 @app.callback(
@@ -911,9 +1138,10 @@ def update_dashboard(start_date, end_date, selected_models, metric):
     Input("backtest-model-dropdown", "value"),
 )
 def update_additional_graphs(start_date, end_date, backtest_model):
+    """Callback para gráficos adicionais (correlação, latência, backtest)."""
     corr_fig = build_corr_sentiment_return_fig(start_date, end_date)
     latency_fig = build_latency_fig(start_date, end_date)
-    backtest_fig = build_backtest_fig(backtest_model)
+    backtest_fig = build_backtest_fig(backtest_model, start_date, end_date)
     return corr_fig, latency_fig, backtest_fig
 
 
@@ -922,5 +1150,6 @@ def update_additional_graphs(start_date, end_date, backtest_model):
 # ------------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    print("Iniciando dashboard em http://localhost:8050 ...")
-    app.run(debug=True)
+    print(f"Iniciando dashboard em http://localhost:{DASH_PORT} ...")
+    # use_reloader=False evita double-loading que causa "Duplicate callback outputs"
+    app.run(port=DASH_PORT, debug=True, use_reloader=False)
