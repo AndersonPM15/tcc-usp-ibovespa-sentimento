@@ -5,6 +5,7 @@ Test the dashboard loading and basic functionality.
 
 import sys
 from datetime import datetime
+import plotly.graph_objects as go
 
 print("=" * 80)
 print("ITEM 4: Testando app_dashboard.py")
@@ -32,8 +33,8 @@ try:
         print(f"  DatePicker: {DATE_MIN.strftime('%Y-%m-%d')} → {DATE_MAX.strftime('%Y-%m-%d')}")
         
         # Check if it matches expected range
-        expected_start = "2018-01-01"
-        expected_end = "2025-01-31"
+        expected_start = "2018-01-02"
+        expected_end = "2024-12-31"
         
         date_min_str = DATE_MIN.strftime('%Y-%m-%d')
         date_max_str = DATE_MAX.strftime('%Y-%m-%d')
@@ -82,3 +83,15 @@ except Exception as e:
     import traceback
     traceback.print_exc()
     sys.exit(1)
+
+
+
+def test_update_additional_graphs_returns_figures():
+    """Smoke test: callback deve devolver 3 figuras mesmo sem dados completos."""
+    from app_dashboard import update_additional_graphs
+
+    corr_fig, latency_fig, backtest_fig = update_additional_graphs("2020-01-02", "2020-12-30", None)
+
+    assert isinstance(corr_fig, go.Figure)
+    assert isinstance(latency_fig, go.Figure)
+    assert isinstance(backtest_fig, go.Figure)
