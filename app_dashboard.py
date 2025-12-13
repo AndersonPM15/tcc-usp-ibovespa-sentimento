@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Plotly Dash application for the TCC USP sentiment x Ibovespa project.
 
@@ -11,13 +12,18 @@ and exposes interactive filters for period, modelo e métrica.
 
 from __future__ import annotations
 
+import argparse
 import json
+import socket
+import sys
+import webbrowser
+from datetime import datetime
 from pathlib import Path
 from typing import List, Tuple
 
 import pandas as pd
 import plotly.graph_objects as go
-from dash import Dash, Input, Output, dash_table, dcc, html
+from dash import Dash, Input, Output, dash_table, dcc, html, ctx
 
 from src.config import loader as cfg
 from src.config.constants import START_DATE, END_DATE
@@ -41,6 +47,58 @@ RESULTS16_PATH = cfg.get_arquivo("tfidf_daily_matrix", BASE_PATH).with_name("res
 BACKTEST_PATH = DATA_PATHS["data_processed"] / "18_backtest_results.csv"
 BACKTEST_CURVES_PATH = DATA_PATHS["data_processed"] / "18_backtest_daily_curves.csv"
 LATENCY_PATH = cfg.get_arquivo("latency_events", BASE_PATH)
+
+PLOTLY_CONFIG = dict(
+    displayModeBar=True,
+    displaylogo=False,
+    responsive=True,
+    scrollZoom=True,
+    doubleClick="reset",
+)
+
+
+def _dataset_status_entry(nome: str, df: pd.DataFrame, path: Path, date_col: str | None) -> str:
+    if not path.exists():
+        return f"{nome}: arquivo ausente em {path}"
+    if df.empty:
+        return f"{nome}: arquivo vazio em {path}"
+    if date_col is None or date_col not in df.columns:
+        return f"{nome}: linhas={len(df)} (sem coluna de data para min/max)"
+    try:
+        dates = pd.to_datetime(df[date_col], errors="coerce").dropna()
+    except Exception as exc:  # noqa: BLE001
+        return f"{nome}: linhas={len(df)} (erro ao ler datas: {exc.__class__.__name__})"
+    if dates.empty:
+        return f"{nome}: linhas={len(df)} (datas inválidas ou vazias)"
+    min_dt = dates.min()
+    max_dt = dates.max()
+    return f"{nome}: linhas={len(df)} | min={min_dt.date()} | max={max_dt.date()}"
+
+
+def check_port(host: str, port: int) -> bool:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(1.0)
+        return s.connect_ex((host, port)) == 0
+
+
+def check_http(host: str, port: int):
+    import urllib.request
+
+    url = f"http://{host}:{port}/"
+    try:
+        with urllib.request.urlopen(url, timeout=3) as r:
+            return True, r.status, None
+    except Exception as exc:  # noqa: BLE001
+        return False, None, repr(exc)
+
+
+def find_free_port(start_port: int) -> int:
+    port = start_port
+    while port < start_port + 20:
+        if not check_port("127.0.0.1", port):
+            return port
+        port += 1
+    return start_port
 
 
 def _safe_read_csv(path: Path, **kwargs) -> pd.DataFrame:
@@ -150,6 +208,13 @@ SENTIMENT_DF = load_sentiment()
 RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
 BACKTEST_DF = load_backtest_curves()
+DATA_STATUS = [
+    _dataset_status_entry("Ibovespa", IBOV_DF, IBOV_PATH, "day"),
+    _dataset_status_entry("Sentimento (OOF)", SENTIMENT_DF, OOF_PATH, "day"),
+    _dataset_status_entry("Resultados TF-IDF", RESULTS_DF, RESULTS16_PATH, None),
+    _dataset_status_entry("Backtest Curvas", BACKTEST_DF, BACKTEST_CURVES_PATH, "day"),
+    _dataset_status_entry("Eventos/Latência", LATENCY_DF, LATENCY_PATH, "event_day"),
+]
 
 # Usar constantes do plano de pesquisa como limites (2018-01-02 a 2024-12-31)
 # FIXO: nunca mais mudar esses valores automaticamente
@@ -171,7 +236,7 @@ METRIC_OPTIONS = [
 # Dash App
 # ------------------------------------------------------------------------------
 
-app = Dash(__name__)
+app = Dash(__name__, meta_tags=[{"charset": "utf-8"}])
 app.title = "Dashboard Sentimento x Ibovespa"
 
 
@@ -264,6 +329,14 @@ app.layout = html.Div(
                 "borderLeft": "4px solid #2196f3",
             },
         ),
+        html.Div(
+            [
+                html.Strong("Status dos dados carregados"),
+                html.Ul([html.Li(item) for item in DATA_STATUS]),
+            ],
+            style={"marginBottom": "15px", "color": "#333"},
+        ),
+        html.Div(id="ui-last-trigger", style={"fontSize": "0.85em", "color": "#555", "marginBottom": "20px"}),
         
         # Card 2: Ibovespa
         html.Div(
@@ -280,7 +353,7 @@ app.layout = html.Div(
                     html.P("Evolução do índice Bovespa com marcadores de eventos relevantes", 
                            style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
                 ]),
-                dcc.Graph(id="ibov-graph", config={"displayModeBar": True}),
+                dcc.Graph(id="ibov-graph", config=PLOTLY_CONFIG),
             ],
         ),
         
@@ -299,7 +372,7 @@ app.layout = html.Div(
                     html.P("Sentimento agregado das notícias (escala -1 a +1, onde valores positivos indicam otimismo)", 
                            style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
                 ]),
-                dcc.Graph(id="sentiment-graph", config={"displayModeBar": True}),
+                dcc.Graph(id="sentiment-graph", config=PLOTLY_CONFIG),
             ],
         ),
         
@@ -327,7 +400,7 @@ app.layout = html.Div(
                         }),
                     ],
                 ),
-                dcc.Graph(id="model-comparison-graph", config={"displayModeBar": True}),
+                dcc.Graph(id="model-comparison-graph", config=PLOTLY_CONFIG),
                 html.Hr(style={"margin": "30px 0"}),
                 html.H4("Detalhamento das Métricas", style={"marginBottom": "15px", "color": "#34495e"}),
                 dash_table.DataTable(
@@ -382,7 +455,7 @@ app.layout = html.Div(
                     html.P("Correlação entre sentimento diário e retorno subsequente do Ibovespa", 
                            style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
                 ]),
-                dcc.Graph(id="scatter-graph", config={"displayModeBar": True}),
+                dcc.Graph(id="scatter-graph", config=PLOTLY_CONFIG),
             ],
         ),
 
@@ -401,7 +474,7 @@ app.layout = html.Div(
                     html.P("Correlação rolada entre sentimento e retorno diário", 
                            style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
                 ]),
-                dcc.Graph(id="rolling-corr-graph", config={"displayModeBar": True}),
+                dcc.Graph(id="rolling-corr-graph", config=PLOTLY_CONFIG),
             ],
         ),
 
@@ -420,7 +493,7 @@ app.layout = html.Div(
                     html.P("Histograma e boxplot do sentimento diário", 
                            style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
                 ]),
-                dcc.Graph(id="sentiment-dist-graph", config={"displayModeBar": True}),
+                dcc.Graph(id="sentiment-dist-graph", config=PLOTLY_CONFIG),
             ],
         ),
 
@@ -439,7 +512,7 @@ app.layout = html.Div(
                     html.P("Visão de latência de eventos/notícias (placeholder se não houver dados)", 
                            style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
                 ]),
-                dcc.Graph(id="latency-graph", config={"displayModeBar": True}),
+                dcc.Graph(id="latency-graph", config=PLOTLY_CONFIG),
             ],
         ),
 
@@ -458,7 +531,7 @@ app.layout = html.Div(
                     html.P("Evolução de equity por modelo/estratégia (placeholder se não houver dados)", 
                            style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
                 ]),
-                dcc.Graph(id="backtest-graph", config={"displayModeBar": True}),
+                dcc.Graph(id="backtest-graph", config=PLOTLY_CONFIG),
             ],
         ),
     ],
@@ -484,6 +557,7 @@ def _filter_by_period(df: pd.DataFrame, start: str, end: str, date_col: str = "d
     Output("model-table", "data"),
     Output("active-filters-indicator", "children"),
     Output("metric-badge", "children"),
+    Output("ui-last-trigger", "children"),
     Output("scatter-graph", "figure"),
     Output("rolling-corr-graph", "figure"),
     Output("sentiment-dist-graph", "figure"),
@@ -524,7 +598,7 @@ def update_dashboard(start_date, end_date, selected_models, metric):
         )
     ibov_fig.update_layout(
         xaxis_title="Data",
-        yaxis_title="Pre?o do Ibovespa (pontos)",
+        yaxis_title="Preço do Ibovespa (pontos)",
         hovermode="x unified",
         template="plotly_white",
         font=dict(size=12),
@@ -599,7 +673,7 @@ def update_dashboard(start_date, end_date, selected_models, metric):
     )
     if metric in {"auc", "mda", "sharpe"} and metric in table_df.columns:
         table_df = table_df.sort_values(metric, ascending=False, na_position="last")
-    table_df = table_df.fillna("")
+    table_df = table_df.fillna("—")
 
     scatter_fig = go.Figure()
     merged_sr = (
@@ -621,11 +695,11 @@ def update_dashboard(start_date, end_date, selected_models, metric):
         )
         scatter_fig.add_annotation(text=f"Corr(Pearson)={corr:.3f} | N={len(merged_sr)}", xref="paper", yref="paper", x=0, y=1.1, showarrow=False)
     else:
-        scatter_fig.add_annotation(text="Sem dados para dispers?o (sentimento x retorno)", x=0.5, y=0.5, showarrow=False)
+        scatter_fig.add_annotation(text="Sem dados para dispersão (sentimento x retorno)", x=0.5, y=0.5, showarrow=False)
     scatter_fig.update_layout(
-        title="Dispers?o Sentimento x Retorno di?rio",
+        title="Dispersão Sentimento x Retorno diário",
         xaxis_title="Sentimento",
-        yaxis_title="Retorno di?rio",
+        yaxis_title="Retorno diário",
         template="plotly_white",
     )
 
@@ -643,11 +717,11 @@ def update_dashboard(start_date, end_date, selected_models, metric):
                 )
             )
     if not rolling_fig.data:
-        rolling_fig.add_annotation(text="Sem dados para correla??o m?vel", x=0.5, y=0.5, showarrow=False)
+        rolling_fig.add_annotation(text="Sem dados para correlação móvel", x=0.5, y=0.5, showarrow=False)
     rolling_fig.update_layout(
-        title="Correla??o m?vel (60d / 90d) entre Sentimento e Retorno",
+        title="Correlação móvel (60d / 90d) entre Sentimento e Retorno",
         xaxis_title="Data",
-        yaxis_title="Correla??o",
+        yaxis_title="Correlação",
         template="plotly_white",
     )
 
@@ -658,7 +732,7 @@ def update_dashboard(start_date, end_date, selected_models, metric):
     else:
         dist_fig.add_annotation(text="Sem dados de sentimento para distribuir", x=0.5, y=0.5, showarrow=False)
     dist_fig.update_layout(
-        title="Distribui??o do Sentimento",
+        title="Distribuição do Sentimento",
         xaxis_title="Sentimento",
         template="plotly_white",
         barmode="overlay",
@@ -666,13 +740,18 @@ def update_dashboard(start_date, end_date, selected_models, metric):
 
     latency_fig = go.Figure()
     if not event_filtered.empty and "fonte" in event_filtered.columns:
-        latency_fig.add_trace(go.Bar(x=event_filtered["fonte"], y=event_filtered.get("car_max_abs", 0), name="Lat?ncia por fonte"))
+        latency_fig.add_trace(go.Bar(x=event_filtered["fonte"], y=event_filtered.get("car_max_abs", 0), name="Latência por fonte"))
     if not latency_fig.data:
-        latency_fig.add_annotation(text="Sem eventos de lat?ncia no per?odo", x=0.5, y=0.5, showarrow=False)
+        latency_fig.add_annotation(
+            text="Dados de latência não gerados / arquivo vazio. Execute notebook 11 ou pipeline de latência.",
+            x=0.5,
+            y=0.5,
+            showarrow=False,
+        )
     latency_fig.update_layout(
-        title="Lat?ncia por fonte/daypart",
+        title="Latência por fonte/daypart",
         xaxis_title="Fonte",
-        yaxis_title="Lat?ncia / CAR",
+        yaxis_title="Latência / CAR",
         template="plotly_white",
     )
 
@@ -691,7 +770,7 @@ def update_dashboard(start_date, end_date, selected_models, metric):
                 )
             )
     if not backtest_fig.data:
-        backtest_fig.add_annotation(text="Sem curva de backtest dispon?vel", x=0.5, y=0.5, showarrow=False)
+        backtest_fig.add_annotation(text="Sem curva de backtest disponível", x=0.5, y=0.5, showarrow=False)
     backtest_fig.update_layout(
         title="Curva de Backtest",
         xaxis_title="Data",
@@ -709,13 +788,14 @@ def update_dashboard(start_date, end_date, selected_models, metric):
     indicator_content = html.Div(
         style={"display": "flex", "flexWrap": "wrap", "gap": "20px", "alignItems": "center"},
         children=[
-            html.Div([html.Strong(" Per?odo: ", style={"color": "#1976d2"}), html.Span(f"{start_date} a {end_date} ({days_count} dias)")]),
+            html.Div([html.Strong(" Período: ", style={"color": "#1976d2"}), html.Span(f"{start_date} a {end_date} ({days_count} dias)")]),
             html.Div([html.Strong(" Dados: ", style={"color": "#1976d2"}), html.Span(f"Ibovespa: {ibov_days} dias | Sentimento: {sentiment_days} dias")]),
             html.Div([html.Strong(" Modelos: ", style={"color": "#1976d2"}), html.Span(models_text)]),
-            html.Div([html.Strong(" M?trica: ", style={"color": "#1976d2"}), html.Span(metric_labels.get(metric, metric.upper()), style={"fontWeight": "600", "color": "#2e7d32"})]),
+            html.Div([html.Strong(" Métrica: ", style={"color": "#1976d2"}), html.Span(metric_labels.get(metric, metric.upper()), style={"fontWeight": "600", "color": "#2e7d32"})]),
         ],
     )
-    metric_badge_text = f" M?trica: {metric_labels.get(metric, metric.upper())}"
+    metric_badge_text = f" Métrica: {metric_labels.get(metric, metric.upper())}"
+    ui_status = f"Última interação: {ctx.triggered_id or 'init'} @ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
 
     print(f"[DEBUG] Filtered IBOV rows={len(ibov_filtered)}, SENT rows={len(sentiment_filtered)}, start={start_date}, end={end_date}")
     return (
@@ -725,6 +805,7 @@ def update_dashboard(start_date, end_date, selected_models, metric):
         table_df.to_dict("records"),
         indicator_content,
         metric_badge_text,
+        ui_status,
         scatter_fig,
         rolling_fig,
         dist_fig,
@@ -752,16 +833,51 @@ def update_additional_graphs(start_date=None, end_date=None, selected_model=None
 
 
 # ------------------------------------------------------------------------------
-# Main
+# Main / CLI
 # ------------------------------------------------------------------------------
 
-if __name__ == "__main__":
-    import os
-    import sys
 
-    host = os.getenv("DASH_HOST", "127.0.0.1")
-    port = int(os.getenv("DASH_PORT", "8050"))
-    print(f"Dashboard: http://{host}:{port}")
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Dashboard Sentimento x Ibovespa")
+    parser.add_argument("--host", default="127.0.0.1", help="Host para o Dash (default: 127.0.0.1)")
+    parser.add_argument("--port", type=int, default=8050, help="Porta para o Dash (default: 8050)")
+    parser.add_argument("--debug", action="store_true", help="Ativa debug do Dash (default: False)")
+    parser.add_argument("--open", action="store_true", help="Abre o navegador automaticamente")
+    parser.add_argument("--probe", action="store_true", help="Apenas testa porta/HTTP e sai")
+    parser.add_argument("--find-port", action="store_true", help="Se porta ocupada, tenta próxima livre")
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    args = parse_args()
+
+    host = args.host
+    port = args.port
+
+    if args.find_port and check_port(host, port):
+        new_port = find_free_port(port)
+        if new_port != port:
+            print(f"[info] Porta {port} ocupada. Usando porta livre {new_port}.")
+            port = new_port
+
+    if args.probe:
+        open_flag = check_port(host, port)
+        ok, status, err = check_http(host, port)
+        print(f"PORT {host}:{port} OPEN={open_flag}")
+        if ok:
+            print(f"HTTP {host}:{port} STATUS={status}")
+            sys.exit(0)
+        else:
+            print(f"HTTP {host}:{port} FAIL={err}")
+            sys.exit(1)
+
+    url = f"http://{host}:{port}/"
+    print(f"Dashboard: {url}")
     print(f"Python: {sys.executable}")
-    # Mantém o servidor vivo sem reloader/threads extras (melhor para diagnósticos locais)
-    app.run(host=host, port=port, debug=False, use_reloader=False)
+    print(f"CWD: {Path.cwd()}")
+    print(f"Debug: {args.debug}")
+
+    if args.open:
+        webbrowser.open(url)
+
+    app.run(host=host, port=port, debug=args.debug, use_reloader=False)
