@@ -222,3 +222,12 @@ reports/_quarantine_*/
 **/.ipynb_checkpoints/
 __pycache__/
 .pytest_cache/
+
+# Data artifacts (não versionar dados/processados)
+data_raw/**
+data_processed/**
+data_interim/**
+
+# Runner tmp
+dash_out.txt
+dash_err.txt
