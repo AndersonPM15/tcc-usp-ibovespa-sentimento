@@ -1,37 +1,37 @@
 # Workspace Cleanup Audit
-Generated: 2025-12-13T14:08:19
+Generated: 2025-12-13T15:02:16
 
 ## Before
-- Total size: 3.4 GB
-- Total files: 90557
+- Total size: 2.9 GB
+- Total files: 61682
 - Top-level breakdown:
   - .env.example/ : 1 files, 40.0 B
   - .gitignore/ : 1 files, 4.8 KB
   - .vscode/ : 1 files, 1.2 KB
   - README.md/ : 1 files, 17.7 KB
-  - app_dashboard.py/ : 1 files, 23.8 KB
+  - app_dashboard.py/ : 1 files, 36.8 KB
   - configs/ : 2 files, 2.0 KB
   - create_sample_data.py/ : 1 files, 7.0 KB
   - data/ : 2 files, 174.7 KB
-  - data_processed/ : 1 files, 167.6 KB
+  - data_processed/ : 6 files, 1.5 MB
   - data_raw/ : 1 files, 167.6 KB
   - main.py/ : 1 files, 30.0 B
   - notebooks/ : 22 files, 1.4 MB
   - pipeline_orchestration.py/ : 1 files, 7.0 KB
-  - reports/ : 11 files, 55.8 KB
+  - reports/ : 13 files, 54.4 KB
   - requirements.txt/ : 1 files, 198.0 B
   - run_pipeline_complete.py/ : 1 files, 8.0 KB
-  - scripts/ : 2 files, 13.1 KB
-  - src/ : 9 files, 43.8 KB
+  - scripts/ : 4 files, 31.3 KB
+  - src/ : 12 files, 56.6 KB
   - test_dashboard.py/ : 1 files, 3.3 KB
   - test_data_period.py/ : 1 files, 964.0 B
-  - venv/ : 90494 files, 3.4 GB
+  - venv/ : 61607 files, 2.9 GB
   - verify_project.py/ : 1 files, 15.1 KB
 
 ### Top 30 largest files/dirs
 | # | Path | Type | Size |
 |---|------|------|------|
-| 1 | . | dir | 3.4 GB |
+| 1 | . | dir | 2.9 GB |
 | 2 | venv/Lib/site-packages/tensorflow/python | dir | 956.7 MB |
 | 3 | venv/Lib/site-packages/tensorflow/python/_pywrap_tensorflow_common.dll | file | 944.6 MB |
 | 4 | venv/Lib/site-packages/torch/lib | dir | 315.5 MB |
@@ -63,13 +63,17 @@ Generated: 2025-12-13T14:08:19
 | 30 | venv/Lib/site-packages/prefect/server/ui/assets | dir | 16.2 MB |
 
 ## Plan (this run)
-- SAFE_DELETE: 0 entries
+- SAFE_DELETE: 5 entries
 - ARCHIVE: 0 entries
-- KEEP: 103555 entries
+- KEEP: 69978 entries
 - Mode: dry-run
 
 ### SAFE_DELETE candidates
-- none
+- src/io/__pycache__/paths.cpython-311.pyc (file, 6.9 KB)
+- src/config/__pycache__/loader.cpython-311.pyc (file, 4.3 KB)
+- src/config/__pycache__/constants.cpython-311.pyc (file, 1.5 KB)
+- src/config/__pycache__ (dir, 0.0 B)
+- src/io/__pycache__ (dir, 0.0 B)
 
 ### ARCHIVE candidates
 - none
