@@ -205,3 +205,29 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project-specific artifacts
+mlruns/
+notebooks/_runs/
+.tmp_diff_*.txt
+.tmp_*
+tmp_*.txt
+tmp_*.log
+*.tmp
+*.log
+tmp_*
+reports/_quarantine_*/
+**/__pycache__/
+**/.pytest_cache/
+**/.ipynb_checkpoints/
+__pycache__/
+.pytest_cache/
+
+# Data artifacts (nao versionar dados/processados)
+data_raw/**
+data_processed/**
+data_interim/**
+
+# Runner tmp
+dash_out.txt
+dash_err.txt
