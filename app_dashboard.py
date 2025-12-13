@@ -741,9 +741,9 @@ def update_dashboard(start_date, end_date, selected_models, metric):
     latency_fig = go.Figure()
     if not event_filtered.empty and "fonte" in event_filtered.columns:
         latency_fig.add_trace(go.Bar(x=event_filtered["fonte"], y=event_filtered.get("car_max_abs", 0), name="Latência por fonte"))
-    if not latency_fig.data:
+    else:
         latency_fig.add_annotation(
-            text="Dados de latência não gerados / arquivo vazio. Execute notebook 11 ou pipeline de latência.",
+            text="Sem eventos de latência no período (arquivo vazio ou não gerado). Para gerar: executar notebook 11 / pipeline de latência.",
             x=0.5,
             y=0.5,
             showarrow=False,
