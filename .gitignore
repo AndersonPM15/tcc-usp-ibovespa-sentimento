@@ -210,6 +210,9 @@ __marimo__/
 mlruns/
 notebooks/_runs/
 .tmp_diff_*.txt
+.tmp_*
+tmp_*.txt
+tmp_*.log
 *.tmp
 *.log
 tmp_*
