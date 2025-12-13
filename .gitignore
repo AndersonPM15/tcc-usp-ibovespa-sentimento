@@ -216,5 +216,9 @@ tmp_*.log
 *.tmp
 *.log
 tmp_*
+reports/_quarantine_*/
+**/__pycache__/
+**/.pytest_cache/
+**/.ipynb_checkpoints/
 __pycache__/
 .pytest_cache/
