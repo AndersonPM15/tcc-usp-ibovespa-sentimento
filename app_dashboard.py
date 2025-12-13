@@ -88,12 +88,12 @@ def load_ibov() -> pd.DataFrame:
 
 
 def load_sentiment() -> pd.DataFrame:
-    df = normalize_day(_safe_read_csv(OOF_PATH))
+    df = normalize_day(_safe_read_csv(OOF_PATH), drop_duplicates=False)
     if df.empty:
         return df
     df["proba"] = df.get("proba", pd.Series(dtype=float))
     df["sentiment"] = df["proba"] * 2 - 1
-    agg = df.groupby("day").agg(
+    agg = df.groupby(["day", "model"]).agg(
         sentiment=("sentiment", "mean"),
         prob_mean=("proba", "mean"),
         n_obs=("proba", "count"),
@@ -739,25 +739,23 @@ def update_dashboard(start_date, end_date, selected_models, metric):
 
     # Gr├ífico de sentimento
     sentiment_filtered = _filter_by_period(SENTIMENT_DF, start_ts, end_ts)
+    if selected_models:
+        sentiment_filtered = sentiment_filtered[sentiment_filtered["model"].isin(selected_models)]
     sentiment_fig = go.Figure()
     if not sentiment_filtered.empty:
-        # Criar cores condicionais (positivo vs negativo)
-        colors = ["rgba(76, 175, 80, 0.3)" if s >= 0 else "rgba(244, 67, 54, 0.3)" 
-                  for s in sentiment_filtered["sentiment"]]
-        line_colors = ["#4caf50" if s >= 0 else "#f44336" 
-                       for s in sentiment_filtered["sentiment"]]
-        
-        sentiment_fig.add_trace(
-            go.Scatter(
-                x=sentiment_filtered["day"],
-                y=sentiment_filtered["sentiment"],
-                mode="lines",
-                fill="tozeroy",
-                name="Sentimento",
-                line=dict(color="#666", width=2),
-                fillcolor="rgba(100, 100, 100, 0.2)",
+        for model_name, grp in sentiment_filtered.groupby("model"):
+            grp = grp.sort_values("day")
+            sentiment_fig.add_trace(
+                go.Scatter(
+                    x=grp["day"],
+                    y=grp["sentiment"],
+                    mode="lines",
+                    name=f"Sentimento {model_name}",
+                    line=dict(width=2),
+                    fill="tozeroy",
+                    fillcolor="rgba(76,175,80,0.15)",
+                )
             )
-        )
         sentiment_fig.add_hline(y=0, line_dash="dash", line_color="rgba(0,0,0,0.3)", line_width=1)
     sentiment_fig.update_layout(
         xaxis_title="Data",
