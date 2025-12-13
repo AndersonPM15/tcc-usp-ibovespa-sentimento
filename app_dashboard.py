@@ -33,7 +33,7 @@ PROJECT_PATHS = paths.get_project_paths()
 BASE_PATH = DATA_PATHS["base"]
 CONFIG = cfg.load_config()
 COL_DATE = cfg.get_colunas_data().get("ibov", "day")
-DATE_ALIASES = [COL_DATE, "day", "date", "data", "Data", "DATA"]
+DATE_ALIASES = [COL_DATE, "day", "date", "data", "Data", "DATA", "event_day"]
 
 # Arquivos principais
 IBOV_PATH = cfg.get_arquivo("ibov_clean", BASE_PATH)
@@ -41,38 +41,53 @@ OOF_PATH = DATA_PATHS["data_processed"] / "16_oof_predictions.csv"
 RESULTS16_PATH = cfg.get_arquivo("tfidf_daily_matrix", BASE_PATH).with_name("results_16_models_tfidf.json")
 BACKTEST_PATH = DATA_PATHS["data_processed"] / "18_backtest_results.csv"
 LATENCY_PATH = cfg.get_arquivo("latency_events", BASE_PATH)
+START_TS = pd.Timestamp(START_DATE)
+END_TS = pd.Timestamp(END_DATE)
 
 
 def _safe_read_csv(path: Path, **kwargs) -> pd.DataFrame:
     if not path.exists():
-        print(f"[aviso] Arquivo n├úo encontrado: {path}")
+        print(f"[aviso] Arquivo não encontrado: {path}")
         return pd.DataFrame()
-    return pd.read_csv(path, **kwargs)
+    try:
+        return pd.read_csv(path, **kwargs)
+    except Exception as exc:
+        print(f"[aviso] Falha ao ler {path}: {exc}")
+        return pd.DataFrame()
+
+
+def normalize_day(df: pd.DataFrame, candidates: List[str] = DATE_ALIASES) -> pd.DataFrame:
+    if df.empty:
+        return df
+    chosen = None
+    for col in candidates:
+        if col in df.columns:
+            chosen = col
+            break
+    if chosen is None:
+        return pd.DataFrame()
+    df = df.copy()
+    df["day"] = pd.to_datetime(df[chosen], errors="coerce").dt.tz_localize(None)
+    df = df.dropna(subset=["day"])
+    df = df[(df["day"] >= START_TS) & (df["day"] <= END_TS)]
+    df = df.sort_values("day").drop_duplicates(subset=["day"])
+    return df
 
 
 def load_ibov() -> pd.DataFrame:
-    df = _safe_read_csv(IBOV_PATH)
+    df = normalize_day(_safe_read_csv(IBOV_PATH))
     if df.empty:
         return df
-    chosen_col = None
-    for candidate in DATE_ALIASES:
-        if candidate in df.columns:
-            chosen_col = candidate
-            break
-    if chosen_col is None:
-        raise KeyError("Arquivo de Ibovespa precisa ter coluna de data.")
-
-    df["day"] = pd.to_datetime(df[chosen_col])
     if "close" not in df.columns and "adj_close" in df.columns:
         df["close"] = df["adj_close"]
-    df = df[df["day"] <= pd.Timestamp(END_DATE)]
-    return df.sort_values("day")
+    return df
 
 
 def load_sentiment() -> pd.DataFrame:
-    df = _safe_read_csv(OOF_PATH, parse_dates=["day"])
+    df = normalize_day(_safe_read_csv(OOF_PATH))
     if df.empty:
         return df
+    df["proba"] = df.get("proba", pd.Series(dtype=float))
     df["sentiment"] = df["proba"] * 2 - 1
     agg = df.groupby("day").agg(
         sentiment=("sentiment", "mean"),
@@ -80,7 +95,6 @@ def load_sentiment() -> pd.DataFrame:
         n_obs=("proba", "count"),
     )
     agg.reset_index(inplace=True)
-    agg = agg[agg["day"] <= pd.Timestamp(END_DATE)]
     return agg
 
 
@@ -124,14 +138,10 @@ def load_results_table() -> pd.DataFrame:
 
 
 def load_latency_events() -> pd.DataFrame:
-    df = _safe_read_csv(LATENCY_PATH)
+    df = normalize_day(_safe_read_csv(LATENCY_PATH), candidates=["event_day", "day", "date"])
     if df.empty:
         return df
-    date_col = cfg.get_colunas_data().get("eventos", "event_day")
-    if date_col not in df.columns:
-        raise KeyError("Arquivo de eventos precisa ter coluna 'event_day'.")
-    df["event_day"] = pd.to_datetime(df[date_col])
-    df = df[df["event_day"] <= pd.Timestamp(END_DATE)]
+    df = df.rename(columns={"day": "event_day"})
     return df
 
 
@@ -139,11 +149,7 @@ IBOV_DF = load_ibov()
 SENTIMENT_DF = load_sentiment()
 RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
-BACKTEST_DF = _safe_read_csv(BACKTEST_PATH)
-if not BACKTEST_DF.empty and "day" in BACKTEST_DF.columns:
-    BACKTEST_DF["day"] = pd.to_datetime(BACKTEST_DF["day"], errors="coerce")
-    BACKTEST_DF = BACKTEST_DF.dropna(subset=["day"])
-    BACKTEST_DF = BACKTEST_DF[BACKTEST_DF["day"] <= pd.Timestamp(END_DATE)]
+BACKTEST_DF = normalize_day(_safe_read_csv(BACKTEST_PATH))
 
 # Usar constantes do plano de pesquisa como limites (2018-01-02 a 2024-12-31)
 # FIXO: nunca mais mudar esses valores automaticamente
@@ -372,7 +378,13 @@ app.layout = html.Div(
 def _filter_by_period(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
     if df.empty or start is None or end is None:
         return df
-    mask = (df["day"] >= pd.to_datetime(start)) & (df["day"] <= pd.to_datetime(end))
+    start_ts = pd.to_datetime(start, errors="coerce")
+    end_ts = pd.to_datetime(end, errors="coerce")
+    if pd.isna(start_ts) or pd.isna(end_ts):
+        return df
+    start_ts = max(start_ts.tz_localize(None), START_TS)
+    end_ts = min(end_ts.tz_localize(None), END_TS)
+    mask = (df["day"] >= start_ts) & (df["day"] <= end_ts)
     return df.loc[mask].copy()
 
 
@@ -384,8 +396,10 @@ def _empty_fig(title: str, note: str) -> go.Figure:
 
 
 def update_additional_graphs(start_date, end_date, selected_model):
-    start_ts = pd.to_datetime(start_date) if start_date else DATE_MIN
-    end_ts = pd.to_datetime(end_date) if end_date else DATE_MAX
+    start_ts = pd.to_datetime(start_date, errors="coerce") if start_date else DATE_MIN
+    end_ts = pd.to_datetime(end_date, errors="coerce") if end_date else DATE_MAX
+    start_ts = max(start_ts, DATE_MIN)
+    end_ts = min(end_ts, DATE_MAX)
 
     # Correlation between sentiment and Ibovespa returns
     corr_fig = _empty_fig("Correlação Sentimento x Retorno", "Sem dados disponíveis")
@@ -474,8 +488,13 @@ def update_additional_graphs(start_date, end_date, selected_model):
 def update_dashboard(start_date, end_date, selected_models, metric):
     print(f"[DEBUG] Callback acionado: start={start_date}, end={end_date}, models={selected_models}, metric={metric}")
     
-    # Gr├ífico do Ibovespa
-    ibov_filtered = _filter_by_period(IBOV_DF, start_date, end_date)
+    start_ts = pd.to_datetime(start_date, errors="coerce") if start_date else DATE_MIN
+    end_ts = pd.to_datetime(end_date, errors="coerce") if end_date else DATE_MAX
+    start_ts = max(start_ts, DATE_MIN)
+    end_ts = min(end_ts, DATE_MAX)
+
+    # Gr├áfico do Ibovespa
+    ibov_filtered = _filter_by_period(IBOV_DF, start_ts, end_ts)
 
     ibov_fig = go.Figure()
     if not ibov_filtered.empty:
@@ -490,9 +509,7 @@ def update_dashboard(start_date, end_date, selected_models, metric):
         )
     event_filtered = LATENCY_DF.copy()
     if not event_filtered.empty:
-        mask = (event_filtered["event_day"] >= pd.to_datetime(start_date)) & (
-            event_filtered["event_day"] <= pd.to_datetime(end_date)
-        )
+        mask = (event_filtered["event_day"] >= start_ts) & (event_filtered["event_day"] <= end_ts)
         event_filtered = event_filtered.loc[mask]
         if not event_filtered.empty:
             ibov_fig.add_trace(
@@ -526,7 +543,7 @@ def update_dashboard(start_date, end_date, selected_models, metric):
     )
 
     # Gr├ífico de sentimento
-    sentiment_filtered = _filter_by_period(SENTIMENT_DF, start_date, end_date)
+    sentiment_filtered = _filter_by_period(SENTIMENT_DF, start_ts, end_ts)
     sentiment_fig = go.Figure()
     if not sentiment_filtered.empty:
         # Criar cores condicionais (positivo vs negativo)
@@ -641,7 +658,7 @@ def update_dashboard(start_date, end_date, selected_models, metric):
     metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
     
     # Calcular janela temporal
-    days_count = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days + 1
+    days_count = (end_ts - start_ts).days + 1
     ibov_days = len(ibov_filtered) if not ibov_filtered.empty else 0
     sentiment_days = len(sentiment_filtered) if not sentiment_filtered.empty else 0
     
@@ -685,5 +702,5 @@ if __name__ == "__main__":
     host = os.getenv("DASH_HOST", "127.0.0.1")
     port = int(os.getenv("DASH_PORT", "8050"))
     print(f"Iniciando dashboard em http://{host}:{port} ...")
-    app.run(host=host, port=port, debug=False)
+    app.run(host=host, port=port, debug=False, use_reloader=False)
 
