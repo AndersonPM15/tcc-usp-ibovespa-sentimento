@@ -1,17 +1,20 @@
-# Envs / IDE
+# Environments
 .env
 .envrc
 .venv/
 venv/
 env/
+ENV/
 .vscode/
 
-# Python
+# Python caches
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
 # Jupyter
 .ipynb_checkpoints/
@@ -30,9 +33,9 @@ data_interim/
 *.tmp
 tmp_*
 .tmp_*
+dash_out.txt
+dash_err.txt
 
 # Outros caches
 *.egg-info/
-.ruff_cache/
-.mypy_cache/
 .cache/
