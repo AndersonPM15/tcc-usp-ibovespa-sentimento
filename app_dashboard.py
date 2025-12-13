@@ -39,6 +39,7 @@ IBOV_PATH = cfg.get_arquivo("ibov_clean", BASE_PATH)
 OOF_PATH = DATA_PATHS["data_processed"] / "16_oof_predictions.csv"
 RESULTS16_PATH = cfg.get_arquivo("tfidf_daily_matrix", BASE_PATH).with_name("results_16_models_tfidf.json")
 BACKTEST_PATH = DATA_PATHS["data_processed"] / "18_backtest_results.csv"
+BACKTEST_CURVES_PATH = DATA_PATHS["data_processed"] / "18_backtest_daily_curves.csv"
 LATENCY_PATH = cfg.get_arquivo("latency_events", BASE_PATH)
 
 
@@ -131,10 +132,24 @@ def load_latency_events() -> pd.DataFrame:
     return df
 
 
+def load_backtest_curves() -> pd.DataFrame:
+    df = _safe_read_csv(BACKTEST_CURVES_PATH)
+    if df.empty:
+        return df
+    date_col = "day" if "day" in df.columns else "date"
+    df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
+    df = df.dropna(subset=[date_col])
+    if "equity" not in df.columns and "strategy_ret" in df.columns:
+        df = df.sort_values(date_col)
+        df["equity"] = (1 + df["strategy_ret"].fillna(0)).cumprod()
+    return df
+
+
 IBOV_DF = load_ibov()
 SENTIMENT_DF = load_sentiment()
 RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
+BACKTEST_DF = load_backtest_curves()
 
 # Usar constantes do plano de pesquisa como limites (2018-01-02 a 2024-12-31)
 # FIXO: nunca mais mudar esses valores automaticamente
@@ -351,6 +366,101 @@ app.layout = html.Div(
                 ),
             ],
         ),
+
+        # Card 5: Dispersão Sentimento x Retorno
+        html.Div(
+            style={
+                "backgroundColor": "white",
+                "padding": "20px",
+                "borderRadius": "8px",
+                "marginBottom": "25px",
+                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
+            },
+            children=[
+                html.Div([
+                    html.H3("Dispersão Sentimento x Retorno Diário", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
+                    html.P("Correlação entre sentimento diário e retorno subsequente do Ibovespa", 
+                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
+                ]),
+                dcc.Graph(id="scatter-graph", config={"displayModeBar": True}),
+            ],
+        ),
+
+        # Card 6: Correlação Móvel
+        html.Div(
+            style={
+                "backgroundColor": "white",
+                "padding": "20px",
+                "borderRadius": "8px",
+                "marginBottom": "25px",
+                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
+            },
+            children=[
+                html.Div([
+                    html.H3("Correlação Móvel (60d/90d)", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
+                    html.P("Correlação rolada entre sentimento e retorno diário", 
+                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
+                ]),
+                dcc.Graph(id="rolling-corr-graph", config={"displayModeBar": True}),
+            ],
+        ),
+
+        # Card 7: Distribuição do Sentimento
+        html.Div(
+            style={
+                "backgroundColor": "white",
+                "padding": "20px",
+                "borderRadius": "8px",
+                "marginBottom": "25px",
+                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
+            },
+            children=[
+                html.Div([
+                    html.H3("Distribuição do Sentimento", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
+                    html.P("Histograma e boxplot do sentimento diário", 
+                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
+                ]),
+                dcc.Graph(id="sentiment-dist-graph", config={"displayModeBar": True}),
+            ],
+        ),
+
+        # Card 8: Latência e Eventos
+        html.Div(
+            style={
+                "backgroundColor": "white",
+                "padding": "20px",
+                "borderRadius": "8px",
+                "marginBottom": "25px",
+                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
+            },
+            children=[
+                html.Div([
+                    html.H3("Latência por Fonte/Daypart", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
+                    html.P("Visão de latência de eventos/notícias (placeholder se não houver dados)", 
+                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
+                ]),
+                dcc.Graph(id="latency-graph", config={"displayModeBar": True}),
+            ],
+        ),
+
+        # Card 9: Curva de Backtest
+        html.Div(
+            style={
+                "backgroundColor": "white",
+                "padding": "20px",
+                "borderRadius": "8px",
+                "marginBottom": "25px",
+                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
+            },
+            children=[
+                html.Div([
+                    html.H3("Curva de Backtest", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
+                    html.P("Evolução de equity por modelo/estratégia (placeholder se não houver dados)", 
+                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
+                ]),
+                dcc.Graph(id="backtest-graph", config={"displayModeBar": True}),
+            ],
+        ),
     ],
 )
 
@@ -360,10 +470,10 @@ app.layout = html.Div(
 # ------------------------------------------------------------------------------
 
 
-def _filter_by_period(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
-    if df.empty or start is None or end is None:
+def _filter_by_period(df: pd.DataFrame, start: str, end: str, date_col: str = "day") -> pd.DataFrame:
+    if df.empty or start is None or end is None or date_col not in df.columns:
         return df
-    mask = (df["day"] >= pd.to_datetime(start)) & (df["day"] <= pd.to_datetime(end))
+    mask = (df[date_col] >= pd.to_datetime(start)) & (df[date_col] <= pd.to_datetime(end))
     return df.loc[mask].copy()
 
 
@@ -374,6 +484,11 @@ def _filter_by_period(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
     Output("model-table", "data"),
     Output("active-filters-indicator", "children"),
     Output("metric-badge", "children"),
+    Output("scatter-graph", "figure"),
+    Output("rolling-corr-graph", "figure"),
+    Output("sentiment-dist-graph", "figure"),
+    Output("latency-graph", "figure"),
+    Output("backtest-graph", "figure"),
     Input("date-range", "start_date"),
     Input("date-range", "end_date"),
     Input("model-filter", "value"),
@@ -381,10 +496,8 @@ def _filter_by_period(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
 )
 def update_dashboard(start_date, end_date, selected_models, metric):
     print(f"[DEBUG] Callback acionado: start={start_date}, end={end_date}, models={selected_models}, metric={metric}")
-    
-    # Gráfico do Ibovespa
-    ibov_filtered = _filter_by_period(IBOV_DF, start_date, end_date)
 
+    ibov_filtered = _filter_by_period(IBOV_DF, start_date, end_date, "day")
     ibov_fig = go.Figure()
     if not ibov_filtered.empty:
         ibov_fig.add_trace(
@@ -396,53 +509,33 @@ def update_dashboard(start_date, end_date, selected_models, metric):
                 line=dict(color="#1f77b4", width=2.5),
             )
         )
-    event_filtered = LATENCY_DF.copy()
+    event_filtered = _filter_by_period(LATENCY_DF, start_date, end_date, "event_day")
     if not event_filtered.empty:
-        mask = (event_filtered["event_day"] >= pd.to_datetime(start_date)) & (
-            event_filtered["event_day"] <= pd.to_datetime(end_date)
-        )
-        event_filtered = event_filtered.loc[mask]
-        if not event_filtered.empty:
-            ibov_fig.add_trace(
-                go.Scatter(
-                    x=event_filtered["event_day"],
-                    y=[ibov_filtered["close"].median()] * len(event_filtered) if not ibov_filtered.empty else event_filtered.index,
-                    mode="markers",
-                    marker=dict(size=10, color="red", symbol="triangle-up"),
-                    name="Eventos",
-                    text=event_filtered.get("event_name") or event_filtered[event_filtered.columns[0]],
-                    hovertemplate="%{text} - %{x|%Y-%m-%d}",
-                )
+        ibov_fig.add_trace(
+            go.Scatter(
+                x=event_filtered["event_day"],
+                y=[ibov_filtered["close"].median()] * len(event_filtered) if not ibov_filtered.empty else event_filtered.index,
+                mode="markers",
+                marker=dict(size=10, color="red", symbol="triangle-up"),
+                name="Eventos",
+                text=event_filtered.get("event_name") or event_filtered[event_filtered.columns[0]],
+                hovertemplate="%{text} - %{x|%Y-%m-%d}",
             )
+        )
     ibov_fig.update_layout(
         xaxis_title="Data",
-        yaxis_title="Preço do Ibovespa (pontos)",
+        yaxis_title="Pre?o do Ibovespa (pontos)",
         hovermode="x unified",
         template="plotly_white",
         font=dict(size=12),
-        xaxis=dict(
-            tickformat="%b %d\n%Y",
-            showgrid=True,
-            gridcolor="rgba(0,0,0,0.1)",
-        ),
-        yaxis=dict(
-            showgrid=True,
-            gridcolor="rgba(0,0,0,0.1)",
-            tickformat=",.0f",
-        ),
+        xaxis=dict(tickformat="%b %d\n%Y", showgrid=True, gridcolor="rgba(0,0,0,0.1)"),
+        yaxis=dict(showgrid=True, gridcolor="rgba(0,0,0,0.1)", tickformat=",.0f"),
         margin=dict(l=60, r=20, t=40, b=60),
     )
 
-    # Gráfico de sentimento
-    sentiment_filtered = _filter_by_period(SENTIMENT_DF, start_date, end_date)
+    sentiment_filtered = _filter_by_period(SENTIMENT_DF, start_date, end_date, "day")
     sentiment_fig = go.Figure()
     if not sentiment_filtered.empty:
-        # Criar cores condicionais (positivo vs negativo)
-        colors = ["rgba(76, 175, 80, 0.3)" if s >= 0 else "rgba(244, 67, 54, 0.3)" 
-                  for s in sentiment_filtered["sentiment"]]
-        line_colors = ["#4caf50" if s >= 0 else "#f44336" 
-                       for s in sentiment_filtered["sentiment"]]
-        
         sentiment_fig.add_trace(
             go.Scatter(
                 x=sentiment_filtered["day"],
@@ -455,55 +548,30 @@ def update_dashboard(start_date, end_date, selected_models, metric):
             )
         )
         sentiment_fig.add_hline(y=0, line_dash="dash", line_color="rgba(0,0,0,0.3)", line_width=1)
+    else:
+        sentiment_fig.add_annotation(text="Sem dados de sentimento", x=0.5, y=0.5, showarrow=False)
     sentiment_fig.update_layout(
         xaxis_title="Data",
         yaxis_title="Sentimento (escala -1 a +1)",
         hovermode="x unified",
         template="plotly_white",
         font=dict(size=12),
-        xaxis=dict(
-            tickformat="%b %d\n%Y",
-            showgrid=True,
-            gridcolor="rgba(0,0,0,0.1)",
-        ),
-        yaxis=dict(
-            showgrid=True,
-            gridcolor="rgba(0,0,0,0.1)",
-            zeroline=True,
-            zerolinecolor="rgba(0,0,0,0.3)",
-            zerolinewidth=2,
-        ),
+        xaxis=dict(tickformat="%b %d\n%Y", showgrid=True, gridcolor="rgba(0,0,0,0.1)"),
+        yaxis=dict(showgrid=True, gridcolor="rgba(0,0,0,0.1)", zeroline=True, zerolinecolor="rgba(0,0,0,0.3)", zerolinewidth=2),
         margin=dict(l=60, r=20, t=40, b=60),
     )
 
-    # Gráfico de comparação de modelos
     comparison_fig = go.Figure()
     table_df = RESULTS_DF.copy()
-    
-    # Filtrar por modelos selecionados
     if selected_models:
         table_df = table_df[table_df["model"].isin(selected_models)]
-    
-    # Ordenar pela métrica selecionada
     if metric in {"auc", "mda", "sharpe"} and metric in table_df.columns:
         table_df_sorted = table_df.dropna(subset=[metric]).sort_values(metric, ascending=False)
-        
         if not table_df_sorted.empty:
-            # Mapear labels das métricas
             metric_labels = {"auc": "AUC", "mda": "MDA (%)", "sharpe": "Sharpe Ratio"}
-            metric_formats = {"auc": ".3f", "mda": ".3f", "sharpe": ".2f"}
-            
-            # Identificar melhor modelo (primeira posição após ordenação)
             best_model = table_df_sorted.iloc[0]["model"]
-            colors = ["#2ecc71" if model == best_model else "#3498db" 
-                      for model in table_df_sorted["model"]]
-            
-            # Formatar texto nas barras
-            if metric in {"auc", "mda"}:
-                text_values = [f"{v:.3f}" for v in table_df_sorted[metric]]
-            else:  # sharpe
-                text_values = [f"{v:.2f}" for v in table_df_sorted[metric]]
-            
+            colors = ["#2ecc71" if model == best_model else "#3498db" for model in table_df_sorted["model"]]
+            text_values = [f"{v:.3f}" if metric in {"auc", "mda"} else f"{v:.2f}" for v in table_df_sorted[metric]]
             comparison_fig.add_trace(
                 go.Bar(
                     x=table_df_sorted["model"],
@@ -514,77 +582,155 @@ def update_dashboard(start_date, end_date, selected_models, metric):
                     marker=dict(
                         color=colors,
                         line=dict(
-                            color=["#27ae60" if model == best_model else "#2980b9" 
-                                   for model in table_df_sorted["model"]],
+                            color=["#27ae60" if model == best_model else "#2980b9" for model in table_df_sorted["model"]],
                             width=2,
                         ),
                     ),
                 )
             )
-            
-            comparison_fig.update_layout(
-                xaxis_title="Modelo",
-                yaxis_title=metric_labels.get(metric, metric.upper()),
-                hovermode="x unified",
-                showlegend=False,
-                template="plotly_white",
-                font=dict(size=12),
-                xaxis=dict(
-                    showgrid=False,
-                    tickangle=-45,
-                ),
-                yaxis=dict(
-                    showgrid=True,
-                    gridcolor="rgba(0,0,0,0.1)",
-                ),
-                margin=dict(l=60, r=20, t=40, b=100),
-            )
-    
-    # Ordenar tabela pela métrica
+    comparison_fig.update_layout(
+        xaxis_title="Modelos",
+        yaxis_title=metric.upper(),
+        template="plotly_white",
+        hovermode="x",
+        uniformtext_minsize=10,
+        uniformtext_mode="hide",
+        margin=dict(l=40, r=40, t=40, b=80),
+    )
     if metric in {"auc", "mda", "sharpe"} and metric in table_df.columns:
         table_df = table_df.sort_values(metric, ascending=False, na_position="last")
     table_df = table_df.fillna("")
 
-    # Criar indicadores visuais de filtros ativos
+    scatter_fig = go.Figure()
+    merged_sr = (
+        sentiment_filtered.merge(ibov_filtered[["day", "return"]], on="day", how="left")
+        if not sentiment_filtered.empty and not ibov_filtered.empty
+        else pd.DataFrame()
+    )
+    merged_sr = merged_sr.dropna(subset=["return"]) if not merged_sr.empty else merged_sr
+    if not merged_sr.empty:
+        corr = merged_sr["sentiment"].corr(merged_sr["return"])
+        scatter_fig.add_trace(
+            go.Scatter(
+                x=merged_sr["sentiment"],
+                y=merged_sr["return"],
+                mode="markers",
+                marker=dict(color="#1f77b4", size=6, opacity=0.6),
+                name="Sentimento x Retorno",
+            )
+        )
+        scatter_fig.add_annotation(text=f"Corr(Pearson)={corr:.3f} | N={len(merged_sr)}", xref="paper", yref="paper", x=0, y=1.1, showarrow=False)
+    else:
+        scatter_fig.add_annotation(text="Sem dados para dispers?o (sentimento x retorno)", x=0.5, y=0.5, showarrow=False)
+    scatter_fig.update_layout(
+        title="Dispers?o Sentimento x Retorno di?rio",
+        xaxis_title="Sentimento",
+        yaxis_title="Retorno di?rio",
+        template="plotly_white",
+    )
+
+    rolling_fig = go.Figure()
+    if not merged_sr.empty:
+        merged_sr = merged_sr.sort_values("day")
+        for window in [60, 90]:
+            merged_sr[f"corr_{window}d"] = merged_sr["sentiment"].rolling(window).corr(merged_sr["return"])
+            rolling_fig.add_trace(
+                go.Scatter(
+                    x=merged_sr["day"],
+                    y=merged_sr[f"corr_{window}d"],
+                    mode="lines",
+                    name=f"Corr {window}d",
+                )
+            )
+    if not rolling_fig.data:
+        rolling_fig.add_annotation(text="Sem dados para correla??o m?vel", x=0.5, y=0.5, showarrow=False)
+    rolling_fig.update_layout(
+        title="Correla??o m?vel (60d / 90d) entre Sentimento e Retorno",
+        xaxis_title="Data",
+        yaxis_title="Correla??o",
+        template="plotly_white",
+    )
+
+    dist_fig = go.Figure()
+    if not sentiment_filtered.empty:
+        dist_fig.add_trace(go.Histogram(x=sentiment_filtered["sentiment"], nbinsx=40, name="Histograma", opacity=0.6))
+        dist_fig.add_trace(go.Box(x=sentiment_filtered["sentiment"], name="Boxplot", boxpoints="outliers", marker_color="#e74c3c"))
+    else:
+        dist_fig.add_annotation(text="Sem dados de sentimento para distribuir", x=0.5, y=0.5, showarrow=False)
+    dist_fig.update_layout(
+        title="Distribui??o do Sentimento",
+        xaxis_title="Sentimento",
+        template="plotly_white",
+        barmode="overlay",
+    )
+
+    latency_fig = go.Figure()
+    if not event_filtered.empty and "fonte" in event_filtered.columns:
+        latency_fig.add_trace(go.Bar(x=event_filtered["fonte"], y=event_filtered.get("car_max_abs", 0), name="Lat?ncia por fonte"))
+    if not latency_fig.data:
+        latency_fig.add_annotation(text="Sem eventos de lat?ncia no per?odo", x=0.5, y=0.5, showarrow=False)
+    latency_fig.update_layout(
+        title="Lat?ncia por fonte/daypart",
+        xaxis_title="Fonte",
+        yaxis_title="Lat?ncia / CAR",
+        template="plotly_white",
+    )
+
+    backtest_fig = go.Figure()
+    backtest_filtered = _filter_by_period(BACKTEST_DF, start_date, end_date, "day")
+    if selected_models:
+        backtest_filtered = backtest_filtered[backtest_filtered["model"].isin(selected_models)]
+    if not backtest_filtered.empty:
+        for (model, strategy), grp in backtest_filtered.groupby(["model", "strategy"]):
+            backtest_fig.add_trace(
+                go.Scatter(
+                    x=grp["day"],
+                    y=grp["equity"],
+                    mode="lines",
+                    name=f"{model} | {strategy}",
+                )
+            )
+    if not backtest_fig.data:
+        backtest_fig.add_annotation(text="Sem curva de backtest dispon?vel", x=0.5, y=0.5, showarrow=False)
+    backtest_fig.update_layout(
+        title="Curva de Backtest",
+        xaxis_title="Data",
+        yaxis_title="Equity",
+        template="plotly_white",
+    )
+
     metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
-    
-    # Calcular janela temporal
     days_count = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days + 1
     ibov_days = len(ibov_filtered) if not ibov_filtered.empty else 0
     sentiment_days = len(sentiment_filtered) if not sentiment_filtered.empty else 0
-    
-    # Criar lista de modelos selecionados
     models_text = ", ".join(selected_models) if selected_models else "Nenhum modelo selecionado"
     if selected_models and len(selected_models) == len(MODEL_OPTIONS):
         models_text = f"Todos os modelos ({len(MODEL_OPTIONS)})"
-    
     indicator_content = html.Div(
         style={"display": "flex", "flexWrap": "wrap", "gap": "20px", "alignItems": "center"},
         children=[
-            html.Div([
-                html.Strong("📅 Período: ", style={"color": "#1976d2"}),
-                html.Span(f"{start_date} a {end_date} ({days_count} dias)"),
-            ]),
-            html.Div([
-                html.Strong("📊 Dados: ", style={"color": "#1976d2"}),
-                html.Span(f"Ibovespa: {ibov_days} dias | Sentimento: {sentiment_days} dias"),
-            ]),
-            html.Div([
-                html.Strong("🤖 Modelos: ", style={"color": "#1976d2"}),
-                html.Span(models_text),
-            ]),
-            html.Div([
-                html.Strong("📈 Métrica: ", style={"color": "#1976d2"}),
-                html.Span(metric_labels.get(metric, metric.upper()), style={"fontWeight": "600", "color": "#2e7d32"}),
-            ]),
+            html.Div([html.Strong(" Per?odo: ", style={"color": "#1976d2"}), html.Span(f"{start_date} a {end_date} ({days_count} dias)")]),
+            html.Div([html.Strong(" Dados: ", style={"color": "#1976d2"}), html.Span(f"Ibovespa: {ibov_days} dias | Sentimento: {sentiment_days} dias")]),
+            html.Div([html.Strong(" Modelos: ", style={"color": "#1976d2"}), html.Span(models_text)]),
+            html.Div([html.Strong(" M?trica: ", style={"color": "#1976d2"}), html.Span(metric_labels.get(metric, metric.upper()), style={"fontWeight": "600", "color": "#2e7d32"})]),
         ],
     )
+    metric_badge_text = f" M?trica: {metric_labels.get(metric, metric.upper())}"
 
-    metric_badge_text = f"📊 Métrica: {metric_labels.get(metric, metric.upper())}"
-    
-    return ibov_fig, sentiment_fig, comparison_fig, table_df.to_dict("records"), indicator_content, metric_badge_text
-
-
+    print(f"[DEBUG] Filtered IBOV rows={len(ibov_filtered)}, SENT rows={len(sentiment_filtered)}, start={start_date}, end={end_date}")
+    return (
+        ibov_fig,
+        sentiment_fig,
+        comparison_fig,
+        table_df.to_dict("records"),
+        indicator_content,
+        metric_badge_text,
+        scatter_fig,
+        rolling_fig,
+        dist_fig,
+        latency_fig,
+        backtest_fig,
+    )
 # ------------------------------------------------------------------------------
 # Helpers usados em smoke tests (pytest)
 # ------------------------------------------------------------------------------
@@ -610,5 +756,12 @@ def update_additional_graphs(start_date=None, end_date=None, selected_model=None
 # ------------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    print("Iniciando dashboard em http://localhost:8050 ...")
-    app.run(debug=True)
+    import os
+    import sys
+
+    host = os.getenv("DASH_HOST", "127.0.0.1")
+    port = int(os.getenv("DASH_PORT", "8050"))
+    print(f"Dashboard: http://{host}:{port}")
+    print(f"Python: {sys.executable}")
+    # Mantém o servidor vivo sem reloader/threads extras (melhor para diagnósticos locais)
+    app.run(host=host, port=port, debug=False, use_reloader=False)
