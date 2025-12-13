@@ -205,3 +205,13 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project-specific artifacts
+mlruns/
+notebooks/_runs/
+.tmp_diff_*.txt
+*.tmp
+*.log
+tmp_*
+__pycache__/
+.pytest_cache/
