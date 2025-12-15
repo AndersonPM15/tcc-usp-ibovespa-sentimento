@@ -70,6 +70,23 @@ def _dataset_status_entry(nome: str, df: pd.DataFrame, path: Path, date_col: str
     return f"{nome}: linhas={len(df)} | min={min_dt.date()} | max={max_dt.date()}"
 
 
+def normalize_dates(df: pd.DataFrame, col: str) -> pd.DataFrame:
+    """Garante coluna datetime e dropa inválidos."""
+    if df.empty or col not in df.columns:
+        return df
+    df = df.copy()
+    df[col] = pd.to_datetime(df[col], errors="coerce")
+    return df.dropna(subset=[col])
+
+
+def filter_period(df: pd.DataFrame, start: str, end: str, col: str) -> pd.DataFrame:
+    if df.empty or col not in df.columns or start is None or end is None:
+        return df
+    df = normalize_dates(df, col)
+    mask = (df[col] >= pd.to_datetime(start)) & (df[col] <= pd.to_datetime(end))
+    return df.loc[mask].copy()
+
+
 def check_port(host: str, port: int) -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.settimeout(1.0)
@@ -488,10 +505,27 @@ app.layout = html.Div(
 
 
 def _filter_by_period(df: pd.DataFrame, start: str, end: str, date_col: str = "day") -> pd.DataFrame:
-    if df.empty or start is None or end is None or date_col not in df.columns:
-        return df
-    mask = (df[date_col] >= pd.to_datetime(start)) & (df[date_col] <= pd.to_datetime(end))
-    return df.loc[mask].copy()
+    return filter_period(df, start, end, date_col)
+
+
+def _log_df(label: str, df: pd.DataFrame, date_col: str | None) -> None:
+    if df.empty:
+        print(f"[DIAG] {label}: vazio")
+        return
+    info = {"rows": len(df)}
+    if date_col and date_col in df.columns:
+        series = pd.to_datetime(df[date_col], errors="coerce").dropna()
+        if not series.empty:
+            info["min"] = series.min().date()
+            info["max"] = series.max().date()
+    print(f"[DIAG] {label}: {info}")
+
+
+def _placeholder_fig(title: str, message: str) -> go.Figure:
+    fig = go.Figure()
+    fig.add_annotation(text=message, x=0.5, y=0.5, showarrow=False)
+    fig.update_layout(title=title, template="plotly_white")
+    return fig
 
 
 @app.callback(
@@ -513,249 +547,313 @@ def _filter_by_period(df: pd.DataFrame, start: str, end: str, date_col: str = "d
     Input("metric-filter", "value"),
 )
 def update_dashboard(start_date, end_date, selected_models, metric):
-    print(f"[DEBUG] Callback acionado: start={start_date}, end={end_date}, models={selected_models}, metric={metric}")
+    try:
+        print(f"[DEBUG] Callback acionado: start={start_date}, end={end_date}, models={selected_models}, metric={metric}")
 
-    ibov_filtered = _filter_by_period(IBOV_DF, start_date, end_date, "day")
-    ibov_fig = go.Figure()
-    if not ibov_filtered.empty:
-        ibov_fig.add_trace(
-            go.Scatter(
-                x=ibov_filtered["day"],
-                y=ibov_filtered["close"],
-                mode="lines",
-                name="Ibovespa",
-                line=dict(color="#1f77b4", width=2.5),
-            )
-        )
-    event_filtered = _filter_by_period(LATENCY_DF, start_date, end_date, "event_day")
-    if not event_filtered.empty:
-        ibov_fig.add_trace(
-            go.Scatter(
-                x=event_filtered["event_day"],
-                y=[ibov_filtered["close"].median()] * len(event_filtered) if not ibov_filtered.empty else event_filtered.index,
-                mode="markers",
-                marker=dict(size=10, color="red", symbol="triangle-up"),
-                name="Eventos",
-                text=event_filtered.get("event_name") or event_filtered[event_filtered.columns[0]],
-                hovertemplate="%{text} - %{x|%Y-%m-%d}",
-            )
-        )
-    ibov_fig.update_layout(
-        xaxis_title="Data",
-        yaxis_title="Preço do Ibovespa (pontos)",
-        hovermode="x unified",
-        template="plotly_white",
-        font=dict(size=12),
-        xaxis=dict(tickformat="%b %d\n%Y", showgrid=True, gridcolor="rgba(0,0,0,0.1)"),
-        yaxis=dict(showgrid=True, gridcolor="rgba(0,0,0,0.1)", tickformat=",.0f"),
-        margin=dict(l=60, r=20, t=40, b=60),
-    )
+        ibov_filtered = _filter_by_period(IBOV_DF, start_date, end_date, "day")
+        sentiment_filtered = _filter_by_period(SENTIMENT_DF, start_date, end_date, "day")
+        backtest_filtered = _filter_by_period(BACKTEST_DF, start_date, end_date, "day")
+        event_filtered = _filter_by_period(LATENCY_DF, start_date, end_date, "event_day")
 
-    sentiment_filtered = _filter_by_period(SENTIMENT_DF, start_date, end_date, "day")
-    sentiment_fig = go.Figure()
-    if not sentiment_filtered.empty:
-        sentiment_fig.add_trace(
-            go.Scatter(
-                x=sentiment_filtered["day"],
-                y=sentiment_filtered["sentiment"],
-                mode="lines",
-                fill="tozeroy",
-                name="Sentimento",
-                line=dict(color="#666", width=2),
-                fillcolor="rgba(100, 100, 100, 0.2)",
-            )
-        )
-        sentiment_fig.add_hline(y=0, line_dash="dash", line_color="rgba(0,0,0,0.3)", line_width=1)
-    else:
-        sentiment_fig.add_annotation(text="Sem dados de sentimento", x=0.5, y=0.5, showarrow=False)
-    sentiment_fig.update_layout(
-        xaxis_title="Data",
-        yaxis_title="Sentimento (escala -1 a +1)",
-        hovermode="x unified",
-        template="plotly_white",
-        font=dict(size=12),
-        xaxis=dict(tickformat="%b %d\n%Y", showgrid=True, gridcolor="rgba(0,0,0,0.1)"),
-        yaxis=dict(showgrid=True, gridcolor="rgba(0,0,0,0.1)", zeroline=True, zerolinecolor="rgba(0,0,0,0.3)", zerolinewidth=2),
-        margin=dict(l=60, r=20, t=40, b=60),
-    )
+        _log_df("IBOV filtrado", ibov_filtered, "day")
+        _log_df("Sentimento filtrado", sentiment_filtered, "day")
+        _log_df("Backtest filtrado", backtest_filtered, "day")
+        _log_df("Latência filtrada", event_filtered, "event_day")
 
-    comparison_fig = go.Figure()
-    table_df = RESULTS_DF.copy()
-    if selected_models:
-        table_df = table_df[table_df["model"].isin(selected_models)]
-    if metric in {"auc", "mda", "sharpe"} and metric in table_df.columns:
-        table_df_sorted = table_df.dropna(subset=[metric]).sort_values(metric, ascending=False)
-        if not table_df_sorted.empty:
-            metric_labels = {"auc": "AUC", "mda": "MDA (%)", "sharpe": "Sharpe Ratio"}
-            best_model = table_df_sorted.iloc[0]["model"]
-            colors = ["#2ecc71" if model == best_model else "#3498db" for model in table_df_sorted["model"]]
-            text_values = [f"{v:.3f}" if metric in {"auc", "mda"} else f"{v:.2f}" for v in table_df_sorted[metric]]
-            comparison_fig.add_trace(
-                go.Bar(
-                    x=table_df_sorted["model"],
-                    y=table_df_sorted[metric],
-                    text=text_values,
-                    textposition="outside",
-                    name=metric_labels.get(metric, metric.upper()),
-                    marker=dict(
-                        color=colors,
-                        line=dict(
-                            color=["#27ae60" if model == best_model else "#2980b9" for model in table_df_sorted["model"]],
-                            width=2,
+        ibov_fig = go.Figure()
+        if not ibov_filtered.empty:
+            ibov_fig.add_trace(
+                go.Scatter(
+                    x=ibov_filtered["day"],
+                    y=ibov_filtered["close"],
+                    mode="lines",
+                    name="Ibovespa",
+                    line=dict(color="#1f77b4", width=2.5),
+                )
+            )
+        if not event_filtered.empty:
+            ibov_fig.add_trace(
+                go.Scatter(
+                    x=event_filtered["event_day"],
+                    y=[ibov_filtered["close"].median()] * len(event_filtered) if not ibov_filtered.empty else event_filtered.index,
+                    mode="markers",
+                    marker=dict(size=10, color="red", symbol="triangle-up"),
+                    name="Eventos",
+                    text=event_filtered.get("event_name") or event_filtered[event_filtered.columns[0]],
+                    hovertemplate="%{text} - %{x|%Y-%m-%d}",
+                )
+            )
+        ibov_fig.update_layout(
+            xaxis_title="Data",
+            yaxis_title="Preço do Ibovespa (pontos)",
+            hovermode="x unified",
+            template="plotly_white",
+            font=dict(size=12),
+            xaxis=dict(tickformat="%b %d\n%Y", showgrid=True, gridcolor="rgba(0,0,0,0.1)"),
+            yaxis=dict(showgrid=True, gridcolor="rgba(0,0,0,0.1)", tickformat=",.0f"),
+            margin=dict(l=60, r=20, t=40, b=60),
+        )
+
+        sentiment_fig = go.Figure()
+        if not sentiment_filtered.empty:
+            sentiment_fig.add_trace(
+                go.Scatter(
+                    x=sentiment_filtered["day"],
+                    y=sentiment_filtered["sentiment"],
+                    mode="lines",
+                    fill="tozeroy",
+                    name="Sentimento",
+                    line=dict(color="#666", width=2),
+                    fillcolor="rgba(100, 100, 100, 0.2)",
+                )
+            )
+            sentiment_fig.add_hline(y=0, line_dash="dash", line_color="rgba(0,0,0,0.3)", line_width=1)
+        else:
+            sentiment_fig.add_annotation(text="Sem dados de sentimento", x=0.5, y=0.5, showarrow=False)
+        sentiment_fig.update_layout(
+            xaxis_title="Data",
+            yaxis_title="Sentimento (escala -1 a +1)",
+            hovermode="x unified",
+            template="plotly_white",
+            font=dict(size=12),
+            xaxis=dict(tickformat="%b %d\n%Y", showgrid=True, gridcolor="rgba(0,0,0,0.1)"),
+            yaxis=dict(showgrid=True, gridcolor="rgba(0,0,0,0.1)", zeroline=True, zerolinecolor="rgba(0,0,0,0.3)", zerolinewidth=2),
+            margin=dict(l=60, r=20, t=40, b=60),
+        )
+
+        comparison_fig = go.Figure()
+        table_df = RESULTS_DF.copy()
+        if selected_models:
+            table_df = table_df[table_df["model"].isin(selected_models)]
+        best_model_name = None
+        best_metric_val = None
+        metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
+        if metric in {"auc", "mda", "sharpe"} and metric in table_df.columns:
+            table_df_sorted = table_df.dropna(subset=[metric]).sort_values(metric, ascending=False)
+            if not table_df_sorted.empty:
+                best_model_name = table_df_sorted.iloc[0]["model"]
+                best_metric_val = table_df_sorted.iloc[0][metric]
+                colors = ["#2ecc71" if model == best_model_name else "#3498db" for model in table_df_sorted["model"]]
+                text_values = [f"{v:.3f}" if metric in {"auc", "mda"} else f"{v:.2f}" for v in table_df_sorted[metric]]
+                comparison_fig.add_trace(
+                    go.Bar(
+                        x=table_df_sorted["model"],
+                        y=table_df_sorted[metric],
+                        text=text_values,
+                        textposition="outside",
+                        name=metric_labels.get(metric, metric.upper()),
+                        marker=dict(
+                            color=colors,
+                            line=dict(
+                                color=["#27ae60" if model == best_model_name else "#2980b9" for model in table_df_sorted["model"]],
+                                width=2,
+                            ),
                         ),
-                    ),
+                    )
+                )
+        comparison_fig.update_layout(
+            xaxis_title="Modelos",
+            yaxis_title=metric.upper(),
+            template="plotly_white",
+            hovermode="x",
+            uniformtext_minsize=10,
+            uniformtext_mode="hide",
+            margin=dict(l=40, r=40, t=40, b=80),
+        )
+        if metric in {"auc", "mda", "sharpe"} and metric in table_df.columns:
+            table_df = table_df.sort_values(metric, ascending=False, na_position="last")
+        table_df = table_df.fillna("—")
+
+        scatter_fig = go.Figure()
+        merged_sr = (
+            sentiment_filtered.merge(ibov_filtered[["day", "return"]], on="day", how="left")
+            if not sentiment_filtered.empty and not ibov_filtered.empty
+            else pd.DataFrame()
+        )
+        merged_sr = merged_sr.dropna(subset=["return"]) if not merged_sr.empty else merged_sr
+        if not merged_sr.empty:
+            corr = merged_sr["sentiment"].corr(merged_sr["return"])
+            scatter_fig.add_trace(
+                go.Scatter(
+                    x=merged_sr["sentiment"],
+                    y=merged_sr["return"],
+                    mode="markers",
+                    marker=dict(color="#1f77b4", size=6, opacity=0.6),
+                    name="Sentimento x Retorno",
                 )
             )
-    comparison_fig.update_layout(
-        xaxis_title="Modelos",
-        yaxis_title=metric.upper(),
-        template="plotly_white",
-        hovermode="x",
-        uniformtext_minsize=10,
-        uniformtext_mode="hide",
-        margin=dict(l=40, r=40, t=40, b=80),
-    )
-    if metric in {"auc", "mda", "sharpe"} and metric in table_df.columns:
-        table_df = table_df.sort_values(metric, ascending=False, na_position="last")
-    table_df = table_df.fillna("—")
+            scatter_fig.add_annotation(text=f"Corr(Pearson)={corr:.3f} | N={len(merged_sr)}", xref="paper", yref="paper", x=0, y=1.1, showarrow=False)
+        else:
+            scatter_fig.add_annotation(text="Sem dados para dispersão (sentimento x retorno)", x=0.5, y=0.5, showarrow=False)
+        scatter_fig.update_layout(
+            title="Dispersão Sentimento x Retorno diário",
+            xaxis_title="Sentimento",
+            yaxis_title="Retorno diário",
+            template="plotly_white",
+        )
 
-    scatter_fig = go.Figure()
-    merged_sr = (
-        sentiment_filtered.merge(ibov_filtered[["day", "return"]], on="day", how="left")
-        if not sentiment_filtered.empty and not ibov_filtered.empty
-        else pd.DataFrame()
-    )
-    merged_sr = merged_sr.dropna(subset=["return"]) if not merged_sr.empty else merged_sr
-    if not merged_sr.empty:
-        corr = merged_sr["sentiment"].corr(merged_sr["return"])
-        scatter_fig.add_trace(
-            go.Scatter(
-                x=merged_sr["sentiment"],
-                y=merged_sr["return"],
-                mode="markers",
-                marker=dict(color="#1f77b4", size=6, opacity=0.6),
-                name="Sentimento x Retorno",
+        rolling_fig = go.Figure()
+        if not merged_sr.empty:
+            merged_sr = merged_sr.sort_values("day")
+            for window in [60, 90]:
+                merged_sr[f"corr_{window}d"] = merged_sr["sentiment"].rolling(window).corr(merged_sr["return"])
+                rolling_fig.add_trace(
+                    go.Scatter(
+                        x=merged_sr["day"],
+                        y=merged_sr[f"corr_{window}d"],
+                        mode="lines",
+                        name=f"Corr {window}d",
+                    )
+                )
+        if not rolling_fig.data:
+            rolling_fig.add_annotation(text="Sem dados para correlação móvel", x=0.5, y=0.5, showarrow=False)
+        rolling_fig.update_layout(
+            title="Correlação móvel (60d / 90d) entre Sentimento e Retorno",
+            xaxis_title="Data",
+            yaxis_title="Correlação",
+            template="plotly_white",
+        )
+
+        dist_fig = go.Figure()
+        if not sentiment_filtered.empty:
+            dist_fig.add_trace(go.Histogram(x=sentiment_filtered["sentiment"], nbinsx=40, name="Histograma", opacity=0.6))
+            dist_fig.add_trace(go.Box(x=sentiment_filtered["sentiment"], name="Boxplot", boxpoints="outliers", marker_color="#e74c3c"))
+        else:
+            dist_fig.add_annotation(text="Sem dados de sentimento para distribuir", x=0.5, y=0.5, showarrow=False)
+        dist_fig.update_layout(
+            title="Distribuição do Sentimento",
+            xaxis_title="Sentimento",
+            template="plotly_white",
+            barmode="overlay",
+        )
+
+        if not event_filtered.empty and "fonte" in event_filtered.columns:
+            latency_fig = go.Figure()
+            latency_fig.add_trace(go.Bar(x=event_filtered["fonte"], y=event_filtered.get("car_max_abs", 0), name="Latência por fonte"))
+            latency_fig.update_layout(
+                title="Latência por fonte/daypart",
+                xaxis_title="Fonte",
+                yaxis_title="Latência / CAR",
+                template="plotly_white",
+            )
+        else:
+            latency_fig = _placeholder_fig(
+                "Latência",
+                "Sem eventos de latência no período (arquivo vazio ou não gerado). Para gerar: executar notebook 11 / pipeline de latência.",
+            )
+
+        backtest_fig = go.Figure()
+        if selected_models:
+            backtest_filtered = backtest_filtered[backtest_filtered["model"].isin(selected_models)]
+        if not backtest_filtered.empty:
+            for (model, strategy), grp in backtest_filtered.groupby(["model", "strategy"]):
+                backtest_fig.add_trace(
+                    go.Scatter(
+                        x=grp["day"],
+                        y=grp["equity"],
+                        mode="lines",
+                        name=f"{model} | {strategy}",
+                    )
+                )
+        if not backtest_fig.data:
+            backtest_fig.add_annotation(text="Sem curva de backtest disponível", x=0.5, y=0.5, showarrow=False)
+        backtest_fig.update_layout(
+            title="Curva de Backtest",
+            xaxis_title="Data",
+            yaxis_title="Equity",
+            template="plotly_white",
+        )
+
+        metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
+        days_count = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days + 1
+        ibov_days = len(ibov_filtered) if not ibov_filtered.empty else 0
+        sentiment_days = len(sentiment_filtered) if not sentiment_filtered.empty else 0
+        inter_days = len(
+            pd.merge(
+                ibov_filtered[["day"]] if not ibov_filtered.empty else pd.DataFrame(columns=["day"]),
+                sentiment_filtered[["day"]] if not sentiment_filtered.empty else pd.DataFrame(columns=["day"]),
+                on="day",
+                how="inner",
             )
         )
-        scatter_fig.add_annotation(text=f"Corr(Pearson)={corr:.3f} | N={len(merged_sr)}", xref="paper", yref="paper", x=0, y=1.1, showarrow=False)
-    else:
-        scatter_fig.add_annotation(text="Sem dados para dispersão (sentimento x retorno)", x=0.5, y=0.5, showarrow=False)
-    scatter_fig.update_layout(
-        title="Dispersão Sentimento x Retorno diário",
-        xaxis_title="Sentimento",
-        yaxis_title="Retorno diário",
-        template="plotly_white",
-    )
+        models_text = ", ".join(selected_models) if selected_models else "Nenhum modelo selecionado"
+        if selected_models and len(selected_models) == len(MODEL_OPTIONS):
+            models_text = f"Todos os modelos ({len(MODEL_OPTIONS)})"
 
-    rolling_fig = go.Figure()
-    if not merged_sr.empty:
-        merged_sr = merged_sr.sort_values("day")
-        for window in [60, 90]:
-            merged_sr[f"corr_{window}d"] = merged_sr["sentiment"].rolling(window).corr(merged_sr["return"])
-            rolling_fig.add_trace(
-                go.Scatter(
-                    x=merged_sr["day"],
-                    y=merged_sr[f"corr_{window}d"],
-                    mode="lines",
-                    name=f"Corr {window}d",
-                )
-            )
-    if not rolling_fig.data:
-        rolling_fig.add_annotation(text="Sem dados para correlação móvel", x=0.5, y=0.5, showarrow=False)
-    rolling_fig.update_layout(
-        title="Correlação móvel (60d / 90d) entre Sentimento e Retorno",
-        xaxis_title="Data",
-        yaxis_title="Correlação",
-        template="plotly_white",
-    )
-
-    dist_fig = go.Figure()
-    if not sentiment_filtered.empty:
-        dist_fig.add_trace(go.Histogram(x=sentiment_filtered["sentiment"], nbinsx=40, name="Histograma", opacity=0.6))
-        dist_fig.add_trace(go.Box(x=sentiment_filtered["sentiment"], name="Boxplot", boxpoints="outliers", marker_color="#e74c3c"))
-    else:
-        dist_fig.add_annotation(text="Sem dados de sentimento para distribuir", x=0.5, y=0.5, showarrow=False)
-    dist_fig.update_layout(
-        title="Distribuição do Sentimento",
-        xaxis_title="Sentimento",
-        template="plotly_white",
-        barmode="overlay",
-    )
-
-    latency_fig = go.Figure()
-    if not event_filtered.empty and "fonte" in event_filtered.columns:
-        latency_fig.add_trace(go.Bar(x=event_filtered["fonte"], y=event_filtered.get("car_max_abs", 0), name="Latência por fonte"))
-    else:
-        latency_fig.add_annotation(
-            text="Sem eventos de latência no período (arquivo vazio ou não gerado). Para gerar: executar notebook 11 / pipeline de latência.",
-            x=0.5,
-            y=0.5,
-            showarrow=False,
+        kpis = [
+            ("Dias IBOV", ibov_days),
+            ("Dias Sentimento", sentiment_days),
+            ("Interseção IBOV ∩ Sent", inter_days),
+            ("Melhor modelo", f"{best_model_name} ({best_metric_val:.3f})" if best_model_name else "—"),
+        ]
+        indicator_content = html.Div(
+            children=[
+                html.Div(
+                    className="kpi-grid",
+                    children=[
+                        html.Div(className="kpi-card", children=[html.Div(k, className="kpi-label"), html.Div(v, className="kpi-value")])
+                        for k, v in kpis
+                    ],
+                ),
+                html.Div(
+                    className="interpret-block",
+                    children=[
+                        html.Strong("Como interpretar:"),
+                        html.Ul(
+                            [
+                                html.Li("Sentimento diário (escala -1 a +1) alinhado ao retorno do Ibovespa."),
+                                html.Li("Comparativo de modelos filtra por métrica selecionada (AUC/MDA/Sharpe)."),
+                                html.Li("Latência mostra mensagem acadêmica quando não há eventos estruturados."),
+                            ]
+                        ),
+                    ],
+                ),
+                html.Div(
+                    className="indicator-bar",
+                    children=[
+                        html.Div([html.Strong("Período: "), html.Span(f"{start_date} a {end_date} ({days_count} dias)")]),
+                        html.Div([html.Strong("Modelos: "), html.Span(models_text)]),
+                        html.Div([html.Strong("Métrica: "), html.Span(metric_labels.get(metric, metric.upper()))]),
+                    ],
+                ),
+            ]
         )
-    latency_fig.update_layout(
-        title="Latência por fonte/daypart",
-        xaxis_title="Fonte",
-        yaxis_title="Latência / CAR",
-        template="plotly_white",
-    )
+        metric_badge_text = f" Métrica: {metric_labels.get(metric, metric.upper())}"
+        ui_status = f"Última interação: {ctx.triggered_id or 'init'} @ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
 
-    backtest_fig = go.Figure()
-    backtest_filtered = _filter_by_period(BACKTEST_DF, start_date, end_date, "day")
-    if selected_models:
-        backtest_filtered = backtest_filtered[backtest_filtered["model"].isin(selected_models)]
-    if not backtest_filtered.empty:
-        for (model, strategy), grp in backtest_filtered.groupby(["model", "strategy"]):
-            backtest_fig.add_trace(
-                go.Scatter(
-                    x=grp["day"],
-                    y=grp["equity"],
-                    mode="lines",
-                    name=f"{model} | {strategy}",
-                )
-            )
-    if not backtest_fig.data:
-        backtest_fig.add_annotation(text="Sem curva de backtest disponível", x=0.5, y=0.5, showarrow=False)
-    backtest_fig.update_layout(
-        title="Curva de Backtest",
-        xaxis_title="Data",
-        yaxis_title="Equity",
-        template="plotly_white",
-    )
-
-    metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
-    days_count = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days + 1
-    ibov_days = len(ibov_filtered) if not ibov_filtered.empty else 0
-    sentiment_days = len(sentiment_filtered) if not sentiment_filtered.empty else 0
-    models_text = ", ".join(selected_models) if selected_models else "Nenhum modelo selecionado"
-    if selected_models and len(selected_models) == len(MODEL_OPTIONS):
-        models_text = f"Todos os modelos ({len(MODEL_OPTIONS)})"
-    indicator_content = html.Div(
-        style={"display": "flex", "flexWrap": "wrap", "gap": "20px", "alignItems": "center"},
-        children=[
-            html.Div([html.Strong(" Período: ", style={"color": "#1976d2"}), html.Span(f"{start_date} a {end_date} ({days_count} dias)")]),
-            html.Div([html.Strong(" Dados: ", style={"color": "#1976d2"}), html.Span(f"Ibovespa: {ibov_days} dias | Sentimento: {sentiment_days} dias")]),
-            html.Div([html.Strong(" Modelos: ", style={"color": "#1976d2"}), html.Span(models_text)]),
-            html.Div([html.Strong(" Métrica: ", style={"color": "#1976d2"}), html.Span(metric_labels.get(metric, metric.upper()), style={"fontWeight": "600", "color": "#2e7d32"})]),
-        ],
-    )
-    metric_badge_text = f" Métrica: {metric_labels.get(metric, metric.upper())}"
-    ui_status = f"Última interação: {ctx.triggered_id or 'init'} @ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-
-    print(f"[DEBUG] Filtered IBOV rows={len(ibov_filtered)}, SENT rows={len(sentiment_filtered)}, start={start_date}, end={end_date}")
-    return (
-        ibov_fig,
-        sentiment_fig,
-        comparison_fig,
-        table_df.to_dict("records"),
-        indicator_content,
-        metric_badge_text,
-        ui_status,
-        scatter_fig,
-        rolling_fig,
-        dist_fig,
-        latency_fig,
-        backtest_fig,
-    )
+        print(f"[DEBUG] Filtered IBOV rows={len(ibov_filtered)}, SENT rows={len(sentiment_filtered)}, BACKTEST rows={len(backtest_filtered)}, INTER={inter_days}")
+        return (
+            ibov_fig,
+            sentiment_fig,
+            comparison_fig,
+            table_df.to_dict("records"),
+            indicator_content,
+            metric_badge_text,
+            ui_status,
+            scatter_fig,
+            rolling_fig,
+            dist_fig,
+            latency_fig,
+            backtest_fig,
+        )
+    except Exception as exc:  # noqa: BLE001
+        err_msg = f"Erro no callback: {exc}"
+        print("[ERRO CALLBACK]", err_msg, file=sys.stderr)
+        placeholder = _placeholder_fig("Erro", "Verifique logs no servidor.")
+        return (
+            placeholder,
+            placeholder,
+            placeholder,
+            [],
+            html.Div(f"Erro no callback: {exc}", style={"color": "red"}),
+            "Erro",
+            f"Erro: {exc}",
+            placeholder,
+            placeholder,
+            placeholder,
+            placeholder,
+            placeholder,
+        )
 # ------------------------------------------------------------------------------
 # Helpers usados em smoke tests (pytest)
 # ------------------------------------------------------------------------------
