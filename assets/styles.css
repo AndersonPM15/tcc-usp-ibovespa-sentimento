@@ -1,0 +1,110 @@
+/* Base layout */
+body {
+  font-family: "Segoe UI", "Inter", "Arial", sans-serif;
+  background: #f5f7fa;
+  color: #1f2933;
+  margin: 0;
+}
+
+.page-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 20px 36px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+  margin-bottom: 22px;
+}
+
+.card h3,
+.card h4 {
+  margin: 0 0 6px 0;
+  color: #1f2933;
+}
+
+.card p {
+  margin: 0 0 12px 0;
+  color: #52606d;
+  font-size: 0.95rem;
+}
+
+.grid-two {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.grid-three {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.status-list {
+  padding-left: 18px;
+  margin: 0;
+  color: #374151;
+}
+
+.status-title {
+  font-weight: 600;
+  color: #1d4ed8;
+  margin-bottom: 8px;
+}
+
+.controls-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.badge {
+  background: #10b981;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.indicator-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  color: #1f2933;
+}
+
+.indicator-bar strong {
+  color: #1d4ed8;
+}
+
+.last-trigger {
+  font-size: 0.85rem;
+  color: #52606d;
+}
+
+.placeholder-text {
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+/* Graph sizing */
+.dash-graph {
+  height: 420px;
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 16px 14px 28px;
+  }
+  .dash-graph {
+    height: 360px;
+  }
+}

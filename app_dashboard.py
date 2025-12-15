@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Plotly Dash application for the TCC USP sentiment x Ibovespa project.
-
-Run with:
-    python app_dashboard.py
-
-The app reads the same artifacts used in `20_final_dashboard_analysis.ipynb`
-and exposes interactive filters for period, modelo e métrica.
+Dashboard do TCC USP: Sentimento de Notícias x Ibovespa.
+Run: python app_dashboard.py
 """
-# cSpell:ignore Ibovespa métrica Carregamento colunas ibov Arquivos principais precisa coluna proba cagr eventos modelo arquivo Sentimento Período modelos Notícia Notícias Comparativo Estratégia Gráfico hovertemplate Preço hovermode sentiment médio diário escala tozeroy hline Selecione Tabela
+# cSpell:ignore Ibovespa metrica Carregamento colunas ibov proba cagr eventos modelo Sentimento Periodo modelos Noticias Comparativo Estrategia Grafico hovertemplate hovermode tozeroy hline Selecione Tabela
 
 from __future__ import annotations
 
@@ -208,12 +203,18 @@ SENTIMENT_DF = load_sentiment()
 RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
 BACKTEST_DF = load_backtest_curves()
+LATENCY_AVAILABLE = not LATENCY_DF.empty and "fonte" in LATENCY_DF.columns
+LATENCY_STATUS = (
+    _dataset_status_entry("Latência", LATENCY_DF, LATENCY_PATH, "event_day")
+    if LATENCY_AVAILABLE
+    else "Latência: 0 linhas (não disponível nesta versão)"
+)
 DATA_STATUS = [
     _dataset_status_entry("Ibovespa", IBOV_DF, IBOV_PATH, "day"),
     _dataset_status_entry("Sentimento (OOF)", SENTIMENT_DF, OOF_PATH, "day"),
     _dataset_status_entry("Resultados TF-IDF", RESULTS_DF, RESULTS16_PATH, None),
     _dataset_status_entry("Backtest Curvas", BACKTEST_DF, BACKTEST_CURVES_PATH, "day"),
-    _dataset_status_entry("Eventos/Latência", LATENCY_DF, LATENCY_PATH, "event_day"),
+    LATENCY_STATUS,
 ]
 
 # Usar constantes do plano de pesquisa como limites (2018-01-02 a 2024-12-31)
@@ -298,111 +299,97 @@ def _build_controls():
 
 
 app.layout = html.Div(
-    style={"fontFamily": "Arial, sans-serif", "maxWidth": "1400px", "margin": "0 auto", "padding": "20px"},
+    className="page-container",
     children=[
         # Cabeçalho
         html.Div(
-            style={"textAlign": "center", "marginBottom": "30px"},
+            style={"textAlign": "center", "marginBottom": "16px"},
             children=[
-                html.H1(
-                    "Sentimento de Notícias x Ibovespa",
-                    style={"fontSize": "2.5em", "color": "#1a1a1a", "marginBottom": "10px", "fontWeight": "600"}
-                ),
-                html.P(
-                    "Análise Preditiva com Modelos de Machine Learning | TCC USP",
-                    style={"fontSize": "1.1em", "color": "#666", "marginTop": "0"}
-                ),
+                html.H1("Sentimento de Notícias x Ibovespa", style={"margin": "0 0 6px 0"}),
+                html.P("TCC USP • NLP + Finanças • Período oficial 2018-01-02 a 2024-12-31", style={"margin": "0", "color": "#4b5563"}),
             ],
         ),
-        
-        # Card 1: Controles
-        _build_controls(),
-        
-        # Indicadores de Filtros Ativos
+        # Overview + controles
         html.Div(
-            id="active-filters-indicator",
-            style={
-                "backgroundColor": "#e3f2fd",
-                "padding": "15px 20px",
-                "borderRadius": "8px",
-                "marginBottom": "25px",
-                "borderLeft": "4px solid #2196f3",
-            },
-        ),
-        html.Div(
-            [
-                html.Strong("Status dos dados carregados"),
-                html.Ul([html.Li(item) for item in DATA_STATUS]),
-            ],
-            style={"marginBottom": "15px", "color": "#333"},
-        ),
-        html.Div(id="ui-last-trigger", style={"fontSize": "0.85em", "color": "#555", "marginBottom": "20px"}),
-        
-        # Card 2: Ibovespa
-        html.Div(
-            style={
-                "backgroundColor": "white",
-                "padding": "20px",
-                "borderRadius": "8px",
-                "marginBottom": "25px",
-                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
-            },
+            className="card",
             children=[
-                html.Div([
-                    html.H3("Ibovespa com Eventos", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
-                    html.P("Evolução do índice Bovespa com marcadores de eventos relevantes", 
-                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
-                ]),
-                dcc.Graph(id="ibov-graph", config=PLOTLY_CONFIG),
-            ],
-        ),
-        
-        # Card 3: Sentimento
-        html.Div(
-            style={
-                "backgroundColor": "white",
-                "padding": "20px",
-                "borderRadius": "8px",
-                "marginBottom": "25px",
-                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
-            },
-            children=[
-                html.Div([
-                    html.H3("Sentimento Médio Diário", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
-                    html.P("Sentimento agregado das notícias (escala -1 a +1, onde valores positivos indicam otimismo)", 
-                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
-                ]),
-                dcc.Graph(id="sentiment-graph", config=PLOTLY_CONFIG),
-            ],
-        ),
-        
-        # Card 4: Comparativo de Modelos
-        html.Div(
-            style={
-                "backgroundColor": "white",
-                "padding": "20px",
-                "borderRadius": "8px",
-                "marginBottom": "25px",
-                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
-            },
-            children=[
+                html.H3("Overview e Controles"),
+                html.Div(className="status-title", children="Status dos dados carregados"),
+                html.Ul(className="status-list", children=[html.Li(item) for item in DATA_STATUS]),
+                html.Div(id="active-filters-indicator", className="indicator-bar"),
+                html.Div(id="ui-last-trigger", className="last-trigger"),
                 html.Div(
-                    style={"display": "flex", "justifyContent": "space-between", "alignItems": "center", "marginBottom": "20px"},
+                    className="controls-panel",
                     children=[
-                        html.H3("Comparativo de Modelos", style={"marginTop": "0", "marginBottom": "0", "color": "#2c3e50"}),
-                        html.Span(id="metric-badge", style={
-                            "backgroundColor": "#4caf50",
-                            "color": "white",
-                            "padding": "8px 16px",
-                            "borderRadius": "20px",
-                            "fontSize": "0.9em",
-                            "fontWeight": "bold",
-                        }),
+                        html.Div(
+                            children=[
+                                html.Label("Período de Análise"),
+                                dcc.DatePickerRange(
+                                    id="date-range",
+                                    min_date_allowed=DATE_MIN,
+                                    max_date_allowed=DATE_MAX,
+                                    start_date=DATE_MIN,
+                                    end_date=DATE_MAX,
+                                    display_format="YYYY-MM-DD",
+                                ),
+                            ]
+                        ),
+                        html.Div(
+                            children=[
+                                html.Label("Selecione os Modelos"),
+                                dcc.Dropdown(
+                                    id="model-filter",
+                                    options=[{"label": m, "value": m} for m in MODEL_OPTIONS],
+                                    value=MODEL_OPTIONS,
+                                    multi=True,
+                                    placeholder="Escolha modelo(s)",
+                                ),
+                            ]
+                        ),
+                        html.Div(
+                            children=[
+                                html.Label("Métrica de Avaliação"),
+                                dcc.Dropdown(
+                                    id="metric-filter",
+                                    options=METRIC_OPTIONS,
+                                    value="auc",
+                                    clearable=False,
+                                ),
+                            ]
+                        ),
                     ],
                 ),
-                dcc.Graph(id="model-comparison-graph", config=PLOTLY_CONFIG),
-                html.Hr(style={"margin": "30px 0"}),
-                html.H4("Detalhamento das Métricas", style={"marginBottom": "15px", "color": "#34495e"}),
+            ],
+        ),
+        # Ibovespa
+        html.Div(
+            className="card",
+            children=[
+                html.H3("Ibovespa com Eventos"),
+                html.P("Evolução do índice Bovespa; marcadores de eventos se disponíveis."),
+                dcc.Graph(id="ibov-graph", config=PLOTLY_CONFIG, className="dash-graph"),
+            ],
+        ),
+        # Sentimento
+        html.Div(
+            className="card",
+            children=[
+                html.H3("Sentimento Médio Diário"),
+                html.P("Sentimento agregado das notícias (escala -1 a +1)."),
+                dcc.Graph(id="sentiment-graph", config=PLOTLY_CONFIG, className="dash-graph"),
+            ],
+        ),
+        # Comparativo
+        html.Div(
+            className="card",
+            children=[
+                html.Div(style={"display": "flex", "justifyContent": "space-between", "alignItems": "center"}, children=[
+                    html.H3("Comparativo de Modelos", style={"margin": 0}),
+                    html.Span(id="metric-badge", className="badge"),
+                ]),
+                dcc.Graph(id="model-comparison-graph", config=PLOTLY_CONFIG, className="dash-graph"),
+                html.Hr(),
+                html.H4("Tabela de Métricas"),
                 dash_table.DataTable(
                     id="model-table",
                     columns=[
@@ -420,7 +407,7 @@ app.layout = html.Div(
                     page_size=10,
                     style_table={"overflowX": "auto"},
                     style_header={
-                        "backgroundColor": "#2c3e50",
+                        "backgroundColor": "#1f2933",
                         "color": "white",
                         "fontWeight": "bold",
                         "textAlign": "center",
@@ -430,108 +417,65 @@ app.layout = html.Div(
                         "padding": "10px",
                     },
                     style_data_conditional=[
-                        {
-                            "if": {"row_index": 0},
-                            "backgroundColor": "#e8f5e9",
-                            "fontWeight": "600",
-                        }
+                        {"if": {"row_index": 0}, "backgroundColor": "#e8f5e9", "fontWeight": "600"}
                     ],
                 ),
             ],
         ),
-
-        # Card 5: Dispersão Sentimento x Retorno
+        # Dispersão e Correlação
         html.Div(
-            style={
-                "backgroundColor": "white",
-                "padding": "20px",
-                "borderRadius": "8px",
-                "marginBottom": "25px",
-                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
-            },
+            className="grid-two",
             children=[
-                html.Div([
-                    html.H3("Dispersão Sentimento x Retorno Diário", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
-                    html.P("Correlação entre sentimento diário e retorno subsequente do Ibovespa", 
-                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
-                ]),
-                dcc.Graph(id="scatter-graph", config=PLOTLY_CONFIG),
+                html.Div(
+                    className="card",
+                    children=[
+                        html.H3("Dispersão Sentimento x Retorno Diário"),
+                        html.P("Correlação entre sentimento diário e retorno subsequente do Ibovespa."),
+                        dcc.Graph(id="scatter-graph", config=PLOTLY_CONFIG, className="dash-graph"),
+                    ],
+                ),
+                html.Div(
+                    className="card",
+                    children=[
+                        html.H3("Correlação Móvel (60d/90d)"),
+                        html.P("Correlação rolada entre sentimento e retorno diário."),
+                        dcc.Graph(id="rolling-corr-graph", config=PLOTLY_CONFIG, className="dash-graph"),
+                    ],
+                ),
             ],
         ),
-
-        # Card 6: Correlação Móvel
+        # Distribuição
         html.Div(
-            style={
-                "backgroundColor": "white",
-                "padding": "20px",
-                "borderRadius": "8px",
-                "marginBottom": "25px",
-                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
-            },
+            className="card",
             children=[
-                html.Div([
-                    html.H3("Correlação Móvel (60d/90d)", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
-                    html.P("Correlação rolada entre sentimento e retorno diário", 
-                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
-                ]),
-                dcc.Graph(id="rolling-corr-graph", config=PLOTLY_CONFIG),
+                html.H3("Distribuição do Sentimento"),
+                html.P("Histograma e boxplot do sentimento diário no período selecionado."),
+                dcc.Graph(id="sentiment-dist-graph", config=PLOTLY_CONFIG, className="dash-graph"),
             ],
         ),
-
-        # Card 7: Distribuição do Sentimento
+        # Latência e Backtest
         html.Div(
-            style={
-                "backgroundColor": "white",
-                "padding": "20px",
-                "borderRadius": "8px",
-                "marginBottom": "25px",
-                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
-            },
+            className="grid-two",
             children=[
-                html.Div([
-                    html.H3("Distribuição do Sentimento", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
-                    html.P("Histograma e boxplot do sentimento diário", 
-                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
-                ]),
-                dcc.Graph(id="sentiment-dist-graph", config=PLOTLY_CONFIG),
-            ],
-        ),
-
-        # Card 8: Latência e Eventos
-        html.Div(
-            style={
-                "backgroundColor": "white",
-                "padding": "20px",
-                "borderRadius": "8px",
-                "marginBottom": "25px",
-                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
-            },
-            children=[
-                html.Div([
-                    html.H3("Latência por Fonte/Daypart", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
-                    html.P("Visão de latência de eventos/notícias (placeholder se não houver dados)", 
-                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
-                ]),
-                dcc.Graph(id="latency-graph", config=PLOTLY_CONFIG),
-            ],
-        ),
-
-        # Card 9: Curva de Backtest
-        html.Div(
-            style={
-                "backgroundColor": "white",
-                "padding": "20px",
-                "borderRadius": "8px",
-                "marginBottom": "25px",
-                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
-            },
-            children=[
-                html.Div([
-                    html.H3("Curva de Backtest", style={"marginTop": "0", "marginBottom": "5px", "color": "#2c3e50"}),
-                    html.P("Evolução de equity por modelo/estratégia (placeholder se não houver dados)", 
-                           style={"fontSize": "0.9em", "color": "#666", "marginTop": "0", "marginBottom": "15px"}),
-                ]),
-                dcc.Graph(id="backtest-graph", config=PLOTLY_CONFIG),
+                html.Div(
+                    className="card",
+                    children=[
+                        html.H3("Latência por Fonte/Daypart"),
+                        html.P("Visão de latência de eventos/notícias."),
+                        dcc.Graph(id="latency-graph", config=PLOTLY_CONFIG, className="dash-graph") if LATENCY_AVAILABLE else html.Div(
+                            "Latência informacional não disponível nesta versão por ausência de eventos estruturados; ver relatório.",
+                            className="placeholder-text",
+                        ),
+                    ],
+                ),
+                html.Div(
+                    className="card",
+                    children=[
+                        html.H3("Curva de Backtest"),
+                        html.P("Evolução de equity por modelo/estratégia (placeholder se não houver dados)."),
+                        dcc.Graph(id="backtest-graph", config=PLOTLY_CONFIG, className="dash-graph"),
+                    ],
+                ),
             ],
         ),
     ],
