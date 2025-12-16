@@ -246,6 +246,15 @@ def choose_common_strategy(backtest_df: pd.DataFrame, models: list[str], preferr
         return preferred, common
     if FALLBACK_STRATEGY in common:
         return FALLBACK_STRATEGY, common
+    if "n_days" in backtest_df.columns:
+        coverage = (
+            backtest_df[backtest_df["strategy"].isin(common)]
+            .groupby("strategy")["n_days"]
+            .sum()
+            .sort_values(ascending=False)
+        )
+        if not coverage.empty:
+            return coverage.index[0], common
     return sorted(common)[0], common
 
 
@@ -790,17 +799,25 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
         backtest_common_df = pd.DataFrame()
         display_df_for_bars = base_df
         if metric == "sharpe":
-            # força comparação justa logreg_l2 vs rf_200
+            # força comparação justa logreg_l2 vs rf_200 sempre com estratégia comum
             anchor_models = [m for m in COMPARE_MODELS_ANCHOR if m in MODEL_OPTIONS]
-            if COMMON_STRATEGY:
+            comparison_models = [m for m in selected_models if m in anchor_models] or anchor_models
+            common_strategy, common_set = choose_common_strategy(
+                BACKTEST_RESULTS_DF.loc[
+                    (BACKTEST_RESULTS_DF.get("dataset", "backtest_daily") == "backtest_daily")
+                    & (BACKTEST_RESULTS_DF["model"].isin(comparison_models))
+                ],
+                comparison_models,
+            )
+            if common_strategy:
                 mask_common = (
-                    (BACKTEST_RESULTS_DF["model"].isin(anchor_models))
-                    & (BACKTEST_RESULTS_DF["strategy"] == COMMON_STRATEGY)
+                    (BACKTEST_RESULTS_DF["model"].isin(comparison_models))
+                    & (BACKTEST_RESULTS_DF["strategy"] == common_strategy)
                     & (BACKTEST_RESULTS_DF.get("dataset", "backtest_daily") == "backtest_daily")
                 )
                 backtest_common_df = BACKTEST_RESULTS_DF.loc[mask_common].copy()
-                print(f"[DEBUG] Estratégia comum usada em Sharpe: {COMMON_STRATEGY}")
-                print(f"[DEBUG] common_strategies_set={COMMON_STRATEGIES_SET}")
+                print(f"[DEBUG] Estratégias comuns (seleção atual): {common_set}")
+                print(f"[DEBUG] Estratégia escolhida para Sharpe (seleção): {common_strategy}")
                 if not backtest_common_df.empty:
                     print(backtest_common_df[["model", "strategy", "cagr", "sharpe"]].to_string(index=False))
                 display_df_for_bars = backtest_common_df
@@ -814,6 +831,8 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
         table_df_display = base_df if metric != "sharpe" else pd.concat(
             [base_df.loc[base_df["dataset"] != "backtest_daily"], backtest_common_df], ignore_index=True
         )
+        if metric == "sharpe":
+            comparison_meta = f"{comparison_meta} • Estratégia (comparação): {common_strategy or '—'}"
         best_model_name = None
         best_metric_val = None
         metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
@@ -1040,7 +1059,9 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
 
         ibov_meta = _meta_text("ibovespa_clean.csv + event_study_latency.csv", ibov_filtered, "day", "Ibovespa")
         sentiment_meta = _meta_text("16_oof_predictions.csv", sentiment_filtered, "day", "Sentimento")
-        comparison_meta = _meta_text("results_16_models_tfidf.json + 18_backtest_results.csv", table_df, None, "Modelos")
+        comparison_meta = _meta_text(
+            "results_16_models_tfidf.json + 18_backtest_results.csv", table_df_display, None, "Modelos"
+        )
         if COMMON_STRATEGY:
             comparison_meta = f"{comparison_meta} | Estratégia (comparação): {COMMON_STRATEGY}"
         scatter_meta = _meta_text("16_oof_predictions.csv ∩ ibovespa_clean.csv", merged_sr, "day", "Dispersão")
@@ -1054,7 +1075,7 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
             ibov_fig,
             sentiment_fig,
             comparison_fig,
-            table_df.to_dict("records"),
+            table_df_display.to_dict("records"),
             indicator_content,
             metric_badge_text,
             ui_status,
