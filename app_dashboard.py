@@ -42,6 +42,7 @@ RESULTS16_PATH = cfg.get_arquivo("tfidf_daily_matrix", BASE_PATH).with_name("res
 BACKTEST_PATH = DATA_PATHS["data_processed"] / "18_backtest_results.csv"
 BACKTEST_CURVES_PATH = DATA_PATHS["data_processed"] / "18_backtest_daily_curves.csv"
 LATENCY_PATH = cfg.get_arquivo("latency_events", BASE_PATH)
+PREFERRED_STRATEGY = "long_only_60"
 
 PLOTLY_CONFIG = dict(
     displayModeBar=True,
@@ -223,6 +224,22 @@ SENTIMENT_DF = load_sentiment()
 RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
 BACKTEST_DF = load_backtest_curves()
+
+
+def choose_common_strategy(backtest_df: pd.DataFrame, models: list[str], preferred: str = PREFERRED_STRATEGY) -> str | None:
+    if backtest_df.empty or "strategy" not in backtest_df.columns or "model" not in backtest_df.columns:
+        return None
+    common: set[str] | None = None
+    for m in models:
+        strategies = set(backtest_df.loc[backtest_df["model"] == m, "strategy"])
+        common = strategies if common is None else common & strategies
+    if not common:
+        return None
+    if preferred in common:
+        return preferred
+    return sorted(common)[0]
+
+
 LATENCY_AVAILABLE = not LATENCY_DF.empty and "fonte" in LATENCY_DF.columns
 LATENCY_STATUS = (
     _dataset_status_entry("Latência", LATENCY_DF, LATENCY_PATH, "event_day")
@@ -276,6 +293,12 @@ METRIC_OPTIONS = [
     {"label": "MDA", "value": "mda"},
     {"label": "Sharpe", "value": "sharpe"},
 ]
+
+COMMON_STRATEGY = choose_common_strategy(BACKTEST_DF, MODEL_OPTIONS)
+if COMMON_STRATEGY:
+    print(f"[DEBUG] Estratégia comum para comparação: {COMMON_STRATEGY}")
+else:
+    print("[DEBUG] Nenhuma estratégia comum encontrada para todos os modelos; usando conjunto integral.")
 
 # ------------------------------------------------------------------------------
 # Dash App
@@ -746,6 +769,8 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
         table_df = RESULTS_DF.copy()
         if selected_models:
             table_df = table_df[table_df["model"].isin(selected_models)]
+        if COMMON_STRATEGY and {"dataset", "strategy"}.issubset(table_df.columns):
+            table_df = table_df.loc[(table_df["dataset"] != "backtest_daily") | (table_df["strategy"] == COMMON_STRATEGY)]
         best_model_name = None
         best_metric_val = None
         metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
@@ -754,8 +779,19 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
             if not table_df_sorted.empty:
                 best_model_name = table_df_sorted.iloc[0]["model"]
                 best_metric_val = table_df_sorted.iloc[0][metric]
-                colors = ["#2ecc71" if model == best_model_name else "#3498db" for model in table_df_sorted["model"]]
+                colors = []
                 text_values = [f"{v:.3f}" if metric in {"auc", "mda"} else f"{v:.2f}" for v in table_df_sorted[metric]]
+                outlines = []
+                for model in table_df_sorted["model"]:
+                    base_color = "#3498db"
+                    outline_color = "#2980b9"
+                    if model == best_model_name:
+                        base_color = "#2ecc71"
+                        outline_color = "#27ae60"
+                    if active_model and model == active_model:
+                        outline_color = "#fcb421"
+                    colors.append(base_color)
+                    outlines.append(outline_color)
                 comparison_fig.add_trace(
                     go.Bar(
                         x=table_df_sorted["model"],
@@ -765,10 +801,7 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
                         name=metric_labels.get(metric, metric.upper()),
                         marker=dict(
                             color=colors,
-                            line=dict(
-                                color=["#27ae60" if model == best_model_name else "#2980b9" for model in table_df_sorted["model"]],
-                                width=2,
-                            ),
+                            line=dict(color=outlines, width=2.5),
                         ),
                     )
                 )
@@ -960,6 +993,8 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
         ibov_meta = _meta_text("ibovespa_clean.csv + event_study_latency.csv", ibov_filtered, "day", "Ibovespa")
         sentiment_meta = _meta_text("16_oof_predictions.csv", sentiment_filtered, "day", "Sentimento")
         comparison_meta = _meta_text("results_16_models_tfidf.json + 18_backtest_results.csv", table_df, None, "Modelos")
+        if COMMON_STRATEGY:
+            comparison_meta = f"{comparison_meta} | Estratégia (comparação): {COMMON_STRATEGY}"
         scatter_meta = _meta_text("16_oof_predictions.csv ∩ ibovespa_clean.csv", merged_sr, "day", "Dispersão")
         rolling_meta = _meta_text("16_oof_predictions.csv ∩ ibovespa_clean.csv", merged_sr, "day", "Correlação móvel")
         dist_meta = _meta_text("16_oof_predictions.csv", sentiment_filtered, "day", "Distribuição")
