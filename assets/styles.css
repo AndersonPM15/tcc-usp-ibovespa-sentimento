@@ -12,12 +12,26 @@ body {
   padding: 24px 20px 36px;
 }
 
+.page-container.export-mode .controls-card {
+  display: none;
+}
+
+.page-container.export-mode .dash-graph {
+  height: 620px;
+}
+
 .card {
   background: #ffffff;
   border-radius: 10px;
   padding: 18px 20px;
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
   margin-bottom: 22px;
+  border-top: 4px solid #1094ab;
+}
+
+.figure-card {
+  display: flex;
+  flex-direction: column;
 }
 
 .card h3,
@@ -42,6 +56,22 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
+}
+
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.title-main {
+  margin: 0;
+}
+
+.title-sub {
+  margin: 0;
+  color: #4b5563;
 }
 
 .status-list {
@@ -113,7 +143,7 @@ body {
 .kpi-value {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #1d4ed8;
+  color: #1094ab;
 }
 
 .kpi-label {
@@ -123,7 +153,7 @@ body {
 
 .interpret-block {
   background: #f8fafc;
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid #1094ab;
   border-radius: 6px;
   padding: 10px 12px;
   margin-top: 8px;
@@ -132,7 +162,7 @@ body {
 
 /* Graph sizing */
 .dash-graph {
-  height: 420px;
+  height: 460px;
 }
 
 .js-plotly-plot,
@@ -140,11 +170,90 @@ body {
   pointer-events: auto;
 }
 
+.figure-card .dash-graph {
+  min-height: 620px;
+  flex: 1 1 auto;
+}
+
+.export-mode .figure-card .dash-graph {
+  min-height: 900px;
+}
+
+.figure-card .js-plotly-plot,
+.figure-card .plot-container,
+.figure-card .svg-container {
+  height: 100% !important;
+}
+
 @media (max-width: 768px) {
   .page-container {
     padding: 16px 14px 28px;
   }
   .dash-graph {
-    height: 360px;
+    height: 380px;
   }
+}
+
+.grid-two {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 18px;
+}
+
+.controls-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.export-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #1094ab;
+}
+
+.page-container.export-mode .grid-two {
+  grid-template-columns: 1fr;
+}
+
+.page-container.export-mode .card {
+  padding: 24px;
+}
+
+.page-container.export-mode .controls-card,
+.page-container.export-mode .interpret-block,
+.page-container.export-mode .indicator-bar,
+.page-container.export-mode .kpi-grid,
+.page-container.export-mode .last-trigger {
+  display: none;
+}
+
+.figure-meta {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: #52606d;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 6px;
+}
+
+.controls-card {
+  border-top-color: #fcb421;
+}
+
+.indicator-bar > div {
+  margin-right: 12px;
+}
+
+.figure-footer {
+  font-size: 0.85rem;
+  color: #4b5563;
+  margin-top: 6px;
+}
+
+.export-note {
+  font-size: 0.9rem;
+  color: #0f766e;
 }
