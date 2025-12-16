@@ -1,0 +1,1 @@
+Nota: AUC/MDA são métricas de classificação em tfidf_daily; backtest_daily reporta métricas econômicas (CAGR/Sharpe). Sharpe calculado sobre retornos diários (convenção 252); custos/atrito não modelados (implícitos = 0). Estratégia comparada nos modelos de backtest: long_only_60.
