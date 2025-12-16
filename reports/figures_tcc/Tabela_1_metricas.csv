@@ -1,0 +1,5 @@
+model,dataset,auc,mda,strategy,cagr,sharpe
+logreg_l2,tfidf_daily,0.5015378221113882,0.5025773195876289,—,—,—
+rf_200,tfidf_daily,0.4912635078969243,0.5115979381443299,—,—,—
+logreg_l2,backtest_daily,—,—,long_only_60,0.008903946076112,0.741343669693607
+rf_200,backtest_daily,—,—,long_only_60,-0.0018269221243237,-0.4214646510585976
