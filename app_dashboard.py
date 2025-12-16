@@ -43,6 +43,7 @@ BACKTEST_PATH = DATA_PATHS["data_processed"] / "18_backtest_results.csv"
 BACKTEST_CURVES_PATH = DATA_PATHS["data_processed"] / "18_backtest_daily_curves.csv"
 LATENCY_PATH = cfg.get_arquivo("latency_events", BASE_PATH)
 PREFERRED_STRATEGY = "long_only_60"
+FALLBACK_STRATEGY = "long_only_55"
 COMPARE_MODELS_ANCHOR = ["logreg_l2", "rf_200"]
 
 PLOTLY_CONFIG = dict(
@@ -231,20 +232,31 @@ if not BACKTEST_RESULTS_DF.empty and "dataset" not in BACKTEST_RESULTS_DF.column
     BACKTEST_RESULTS_DF["dataset"] = "backtest_daily"
 
 
-def choose_common_strategy(backtest_df: pd.DataFrame, models: list[str], preferred: str = PREFERRED_STRATEGY) -> str | None:
+def choose_common_strategy(backtest_df: pd.DataFrame, models: list[str], preferred: str = PREFERRED_STRATEGY) -> tuple[str | None, set[str]]:
     if backtest_df.empty or "strategy" not in backtest_df.columns or "model" not in backtest_df.columns:
-        return None
+        return None, set()
     common: set[str] | None = None
     for m in models:
         strategies = set(backtest_df.loc[backtest_df["model"] == m, "strategy"])
         common = strategies if common is None else common & strategies
+    common = common or set()
     if not common:
-        return None
+        return None, set()
     if preferred in common:
-        return preferred
-    return sorted(common)[0]
+        return preferred, common
+    if FALLBACK_STRATEGY in common:
+        return FALLBACK_STRATEGY, common
+    return sorted(common)[0], common
 
 
+COMMON_STRATEGY, COMMON_STRATEGIES_SET = choose_common_strategy(
+    BACKTEST_RESULTS_DF.loc[BACKTEST_RESULTS_DF["dataset"] == "backtest_daily"], COMPARE_MODELS_ANCHOR
+)
+print(f"[DEBUG] Estratégias comuns (logreg_l2 vs rf_200): {COMMON_STRATEGIES_SET}")
+if COMMON_STRATEGY:
+    print(f"[DEBUG] Estratégia escolhida para comparação Sharpe: {COMMON_STRATEGY}")
+else:
+    print("[DEBUG] Nenhuma estratégia comum entre logreg_l2 e rf_200 em backtest_daily.")
 LATENCY_AVAILABLE = not LATENCY_DF.empty and "fonte" in LATENCY_DF.columns
 LATENCY_STATUS = (
     _dataset_status_entry("Latência", LATENCY_DF, LATENCY_PATH, "event_day")
@@ -778,21 +790,24 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
         backtest_common_df = pd.DataFrame()
         display_df_for_bars = base_df
         if metric == "sharpe":
+            # força comparação justa logreg_l2 vs rf_200
+            anchor_models = [m for m in COMPARE_MODELS_ANCHOR if m in MODEL_OPTIONS]
             if COMMON_STRATEGY:
                 mask_common = (
-                    (BACKTEST_RESULTS_DF["model"].isin(selected_models))
+                    (BACKTEST_RESULTS_DF["model"].isin(anchor_models))
                     & (BACKTEST_RESULTS_DF["strategy"] == COMMON_STRATEGY)
                     & (BACKTEST_RESULTS_DF.get("dataset", "backtest_daily") == "backtest_daily")
                 )
                 backtest_common_df = BACKTEST_RESULTS_DF.loc[mask_common].copy()
                 print(f"[DEBUG] Estratégia comum usada em Sharpe: {COMMON_STRATEGY}")
+                print(f"[DEBUG] common_strategies_set={COMMON_STRATEGIES_SET}")
                 if not backtest_common_df.empty:
                     print(backtest_common_df[["model", "strategy", "cagr", "sharpe"]].to_string(index=False))
                 display_df_for_bars = backtest_common_df
             else:
                 comparison_fig = _placeholder_fig(
                     "Comparativo de Modelos",
-                    "Sem estratégia comum entre logreg_l2 e rf_200 no backtest_daily; recalcule o backtest.",
+                    "Sem estratégia comum entre logreg_l2 e rf_200 em backtest_daily; recalcule o backtest.",
                 )
                 comparison_fig.update_layout(height=graph_height)
                 display_df_for_bars = pd.DataFrame()
@@ -853,8 +868,11 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
         if metric in {"auc", "mda", "sharpe"} and metric in table_df_display.columns:
             table_df_display = table_df_display.sort_values(metric, ascending=False, na_position="last")
         table_df_display = table_df_display.fillna("—")
-        if metric == "sharpe" and COMMON_STRATEGY:
-            comparison_meta = f"{comparison_meta} | Estratégia comparada: {COMMON_STRATEGY}"
+        if metric == "sharpe":
+            if COMMON_STRATEGY:
+                comparison_meta = f"{comparison_meta} | Estratégia comparada: {COMMON_STRATEGY}"
+            else:
+                comparison_meta = f"{comparison_meta} | Estratégia comparada: (nenhuma disponível)"
 
         scatter_fig = go.Figure()
         merged_sr = (
