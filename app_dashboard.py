@@ -816,8 +816,13 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
                     & (BACKTEST_RESULTS_DF.get("dataset", "backtest_daily") == "backtest_daily")
                 )
                 backtest_common_df = BACKTEST_RESULTS_DF.loc[mask_common].copy()
+<<<<<<< HEAD
                 print(f"[DEBUG] Estratégias comuns (seleção atual): {common_set}")
                 print(f"[DEBUG] Estratégia escolhida para Sharpe (seleção): {common_strategy}")
+=======
+                print(f"[DEBUG] Estratégias comuns (logreg_l2 vs rf_200): {COMMON_STRATEGIES_SET}")
+                print(f"[DEBUG] Estratégia escolhida para Sharpe: {COMMON_STRATEGY}")
+>>>>>>> 836064edd34f47d7663b0b345a7751041c386821
                 if not backtest_common_df.empty:
                     print(backtest_common_df[["model", "strategy", "cagr", "sharpe"]].to_string(index=False))
                 display_df_for_bars = backtest_common_df
