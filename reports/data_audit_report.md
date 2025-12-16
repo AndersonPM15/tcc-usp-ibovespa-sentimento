@@ -1,0 +1,22 @@
+# Data Audit - 2025-12-16
+Periodo oficial: 2018-01-02 a 2024-12-31
+
+## Artefatos
+- ibovespa_clean.csv: {'status': 'ok', 'rows': '1737', 'min': '2018-01-02', 'max': '2024-12-30'}
+- 16_oof_predictions.csv: {'status': 'ok', 'rows': '2682', 'min': '2019-08-05', 'max': '2024-12-30'}
+- results_16_models_tfidf.json: {'status': 'ok', 'rows': 2}
+- 18_backtest_daily_curves.csv: {'status': 'ok', 'rows': '8046', 'min': '2019-08-05', 'max': '2024-12-30'}
+- 18_backtest_results.csv: {'status': 'ok', 'rows': '6'}
+- event_study_latency.csv: {'status': 'ok', 'rows': '270', 'min': '2019-08-08', 'max': '2024-12-27'}
+
+## Graficos (8)
+- ibov: OK
+- sentiment: OK
+- comparison: OK
+- scatter: OK
+- rolling: OK
+- dist: OK
+- latency: OK
+- backtest: OK
+
+DEFAULT_START=2019-08-08 DEFAULT_END=2024-12-27
