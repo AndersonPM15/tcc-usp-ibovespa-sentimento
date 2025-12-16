@@ -790,7 +790,7 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
         backtest_common_df = pd.DataFrame()
         display_df_for_bars = base_df
         if metric == "sharpe":
-            # força comparação justa logreg_l2 vs rf_200
+            # força comparação justa logreg_l2 vs rf_200 sempre com estratégia comum
             anchor_models = [m for m in COMPARE_MODELS_ANCHOR if m in MODEL_OPTIONS]
             if COMMON_STRATEGY:
                 mask_common = (
@@ -799,8 +799,8 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
                     & (BACKTEST_RESULTS_DF.get("dataset", "backtest_daily") == "backtest_daily")
                 )
                 backtest_common_df = BACKTEST_RESULTS_DF.loc[mask_common].copy()
-                print(f"[DEBUG] Estratégia comum usada em Sharpe: {COMMON_STRATEGY}")
-                print(f"[DEBUG] common_strategies_set={COMMON_STRATEGIES_SET}")
+                print(f"[DEBUG] Estratégias comuns (logreg_l2 vs rf_200): {COMMON_STRATEGIES_SET}")
+                print(f"[DEBUG] Estratégia escolhida para Sharpe: {COMMON_STRATEGY}")
                 if not backtest_common_df.empty:
                     print(backtest_common_df[["model", "strategy", "cagr", "sharpe"]].to_string(index=False))
                 display_df_for_bars = backtest_common_df
