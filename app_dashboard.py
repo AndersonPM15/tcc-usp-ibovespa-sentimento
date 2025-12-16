@@ -265,6 +265,8 @@ else:
 print(f"[DEBUG] DEFAULT_START={DEFAULT_START.date()} DEFAULT_END={DEFAULT_END.date()}")
 
 MODEL_OPTIONS = sorted(RESULTS_DF["model"].dropna().unique()) if not RESULTS_DF.empty and "model" in RESULTS_DF.columns else []
+PREFERRED_MODELS = ["logreg_l2", "rf_200"]
+MODEL_DEFAULT_SELECTION = PREFERRED_MODELS if set(PREFERRED_MODELS).issubset(set(MODEL_OPTIONS)) else MODEL_OPTIONS.copy()
 print(f"[DEBUG] MODEL_OPTIONS carregados: {MODEL_OPTIONS}")
 print(f"[DEBUG] RESULTS_DF shape: {RESULTS_DF.shape}")
 print(f"[DEBUG] IBOV_DF shape: {IBOV_DF.shape}")
@@ -316,7 +318,7 @@ def _build_controls():
                             dcc.Dropdown(
                                 id="model-filter",
                                 options=[{"label": m, "value": m} for m in MODEL_OPTIONS],
-                                value=MODEL_OPTIONS,
+                                value=MODEL_DEFAULT_SELECTION,
                                 multi=True,
                                 placeholder="Escolha um ou mais modelos...",
                             ),
@@ -391,9 +393,9 @@ app.layout = html.Div(
                                 dcc.Dropdown(
                                     id="model-filter",
                                     options=[{"label": m, "value": m} for m in MODEL_OPTIONS],
-                                    value=MODEL_OPTIONS[0] if MODEL_OPTIONS else None,
-                                    multi=False,
-                                    placeholder="Escolha um modelo",
+                                    value=MODEL_DEFAULT_SELECTION,
+                                    multi=True,
+                                    placeholder="Escolha um ou mais modelos",
                                     clearable=False,
                                 ),
                             ]
@@ -644,7 +646,12 @@ app.clientside_callback(
 )
 def update_dashboard(start_date, end_date, selected_model, metric, export_toggle):
     try:
-        print(f"[DEBUG] Callback acionado: start={start_date}, end={end_date}, model={selected_model}, metric={metric}")
+        selected_models = selected_model if isinstance(selected_model, list) else ([selected_model] if selected_model else [])
+        if not selected_models:
+            selected_models = MODEL_DEFAULT_SELECTION
+        active_model = selected_models[0] if selected_models else None
+
+        print(f"[DEBUG] Callback acionado: start={start_date}, end={end_date}, models={selected_models}, metric={metric}")
         export_mode = bool(export_toggle)
         graph_height = H_EXPORT if export_mode else H_NORMAL
 
@@ -737,8 +744,8 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
 
         comparison_fig = go.Figure()
         table_df = RESULTS_DF.copy()
-        if selected_model:
-            table_df = table_df[table_df["model"] == selected_model]
+        if selected_models:
+            table_df = table_df[table_df["model"].isin(selected_models)]
         best_model_name = None
         best_metric_val = None
         metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
@@ -888,8 +895,8 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
             latency_fig.update_layout(height=graph_height)
 
         backtest_fig = go.Figure()
-        if selected_model and "model" in backtest_filtered.columns:
-            backtest_filtered = backtest_filtered[backtest_filtered["model"] == selected_model]
+        if selected_models and "model" in backtest_filtered.columns:
+            backtest_filtered = backtest_filtered[backtest_filtered["model"].isin(selected_models)]
         if not backtest_filtered.empty:
             for (model, strategy), grp in backtest_filtered.groupby(["model", "strategy"]):
                 backtest_fig.add_trace(
@@ -927,7 +934,7 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
                 how="inner",
             )
         )
-        models_text = selected_model or "Nenhum modelo selecionado"
+        models_text = ", ".join(selected_models) if selected_models else "Nenhum modelo selecionado"
 
         kpis_cards = [
             html.Div(className="kpi-card", children=[html.Div("Dias IBOV", className="kpi-label"), html.Div(f"{ibov_days}", className="kpi-value")]),
