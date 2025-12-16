@@ -1,0 +1,102 @@
+[
+  {
+    "order": 1,
+    "title": "Figura 1 – Ibovespa com Eventos",
+    "id": "ibov-graph",
+    "callback": "update_dashboard",
+    "filters": ["date-range", "model-filter", "metric-filter", "export-toggle"],
+    "datasets": [
+      {"path": "ibovespa_clean.csv", "columns": ["day", "close", "return (esperado)"]},
+      {"path": "event_study_latency.csv", "columns": ["event_day", "fonte", "event_name", "car_max_abs"]}
+    ],
+    "empty_behavior": "placeholder 'Sem dados no intervalo'",
+    "config": "PLOTLY_CONFIG; altura 460 (620 export)"
+  },
+  {
+    "order": 2,
+    "title": "Figura 2 – Sentimento Médio Diário",
+    "id": "sentiment-graph",
+    "callback": "update_dashboard",
+    "filters": ["date-range", "export-toggle"],
+    "datasets": [
+      {"path": "16_oof_predictions.csv", "columns": ["day", "sentiment"]}
+    ],
+    "empty_behavior": "placeholder",
+    "config": "PLOTLY_CONFIG; altura 460/620"
+  },
+  {
+    "order": 3,
+    "title": "Figura 3 – Comparativo de Modelos",
+    "id": "model-comparison-graph",
+    "callback": "update_dashboard",
+    "filters": ["model-filter", "metric-filter", "export-toggle"],
+    "datasets": [
+      {"path": "results_16_models_tfidf.json", "columns": ["model", "auc", "mda"]},
+      {"path": "18_backtest_results.csv", "columns": ["model", "strategy", "cagr", "sharpe"]}
+    ],
+    "empty_behavior": "placeholder se métrica/seleção zerar",
+    "config": "PLOTLY_CONFIG; altura 460/620"
+  },
+  {
+    "order": 4,
+    "title": "Figura 4 – Dispersão Sentimento x Retorno Diário",
+    "id": "scatter-graph",
+    "callback": "update_dashboard",
+    "filters": ["date-range", "export-toggle"],
+    "datasets": [
+      {"path": "16_oof_predictions.csv", "columns": ["day", "sentiment"]},
+      {"path": "ibovespa_clean.csv", "columns": ["day", "return"]}
+    ],
+    "empty_behavior": "placeholder",
+    "config": "PLOTLY_CONFIG; altura 460/620"
+  },
+  {
+    "order": 5,
+    "title": "Figura 5 – Correlação Móvel (60d/90d)",
+    "id": "rolling-corr-graph",
+    "callback": "update_dashboard",
+    "filters": ["date-range", "export-toggle"],
+    "datasets": [
+      {"path": "16_oof_predictions.csv", "columns": ["day", "sentiment"]},
+      {"path": "ibovespa_clean.csv", "columns": ["day", "return"]}
+    ],
+    "empty_behavior": "placeholder",
+    "config": "PLOTLY_CONFIG; altura 460/620"
+  },
+  {
+    "order": 6,
+    "title": "Figura 6 – Distribuição do Sentimento",
+    "id": "sentiment-dist-graph",
+    "callback": "update_dashboard",
+    "filters": ["date-range", "export-toggle"],
+    "datasets": [
+      {"path": "16_oof_predictions.csv", "columns": ["day", "sentiment"]}
+    ],
+    "empty_behavior": "placeholder",
+    "config": "PLOTLY_CONFIG; altura 460/620"
+  },
+  {
+    "order": 7,
+    "title": "Figura 7 – Latência por Fonte/Daypart",
+    "id": "latency-graph",
+    "callback": "update_dashboard",
+    "filters": ["date-range", "export-toggle"],
+    "datasets": [
+      {"path": "event_study_latency.csv", "columns": ["event_day", "fonte", "car_max_abs", "event_name"]}
+    ],
+    "empty_behavior": "placeholder acadêmico",
+    "config": "PLOTLY_CONFIG; altura 460/620"
+  },
+  {
+    "order": 8,
+    "title": "Figura 8 – Curva de Backtest",
+    "id": "backtest-graph",
+    "callback": "update_dashboard",
+    "filters": ["date-range", "model-filter", "export-toggle"],
+    "datasets": [
+      {"path": "18_backtest_daily_curves.csv", "columns": ["day", "model", "strategy", "equity"]}
+    ],
+    "empty_behavior": "placeholder",
+    "config": "PLOTLY_CONFIG; altura 460/620"
+  }
+]
