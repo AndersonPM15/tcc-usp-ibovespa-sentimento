@@ -239,6 +239,28 @@ DATA_STATUS = [
 DATE_MIN = pd.Timestamp(START_DATE)
 DATE_MAX = pd.Timestamp(END_DATE)
 
+# Definir range padrão como interseção dos datasets carregados (opção A)
+ranges = []
+for df, col in [
+    (IBOV_DF, "day"),
+    (SENTIMENT_DF, "day"),
+    (BACKTEST_DF, "day"),
+    (LATENCY_DF, "event_day"),
+]:
+    if not df.empty and col in df.columns:
+        dt = pd.to_datetime(df[col], errors="coerce").dropna()
+        if not dt.empty:
+            ranges.append((dt.min(), dt.max()))
+if ranges:
+    DEFAULT_START = max(r[0] for r in ranges)
+    DEFAULT_END = min(r[1] for r in ranges)
+    DEFAULT_START = max(DEFAULT_START, DATE_MIN)
+    DEFAULT_END = min(DEFAULT_END, DATE_MAX)
+else:
+    DEFAULT_START = DATE_MIN
+    DEFAULT_END = DATE_MAX
+print(f"[DEBUG] DEFAULT_START={DEFAULT_START.date()} DEFAULT_END={DEFAULT_END.date()}")
+
 MODEL_OPTIONS = sorted(RESULTS_DF["model"].dropna().unique()) if not RESULTS_DF.empty and "model" in RESULTS_DF.columns else []
 print(f"[DEBUG] MODEL_OPTIONS carregados: {MODEL_OPTIONS}")
 print(f"[DEBUG] RESULTS_DF shape: {RESULTS_DF.shape}")
@@ -345,8 +367,8 @@ app.layout = html.Div(
                                     id="date-range",
                                     min_date_allowed=DATE_MIN,
                                     max_date_allowed=DATE_MAX,
-                                    start_date=DATE_MIN,
-                                    end_date=DATE_MAX,
+                                    start_date=DEFAULT_START,
+                                    end_date=DEFAULT_END,
                                     display_format="YYYY-MM-DD",
                                 ),
                             ]
@@ -579,7 +601,11 @@ def update_dashboard(start_date, end_date, selected_models, metric):
                     mode="markers",
                     marker=dict(size=10, color="red", symbol="triangle-up"),
                     name="Eventos",
-                    text=event_filtered.get("event_name") or event_filtered[event_filtered.columns[0]],
+                    text=event_filtered["event_name"]
+                    if "event_name" in event_filtered.columns
+                    else event_filtered["fonte"]
+                    if "fonte" in event_filtered.columns
+                    else event_filtered.index.astype(str),
                     hovertemplate="%{text} - %{x|%Y-%m-%d}",
                 )
             )
@@ -837,8 +863,11 @@ def update_dashboard(start_date, end_date, selected_models, metric):
             backtest_fig,
         )
     except Exception as exc:  # noqa: BLE001
+        import traceback
+
         err_msg = f"Erro no callback: {exc}"
         print("[ERRO CALLBACK]", err_msg, file=sys.stderr)
+        traceback.print_exc()
         placeholder = _placeholder_fig("Erro", "Verifique logs no servidor.")
         return (
             placeholder,
