@@ -1,91 +1,136 @@
-# Sentimento de Notícias x Ibovespa — Dashboard TCC USP
+# Dashboard — Sentimento de Notícias (PT-BR) × Ibovespa (USP)
 
-[![Python](https://img.shields.io/badge/Python-3.11+-blue.svg?logo=python&logoColor=white)]()
-[![Dash/Plotly](https://img.shields.io/badge/Dash%20%2F%20Plotly-UI%20Interativo-20B2AA.svg?logo=plotly&logoColor=white)]()
-[![Status](https://img.shields.io/badge/Status-Dashboard%20v1.0--dashboard-brightgreen.svg)]()
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![Dash](https://img.shields.io/badge/Dash-Plotly-informational)
+![Status](https://img.shields.io/badge/Status-Validado%20%7C%20v1.0--dashboard-success)
+
+## Identificação acadêmica (USP)
+- **Autor:** Anderson Pantoja Machado  
+- **Orientador:** Prof. Vinicius Rocha Biscaro  
+- **Instituição:** Universidade de São Paulo (USP)  
+- **Curso/Programa:** MBA em Business Intelligence & Analytics — ECA/USP  
+- **Título do TCC:** *Análise do Sentimento de Notícias em Português e seu Efeito no Ibovespa: Evidência Empírica com Baselines Transparentes e Estudo de Eventos*  
+
+> Projeto: investigar se o sentimento em notícias financeiras em português antecipa a direção do retorno diário do Ibovespa, usando baselines transparentes (TF-IDF + Regressão Logística/Random Forest), métricas AUC/MDA e estudo de eventos (CAR/latência).
+
+---
 
 ## Sumário
-- [Identificação Acadêmica](#identificação-acadêmica)
-- [Visão Geral](#visão-geral)
-- [Tecnologias e Boas Práticas](#tecnologias-e-boas-práticas)
-- [Estrutura do Repositório](#estrutura-do-repositório)
-- [Como Rodar (Windows)](#como-rodar-windows)
-- [Como Usar o Dashboard](#como-usar-o-dashboard)
-- [Exportar as 8 Figuras](#exportar-as-8-figuras)
-- [Validação e Qualidade](#validação-e-qualidade)
-- [Dados e Ética](#dados-e-ética)
-- [Licença e Contato](#licença-e-contato)
+- [Visão geral](#visão-geral)
+- [Pergunta de pesquisa e hipóteses](#pergunta-de-pesquisa-e-hipóteses)
+- [Tecnologias](#tecnologias)
+- [Estrutura do repositório](#estrutura-do-repositório)
+- [Como rodar (Windows)](#como-rodar-windows)
+- [Como usar o dashboard](#como-usar-o-dashboard)
+- [Como exportar as 8 figuras](#como-exportar-as-8-figuras)
+- [Validação e rastreabilidade](#validação-e-rastreabilidade)
+- [Dados, ética e conformidade](#dados-ética-e-conformidade)
+- [Como citar (ABNT — sugestão)](#como-citar-abnt--sugestão)
+- [Licença](#licença)
 
-## Identificação Acadêmica
-- **Autor:** [[PREENCHER PELO ALUNO]]
-- **Orientador(a):** [[PREENCHER PELO ALUNO]]
-- **Instituição:** Universidade de São Paulo (USP)
-- **Curso/MBA/Programa:** [[PREENCHER PELO ALUNO]]
-- **Ano/Semestre:** [[PREENCHER PELO ALUNO]]
-- **Título do TCC:** [[PREENCHER PELO ALUNO]]
-- **Tema:** Sentimento de notícias e impacto/predição no Ibovespa (2018–2024; período efetivo = interseção das séries)
+---
 
-## Visão Geral
-- Problema: verificar se o sentimento diário de notícias em PT-BR tem relação ou poder preditivo sobre o Ibovespa.
-- Hipótese: séries de sentimento agregadas podem antecipar movimento/retorno do índice.
-- Contribuição: dashboard interativo (8 figuras) + trilha de validação de dados e backtest reprodutível.
-- Escopo temporal (hard cap): **2018-01-02 a 2024-12-31**. Sentimento/backtest iniciam em 2019-08 pela interseção das séries.
-- Conteúdo do repositório: app_dashboard (Dash/Plotly), assets (CSS), scripts utilitários, relatórios de validação em `reports/`, documentação de exportação.
+## Visão geral
+- Dashboard (Dash/Plotly) com 8 figuras: Ibovespa/eventos, sentimento diário, comparativo de modelos, dispersão, correlação móvel, distribuição de sentimento, latência (CAR), backtest.
+- Hard cap temporal: **2018-01-02 a 2024-12-31**; período efetivo ajustado pela interseção das séries (sentimento/backtest iniciam em 2019-08).
+- Conteúdo: código do app, CSS, scripts utilitários, relatórios de validação em `reports/`, guia de exportação para o TCC.
 
-## Tecnologias e Boas Práticas
-- **Linguagens:** Python (principal), HTML/CSS (assets/).
-- **Bibliotecas principais:** Dash, Plotly, Pandas, NumPy; (se aplicável) Scikit-learn para métricas/modelos; urllib/socket para probe.
-- **Boas práticas:** uso de `venv`; pinagem em requirements.txt (se existir); **não versionar dados** (`data_processed/` ignorado); reprodutibilidade com scripts e relatórios; usar `--find-port` para evitar conflito de porta; probe para checar HTTP 200.
+---
 
-## Estrutura do Repositório
-```
+## Pergunta de pesquisa e hipóteses
+- **Pergunta:** o sentimento de notícias publicadas em T₀ está associado à direção do retorno do Ibovespa em T₀+1?
+- **Hipóteses (síntese):**
+  - H1: sentimento negativo em T₀ associa-se a retornos negativos em T₀+1.  
+  - H2: sentimento melhora desempenho vs modelos apenas técnicos (ganho em AUC/MDA).  
+  - H3 (exploratória): latência de incorporação varia por fonte/horário (CAR).
+
+---
+
+## Tecnologias
+**Linguagens**
+- Python (principal)
+- CSS (tema/layout do dashboard)
+
+**Principais bibliotecas**
+- Dash + Plotly (dashboard e gráficos)
+- Pandas/NumPy (ETL, joins, séries temporais)
+- Scikit-learn (baselines: Regressão Logística, Random Forest)
+
+**Boas práticas**
+- Usar ambiente virtual (`venv`) e pinagem em `requirements.txt` (se presente).
+- **Não versionar dados** (`data_processed/` ignorado).
+- Reprodutibilidade com scripts e relatórios; usar `--find-port` para evitar conflito de porta; probe para checar HTTP 200.
+
+---
+
+## Estrutura do repositório
+```text
 .
-├── app_dashboard.py            # Dashboard (Dash/Plotly)
-├── assets/                    # CSS e assets estáticos
-├── data_processed/            # NÃO versionado (dados locais)
-├── reports/                   # Relatórios de auditoria/validação/export
-├── scripts/                   # Utilitários (latência, preflight, etc.)
-├── README.md                  # Este arquivo
-└── requirements.txt           # (se existir) dependências
+├── app_dashboard.py                 # app Dash/Plotly (8 figuras + modo exportação)
+├── assets/
+│   └── styles.css                   # tema visual (USP-like) + export-mode
+├── data_processed/                  # DADOS (NÃO versionados)
+├── reports/                         # auditorias, validações e blueprint do dashboard
+│   ├── final_data_audit.md
+│   ├── final_sanity_checks.md
+│   ├── final_graph_validation.md
+│   ├── final_runtime_checks.md
+│   ├── how_to_export_figures.md
+│   ├── dashboard_blueprint.md
+│   └── dashboard_graph_index.json
+├── scripts/                         # utilitários (diagnóstico/latência/preflight)
+└── README.md
 ```
-- `app_dashboard.py`: lógica de carregamento, callbacks e layout dos 8 gráficos.
-- `assets/`: estilos (inclui ajustes para Modo Exportação).
-- `reports/`: auditorias finais (dados, sanity, gráficos, runtime), blueprint/index das figuras e guia de exportação.
-- `scripts/`: ferramentas de diagnóstico/geração (não roda pipeline pesado).
-- `data_processed/`: dados locais esperados (ibovespa_clean.csv, 16_oof_predictions.csv, backtest, latência) — ficam fora do Git.
+> `data_processed/` não é versionado; mantenha os arquivos locais em `C:\TCC_USP\data_processed\`.
 
-## Como Rodar (Windows)
-```powershell
-# 1) Criar e ativar venv
+---
+
+## Como rodar (Windows)
+### 1) Ambiente virtual (venv)
+```bat
 python -m venv venv
-.\venv\Scripts\Activate.ps1
+.\venv\Scripts\activate
+```
 
-# 2) Instalar dependências
-pip install --upgrade pip
-pip install -r requirements.txt   # se o arquivo existir
+### 2) Instalar dependências
+- Se existir `requirements.txt`:
+  ```bat
+  pip install -r requirements.txt
+  ```
+- Se não existir, instale manualmente (dash, plotly, pandas, numpy, scikit-learn etc.) e gere:
+  ```bat
+  pip freeze > requirements.txt
+  ```
 
-# 3) Rodar o dashboard
+### 3) Rodar o dashboard
+```bat
 cd C:\TCC_USP\tcc-usp-ibovespa-sentimento
 .\venv\Scripts\python.exe app_dashboard.py --host 127.0.0.1 --port 8050 --find-port --open
 ```
-- `--find-port` escolhe a próxima porta livre se 8050 estiver ocupada.
-- Probe (somente com o servidor rodando e porta correta; ajuste se o find-port mudar):
-  ```powershell
-  .\venv\Scripts\python.exe app_dashboard.py --probe --host 127.0.0.1 --port 8050
-  ```
 
-## Como Usar o Dashboard
-- **Período:** DatePickerRange (clamp 2018-01-02 a 2024-12-31); padrão = interseção das séries (evita gráficos vazios).
+### 4) Probe (validação rápida)
+> Só funciona com o servidor rodando e na porta correta (ajuste se `--find-port` mudar a porta).
+```bat
+.\venv\Scripts\python.exe app_dashboard.py --probe --host 127.0.0.1 --port 8050
+```
+
+---
+
+## Como usar o dashboard
+- **Período de Análise:** filtra todos os 8 gráficos (clamp dentro do hard cap).
 - **Modelo:** dropdown single (ex.: `logreg_l2`, `rf_200`); afeta comparativo, backtest e KPIs.
-- **Métrica:** `AUC`, `MDA`, `Sharpe`; usada no comparativo, badge e KPIs.
-- **Modelos (resumo):** `logreg_l2` (baseline linear), `rf_200` (árvore/ensemble).
-- **Modo Exportação:** 1 coluna, altura ampliada (~900px), oculta cabeçalho/controles/KPIs — ideal para recorte/PNG.
+- **Métrica:** `AUC`, `MDA`, `Sharpe` (comparativo, badge, KPIs).
+  - AUC: discriminação (ROC) do classificador.
+  - MDA: acerto direcional médio (↑/↓).
+  - Sharpe: desempenho risco-retorno da estratégia (backtest).
+- **Modo Exportação:** 1 coluna, altura ampliada (~900px), cabeçalho/controles ocultos para recorte/PNG.
 
-## Exportar as 8 Figuras
-Passo a passo (resumo do `reports/how_to_export_figures.md`):
-1) Suba o app com `--open`, ative **Modo Exportação**.
-2) Cenário TCC: período padrão (2019-08-08 → 2024-12-27), modelo = melhor por Sharpe (ex.: `logreg_l2`), métrica = `sharpe`.
-3) Use o ícone de câmera (Plotly) em cada card e salve com largura ≥ 1600px:
+---
+
+## Como exportar as 8 figuras
+1) Rodar o dashboard com `--open` e ativar **Modo Exportação**.  
+2) Cenário TCC: período padrão (interseção), modelo = melhor por Sharpe (ex.: `logreg_l2`), métrica = `sharpe`.  
+3) Em cada card, clique no ícone de câmera (Plotly) e salve em PNG (largura ≥ 1600px) com nomes:
    - `fig01_ibov_eventos.png`
    - `fig02_sentimento_medio.png`
    - `fig03_comparativo_modelos.png`
@@ -94,21 +139,35 @@ Passo a passo (resumo do `reports/how_to_export_figures.md`):
    - `fig06_dist_sentimento.png`
    - `fig07_event_study_latencia.png`
    - `fig08_backtest_equity.png`
-Checklist: legenda não cortada, rodapé “Fonte | Período | N” visível, nenhum placeholder.
+4) Checklist: legenda não cortada; rodapé “Fonte | Período | N” visível; nenhum placeholder.  
+> Guia detalhado: `reports/how_to_export_figures.md`.
 
-## Validação e Qualidade
-- `reports/final_data_audit.md` — datas/colunas/nulos (max ≤ 2024-12-30/27).
-- `reports/final_sanity_checks.md` — retornos, distribuição de sentimento, interseção, backtest, latência.
-- `reports/final_graph_validation.md` — 8/8 gráficos OK no estado padrão.
-- `reports/final_runtime_checks.md` — py_compile, pytest, probe HTTP 200.
-- `reports/dashboard_blueprint.md` e `reports/dashboard_graph_index.json` — mapa do layout/figuras.
-- Versão marcada: tag **v1.0-dashboard**; commit core: `cbee9db`.
+---
 
-## Dados e Ética
+## Validação e rastreabilidade
+Relatórios em `reports/`:
+- `final_data_audit.md` — datas, colunas, nulos (max ≤ 2024-12-30/27).
+- `final_sanity_checks.md` — retornos, distribuição de sentimento, interseção, backtest, latência.
+- `final_graph_validation.md` — 8/8 gráficos OK no estado padrão.
+- `final_runtime_checks.md` — `py_compile`, `pytest`, probe HTTP 200.
+- `dashboard_blueprint.md` e `dashboard_graph_index.json` — mapa do layout/figuras.
+
+Versão estável: tag **v1.0-dashboard** (commit core: `cbee9db`).
+
+---
+
+## Dados, ética e conformidade
 - Dados locais em `C:\TCC_USP\data_processed\` (não versionados).
-- Use apenas fontes permitidas/licenças adequadas; cite as fontes no TCC.
-- Evite expor credenciais; mantenha `.env` fora do Git; respeite privacidade e termos de uso.
+- Respeitar termos/licenças das fontes; não redistribuir conteúdo protegido.
+- Priorizar metadados/trechos curtos quando aplicável; citar fontes no TCC.
+- Evitar vazamento temporal: usar clamping e validação walk-forward.
 
-## Licença e Contato
-- Licença: [[PREENCHER]]
-- Contato: [[PREENCHER PELO ALUNO]] (email)
+---
+
+## Como citar (ABNT — sugestão)
+MACHADO, Anderson Pantoja. **Análise do sentimento de notícias em português e seu efeito no Ibovespa: evidência empírica com baselines transparentes e estudo de eventos**. Trabalho de Conclusão de Curso (MBA em Business Intelligence & Analytics) — Escola de Comunicações e Artes, Universidade de São Paulo, São Paulo, 2026. (Ajuste ano/local conforme a entrega oficial.)
+
+---
+
+## Licença
+Distribuído sob a licença **MIT**. Veja o arquivo `LICENSE`.
