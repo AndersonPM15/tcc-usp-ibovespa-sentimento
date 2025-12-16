@@ -43,6 +43,7 @@ BACKTEST_PATH = DATA_PATHS["data_processed"] / "18_backtest_results.csv"
 BACKTEST_CURVES_PATH = DATA_PATHS["data_processed"] / "18_backtest_daily_curves.csv"
 LATENCY_PATH = cfg.get_arquivo("latency_events", BASE_PATH)
 PREFERRED_STRATEGY = "long_only_60"
+COMPARE_MODELS_ANCHOR = ["logreg_l2", "rf_200"]
 
 PLOTLY_CONFIG = dict(
     displayModeBar=True,
@@ -185,6 +186,7 @@ def load_results_table() -> pd.DataFrame:
                 {
                     "model": row["model"],
                     "dataset": "backtest_daily",
+                    "strategy": row.get("strategy"),
                     "auc": None,
                     "mda": None,
                     "strategy": row["strategy"],
@@ -224,6 +226,9 @@ SENTIMENT_DF = load_sentiment()
 RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
 BACKTEST_DF = load_backtest_curves()
+BACKTEST_RESULTS_DF = _safe_read_csv(BACKTEST_PATH)
+if not BACKTEST_RESULTS_DF.empty and "dataset" not in BACKTEST_RESULTS_DF.columns:
+    BACKTEST_RESULTS_DF["dataset"] = "backtest_daily"
 
 
 def choose_common_strategy(backtest_df: pd.DataFrame, models: list[str], preferred: str = PREFERRED_STRATEGY) -> str | None:
@@ -766,16 +771,39 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
             sentiment_fig.update_layout(height=graph_height)
 
         comparison_fig = go.Figure()
-        table_df = RESULTS_DF.copy()
+        base_df = RESULTS_DF.copy()
         if selected_models:
-            table_df = table_df[table_df["model"].isin(selected_models)]
-        if COMMON_STRATEGY and {"dataset", "strategy"}.issubset(table_df.columns):
-            table_df = table_df.loc[(table_df["dataset"] != "backtest_daily") | (table_df["strategy"] == COMMON_STRATEGY)]
+            base_df = base_df[base_df["model"].isin(selected_models)]
+        comparison_meta = _meta_text("results_16_models_tfidf.json + 18_backtest_results.csv", base_df, None, "Modelos")
+        backtest_common_df = pd.DataFrame()
+        display_df_for_bars = base_df
+        if metric == "sharpe":
+            if COMMON_STRATEGY:
+                mask_common = (
+                    (BACKTEST_RESULTS_DF["model"].isin(selected_models))
+                    & (BACKTEST_RESULTS_DF["strategy"] == COMMON_STRATEGY)
+                    & (BACKTEST_RESULTS_DF.get("dataset", "backtest_daily") == "backtest_daily")
+                )
+                backtest_common_df = BACKTEST_RESULTS_DF.loc[mask_common].copy()
+                print(f"[DEBUG] Estratégia comum usada em Sharpe: {COMMON_STRATEGY}")
+                if not backtest_common_df.empty:
+                    print(backtest_common_df[["model", "strategy", "cagr", "sharpe"]].to_string(index=False))
+                display_df_for_bars = backtest_common_df
+            else:
+                comparison_fig = _placeholder_fig(
+                    "Comparativo de Modelos",
+                    "Sem estratégia comum entre logreg_l2 e rf_200 no backtest_daily; recalcule o backtest.",
+                )
+                comparison_fig.update_layout(height=graph_height)
+                display_df_for_bars = pd.DataFrame()
+        table_df_display = base_df if metric != "sharpe" else pd.concat(
+            [base_df.loc[base_df["dataset"] != "backtest_daily"], backtest_common_df], ignore_index=True
+        )
         best_model_name = None
         best_metric_val = None
         metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
-        if metric in {"auc", "mda", "sharpe"} and metric in table_df.columns:
-            table_df_sorted = table_df.dropna(subset=[metric]).sort_values(metric, ascending=False)
+        if metric in {"auc", "mda", "sharpe"} and not display_df_for_bars.empty and metric in display_df_for_bars.columns:
+            table_df_sorted = display_df_for_bars.dropna(subset=[metric]).sort_values(metric, ascending=False)
             if not table_df_sorted.empty:
                 best_model_name = table_df_sorted.iloc[0]["model"]
                 best_metric_val = table_df_sorted.iloc[0][metric]
@@ -822,9 +850,11 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
         else:
             comparison_fig = _placeholder_fig("Comparativo de Modelos", "Sem dados no intervalo selecionado; ajuste o período ou modelo.")
             comparison_fig.update_layout(height=graph_height)
-        if metric in {"auc", "mda", "sharpe"} and metric in table_df.columns:
-            table_df = table_df.sort_values(metric, ascending=False, na_position="last")
-        table_df = table_df.fillna("—")
+        if metric in {"auc", "mda", "sharpe"} and metric in table_df_display.columns:
+            table_df_display = table_df_display.sort_values(metric, ascending=False, na_position="last")
+        table_df_display = table_df_display.fillna("—")
+        if metric == "sharpe" and COMMON_STRATEGY:
+            comparison_meta = f"{comparison_meta} | Estratégia comparada: {COMMON_STRATEGY}"
 
         scatter_fig = go.Figure()
         merged_sr = (
