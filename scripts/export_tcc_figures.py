@@ -105,9 +105,10 @@ def figure_ibov_events(ibov: pd.DataFrame, events: pd.DataFrame):
     fig, ax = plt.subplots(figsize=(10, 5), dpi=300)
     ax.plot(ibov["day"], ibov["close"], color="#1f77b4", label="Ibovespa (close)")
     if not events.empty:
-        ax.vlines(events["event_day"], ymin=ax.get_ylim()[0], ymax=ax.get_ylim()[1], colors="tomato", alpha=0.35, linewidth=1.2, label="Eventos (sentimento)")
-        # Scatter nos valores existentes
-        merged = events.merge(ibov[["day", "close"]], left_on="event_day", right_on="day", how="left")
+        thresh = events["car_max_abs"].quantile(0.9)
+        extreme = events.loc[events["car_max_abs"] >= thresh]
+        ax.vlines(extreme["event_day"], ymin=ax.get_ylim()[0], ymax=ax.get_ylim()[1], colors="tomato", alpha=0.35, linewidth=1.2, label="Eventos extremos (≥p90)")
+        merged = extreme.merge(ibov[["day", "close"]], left_on="event_day", right_on="day", how="left")
         ax.scatter(merged["event_day"], merged["close"], color="tomato", edgecolor="k", zorder=3, s=24)
     ax.set_title("Figura 1 – Ibovespa com Eventos")
     ax.set_xlabel("Data")
@@ -123,12 +124,12 @@ def figure_ibov_events(ibov: pd.DataFrame, events: pd.DataFrame):
 def figure_latency(events: pd.DataFrame):
     events = events.copy()
     events["window"] = events["window"].astype(str)
-    # 7A box/violin por polaridade
+    # 7A boxplot por polaridade
     fig, ax = plt.subplots(figsize=(8, 5), dpi=300)
     groups = [events.loc[events["polarity"] == pol, "car_value"].dropna() for pol in ["pos", "neg"]]
     ax.boxplot(groups, labels=["pos", "neg"], showmeans=True, meanline=True, patch_artist=True,
                boxprops=dict(facecolor="#a6cee3"), medianprops=dict(color="black"), meanprops=dict(color="red"))
-    ax.set_title("Figura 7A – Latência / CAR por polaridade")
+    ax.set_title("Figura 7A – CAR por polaridade (boxplot)")
     ax.set_xlabel("Polaridade")
     ax.set_ylabel("CAR")
     ax.grid(alpha=0.2)
@@ -136,21 +137,34 @@ def figure_latency(events: pd.DataFrame):
     fig.savefig(OUTPUT_DIR / "Figura_7A_latencia_boxplot.png", dpi=300)
     plt.close(fig)
 
-    # 7B CAR médio por window e polaridade
-    grp = events.groupby(["window", "polarity"]).agg(
-        mean_car=("car_value", "mean"),
-        sem_car=("car_value", lambda s: s.std(ddof=1) / np.sqrt(len(s)) if len(s) > 1 else 0),
-    )
-    grp = grp.reset_index()
-    # ordenar janela pelo sufixo numérico
-    grp["w_order"] = grp["window"].str.extract(r"(\d+)").astype(int)
-    grp = grp.sort_values("w_order")
+    # 7B CAR médio por janelas múltiplas (bootstrap IC)
+    def bootstrap_ci(data: np.ndarray, n_boot: int = 1000, alpha: float = 0.05):
+        if len(data) == 0:
+            return np.nan, np.nan, np.nan
+        means = []
+        for _ in range(n_boot):
+            sample = np.random.choice(data, size=len(data), replace=True)
+            means.append(sample.mean())
+        mean = np.mean(means)
+        lower = np.percentile(means, 100 * alpha / 2)
+        upper = np.percentile(means, 100 * (1 - alpha / 2))
+        return mean, lower, upper
+
+    windows_to_use = ["D0-D1", "D0-D3", "D0-D5"]
+    rows = []
+    for w in windows_to_use:
+        for pol in ["pos", "neg"]:
+            vals = events.loc[(events["window"] == w) & (events["polarity"] == pol), "car_value"].dropna().values
+            mean, low, high = bootstrap_ci(vals) if len(vals) else (np.nan, np.nan, np.nan)
+            rows.append({"window": w, "polarity": pol, "mean": mean, "low": low, "high": high, "n": len(vals)})
+    grp = pd.DataFrame(rows)
 
     fig, ax = plt.subplots(figsize=(8, 5), dpi=300)
     for pol, df_pol in grp.groupby("polarity"):
-        ax.errorbar(df_pol["window"], df_pol["mean_car"], yerr=df_pol["sem_car"], marker="o", label=pol)
+        ax.errorbar(df_pol["window"], df_pol["mean"], yerr=[df_pol["mean"] - df_pol["low"], df_pol["high"] - df_pol["mean"]],
+                    marker="o", label=pol, capsize=4)
     ax.axhline(0, color="k", linestyle="--", linewidth=1)
-    ax.set_title("Figura 7B – CAR médio por janela (evento) e polaridade")
+    ax.set_title("Figura 7B – CAR médio por janela (evento) e polaridade (IC bootstrap)")
     ax.set_xlabel("Janela do evento")
     ax.set_ylabel("CAR médio")
     ax.legend(title="Polaridade")
@@ -178,6 +192,13 @@ def table_metrics(results16: pd.DataFrame, backtest: pd.DataFrame, common_strate
         back = backtest.loc[mask, ["model", "dataset", "strategy", "cagr", "sharpe"]].copy()
         back["auc"] = "—"
         back["mda"] = "—"
+        back["cagr"] = back["cagr"].apply(lambda x: f"{float(x):+.2%}" if pd.notna(x) else "—")
+        back["sharpe"] = back["sharpe"].apply(lambda x: f"{float(x):.3f}" if pd.notna(x) else "—")
+    # format tfidf metrics
+    tfidf["auc"] = tfidf["auc"].apply(lambda x: f"{float(x):.3f}" if pd.notna(x) else "—")
+    tfidf["mda"] = tfidf["mda"].apply(lambda x: f"{float(x):.3f}" if pd.notna(x) else "—")
+    tfidf["cagr"] = "—"
+    tfidf["sharpe"] = "—"
     table = pd.concat([tfidf[["model", "dataset", "auc", "mda", "strategy", "cagr", "sharpe"]], back], ignore_index=True)
     table.to_csv(OUTPUT_DIR / "Tabela_1_metricas.csv", index=False)
 
