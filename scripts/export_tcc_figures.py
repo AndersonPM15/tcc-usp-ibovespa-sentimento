@@ -1,11 +1,15 @@
 ﻿"""
 Pipeline headless para gerar TODAS as figuras/tabelas finais (PNG) do TCC.
-Garante limpeza prévia, backend headless, overwrite dos PNGs e valida mtimes.
-Saídas em: reports/figures/
+- Limpa outputs antigos em reports/figures (PNG/CSV/TXT)
+- Usa backend headless Agg
+- Recalcula backtest diário mark-to-market a partir de 16_oof_predictions (estratégias long_only_60/55/long_short_sym)
+- Valida mtime/size dos PNGs e fail se desatualizado
 """
 from __future__ import annotations
+import argparse
 import json
 import time
+import os
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -19,9 +23,13 @@ BASE_DATA = Path(r"C:\TCC_USP\data_processed")
 OUTPUT_DIR = Path("reports") / "figures"
 OFFICIAL_START = pd.Timestamp("2018-01-02")
 OFFICIAL_END = pd.Timestamp("2024-12-31")
-PREFERRED_STRATEGY = "long_only_60"
-FALLBACK_STRATEGY = "long_only_55"
 ANCHOR_MODELS = ["logreg_l2", "rf_200"]
+# ordem de preferência; caímos para a próxima se a curva diária ficar peça (nunique<=200)
+STRATEGIES_CFG = [
+    {"name": "long_only_60", "long_th": 0.60, "short_th": 0.40, "allow_short": False, "cost": 0.0005},
+    {"name": "long_only_55", "long_th": 0.55, "short_th": 0.45, "allow_short": False, "cost": 0.0005},
+    {"name": "long_short_sym", "long_th": 0.55, "short_th": 0.45, "allow_short": True, "cost": 0.0007},
+]
 REQUIRED_PNGS = [
     "Figura_1_ibov_eventos.png",
     "Figura_2_sentimento_medio_diario.png",
@@ -46,23 +54,22 @@ def _clamp_period(df: pd.DataFrame, col: str) -> pd.DataFrame:
 
 
 def _clean_outputs() -> None:
-    if OUTPUT_DIR.exists():
-        for f in OUTPUT_DIR.iterdir():
-            if f.name in REQUIRED_PNGS or f.suffix in {".csv", ".txt"}:
-                try:
-                    f.unlink()
-                except Exception:
-                    pass
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    for pattern in ("*.png", "*.csv", "*.txt"):
+        for f in OUTPUT_DIR.glob(pattern):
+            try:
+                f.unlink()
+            except Exception:
+                pass
 
 
 def _savefig(fig, path: Path) -> None:
-    try:
-        if path.exists():
+    if path.exists():
+        try:
             path.unlink()
-    except PermissionError:
-        pass
-    fig.savefig(path, dpi=200, bbox_inches="tight")
+        except Exception:
+            pass
+    fig.savefig(path, dpi=300, bbox_inches="tight")
     plt.close(fig)
     if (not path.exists()) or path.stat().st_size == 0:
         raise RuntimeError(f"Falha ao salvar figura: {path}")
@@ -76,7 +83,7 @@ def _validate_png_mtimes(start_ts: float) -> None:
         size = path.stat().st_size if exists else 0
         mtime = path.stat().st_mtime if exists else 0
         print(f"{path} | exists={exists} | size={size} | mtime={mtime}")
-        if (not exists) or size <= 0 or mtime < start_ts:
+        if (not exists) or size <= 30_000 or mtime < start_ts - 2:
             raise RuntimeError(f"PNG inválido ou não atualizado: {path}")
 
 
@@ -132,27 +139,96 @@ def load_backtest_results() -> pd.DataFrame:
     return df
 
 
-def load_backtest_curves() -> pd.DataFrame:
-    df = pd.read_csv(BASE_DATA / "18_backtest_daily_curves.csv")
-    df["day"] = pd.to_datetime(df["day"] if "day" in df.columns else df["date"])
-    return _clamp_period(df, "day")
+def load_oof_predictions() -> pd.DataFrame:
+    df = pd.read_csv(BASE_DATA / "16_oof_predictions.csv")
+    df["day"] = pd.to_datetime(df["day"])
+    df = _clamp_period(df, "day")
+    return df
 
 
-def choose_common_strategy(df: pd.DataFrame) -> Tuple[str | None, set[str]]:
-    if df.empty:
-        return None, set()
-    common: set[str] | None = None
-    for m in ANCHOR_MODELS:
-        strategies = set(df.loc[df["model"] == m, "strategy"])
-        common = strategies if common is None else common & strategies
-    common = common or set()
-    if not common:
-        return None, set()
-    if PREFERRED_STRATEGY in common:
-        return PREFERRED_STRATEGY, common
-    if FALLBACK_STRATEGY in common:
-        return FALLBACK_STRATEGY, common
-    return sorted(common)[0], common
+def _run_strategy_from_oof(oof: pd.DataFrame, cfg: Dict[str, float]) -> pd.DataFrame:
+    df = oof.copy().reset_index(drop=True)
+    long_th = cfg["long_th"]
+    short_th = cfg["short_th"]
+    allow_short = cfg.get("allow_short", True)
+    cost = cfg.get("cost", 0.0005)
+
+    positions = []
+    turnovers = []
+    pos_prev = 0
+    for proba in df["proba"]:
+        if proba >= long_th:
+            pos = 1
+        elif allow_short and proba <= short_th:
+            pos = -1
+        elif (not allow_short) and proba <= short_th:
+            pos = 0
+        else:
+            pos = pos_prev  # mantém posição até novo gatilho
+        turnovers.append(abs(pos - pos_prev))
+        positions.append(pos)
+        pos_prev = pos
+
+    df["signal"] = positions
+    df["turnover"] = turnovers
+    df["cost"] = df["turnover"] * cost
+    df["strategy_ret"] = df["signal"].shift(1, fill_value=0) * df["ret_next"].fillna(0) - df["cost"]
+    df["equity"] = (1 + df["strategy_ret"]).cumprod()
+    return df
+
+
+def compute_backtest_mark_to_market(oof: pd.DataFrame, ibov: pd.DataFrame, strategy_name: str) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
+    cfg = next((c for c in STRATEGIES_CFG if c["name"] == strategy_name), None)
+    if cfg is None:
+        raise RuntimeError(f"Estratégia {strategy_name} não configurada.")
+
+    records = []
+    stats: Dict[str, Dict[str, float]] = {}
+    for model in ANCHOR_MODELS:
+        df_model = oof[oof["model"] == model].copy()
+        df_model = df_model.sort_values("day")
+        if df_model.empty:
+            continue
+        res = _run_strategy_from_oof(df_model, cfg)
+        records.append(res.assign(model=model, strategy=strategy_name))
+    if not records:
+        raise RuntimeError(f"Nenhum dado para estratégia {strategy_name}.")
+
+    daily = pd.concat(records, ignore_index=True)
+    # alinhar datas com Ibov
+    common_dates = set(daily["day"]).intersection(set(ibov["day"]))
+    if not common_dates:
+        raise RuntimeError(f"Sem interseção de datas entre backtest e Ibov para {strategy_name}.")
+    common_dates = sorted(common_dates)
+    bench = ibov.set_index("day").loc[common_dates, "ret"].fillna(0)
+    equity_df = pd.DataFrame({"date": common_dates})
+    bench_eq = (1 + bench).cumprod()
+    bench_eq = bench_eq / bench_eq.iloc[0]
+    equity_df["equity_ibov"] = bench_eq.values
+
+    for model in ANCHOR_MODELS:
+        sub = daily[(daily["model"] == model) & (daily["day"].isin(common_dates))].sort_values("day")
+        if sub.empty:
+            raise RuntimeError(f"Sem dados para {model} em {strategy_name}.")
+        eq = (1 + sub["strategy_ret"].fillna(0)).cumprod()
+        eq = eq / eq.iloc[0]
+        equity_df[f"equity_{model}"] = eq.values
+        ret = sub["strategy_ret"].fillna(0)
+        cagr = eq.iloc[-1] ** (252 / len(eq)) - 1 if len(eq) > 1 else np.nan
+        sharpe = ret.mean() / ret.std(ddof=0) * np.sqrt(252) if ret.std(ddof=0) != 0 else np.nan
+        stats[model] = {"cagr": cagr, "sharpe": sharpe, "nunique_equity": eq.nunique()}
+        if eq.nunique() <= 200:
+            raise RuntimeError(f"Curva diária insuficiente para {model} na estratégia {strategy_name}: {eq.nunique()} valores únicos.")
+    return equity_df, stats, strategy_name
+
+
+def load_backtest_curves_mark_to_market(oof: pd.DataFrame, ibov: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
+    # wrapper mantido para compatibilidade
+    return compute_backtest_mark_to_market(oof, ibov, STRATEGIES_CFG[0]["name"])
+
+
+def choose_common_strategy(stats: Dict[str, Dict[str, float]], chosen: str) -> Tuple[str | None, set[str]]:
+    return chosen, set([chosen])
 
 
 def figure_ibov_events(ibov: pd.DataFrame, events: pd.DataFrame) -> None:
@@ -308,44 +384,12 @@ def figure_caar_event_time(events: pd.DataFrame, ibov: pd.DataFrame, tau_max: in
     _savefig(fig, OUTPUT_DIR / "Figura_7B_event_time_CAAR.png")
 
 
-def _compute_backtest_equity(curves: pd.DataFrame, ibov: pd.DataFrame, strategy: str) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]]]:
-    mask = (curves["strategy"] == strategy) & (curves["model"].isin(ANCHOR_MODELS))
-    sel = curves.loc[mask, ["day", "model", "strategy_ret"]].copy()
-    if sel["model"].nunique() < 2:
-        raise RuntimeError("Backtest: não há duas curvas (logreg_l2 e rf_200) para a estratégia comum.")
-    daily = sel.groupby(["model", "day"])["strategy_ret"].mean().reset_index()
-    pivot = daily.pivot(index="day", columns="model", values="strategy_ret").sort_index()
-    pivot.index = pd.to_datetime(pivot.index)
-    bench = ibov.set_index("day")["ret"].copy()
-    common_dates = pivot.index.intersection(bench.index)
-    if common_dates.empty:
-        raise RuntimeError("Backtest: não há datas comuns entre Ibov e curvas de backtest.")
-    pivot = pivot.loc[common_dates]
-    bench = bench.loc[common_dates]
-    equity_df = pd.DataFrame({"date": common_dates})
-    stats: Dict[str, Dict[str, float]] = {}
-    n_days = len(common_dates)
-    bench_ret = bench.fillna(0)
-    bench_eq = (1 + bench_ret).cumprod()
-    bench_eq = bench_eq / bench_eq.iloc[0]
-    equity_df["equity_ibov"] = bench_eq.values
-    for model in ANCHOR_MODELS:
-        ret = pivot[model].fillna(0)
-        eq = (1 + ret).cumprod()
-        eq = eq / eq.iloc[0]
-        equity_df[f"equity_{model}"] = eq.values
-        cagr = eq.iloc[-1] ** (252 / n_days) - 1 if n_days > 1 else np.nan
-        sharpe = np.nan
-        if ret.std(ddof=0) != 0:
-            sharpe = ret.mean() / ret.std(ddof=0) * np.sqrt(252)
-        stats[model] = {"cagr": cagr, "sharpe": sharpe}
-    return equity_df, stats
+def _compute_backtest_equity_mark_to_market(oof: pd.DataFrame, ibov: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
+    return compute_backtest_mark_to_market(oof, ibov)
 
 
-def figure_backtest_vs_benchmark(curves: pd.DataFrame, ibov: pd.DataFrame, strategy: str | None) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]]]:
-    if curves.empty or strategy is None:
-        raise RuntimeError("Backtest: curvas vazias ou estratégia comum ausente.")
-    equity_df, stats = _compute_backtest_equity(curves, ibov, strategy)
+def figure_backtest_vs_benchmark(oof: pd.DataFrame, ibov: pd.DataFrame, strategy_name: str) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
+    equity_df, stats, strategy = compute_backtest_mark_to_market(oof, ibov, strategy_name)
     equity_df.to_csv(OUTPUT_DIR / "Figura_8_backtest_vs_benchmark.csv", index=False)
     fig, ax = plt.subplots(figsize=(11, 5.5), dpi=300)
     ax.plot(equity_df["date"], equity_df["equity_logreg_l2"], label=f"logreg_l2 ({strategy})")
@@ -359,12 +403,12 @@ def figure_backtest_vs_benchmark(curves: pd.DataFrame, ibov: pd.DataFrame, strat
     fig.autofmt_xdate()
     fig.tight_layout()
     _savefig(fig, OUTPUT_DIR / "Figura_8_backtest_vs_benchmark.png")
-    return equity_df, stats
+    return equity_df, stats, strategy
 
 
-def figure_comparativo(backtest_stats: Dict[str, Dict[str, float]], common_strategy: str | None) -> None:
-    if common_strategy is None:
-        raise RuntimeError("Não há estratégia comum entre logreg_l2 e rf_200 para Sharpe.")
+def figure_comparativo(backtest_stats: Dict[str, Dict[str, float]], strategy_name: str | None) -> None:
+    if strategy_name is None:
+        raise RuntimeError("Não há estratégia comum para Sharpe.")
     rows = []
     for model in ANCHOR_MODELS:
         stats = backtest_stats.get(model, {})
@@ -372,19 +416,19 @@ def figure_comparativo(backtest_stats: Dict[str, Dict[str, float]], common_strat
             rows.append({"model": model, "sharpe": stats.get("sharpe")})
     data = pd.DataFrame(rows)
     if len(data["model"].unique()) < 2:
-        raise RuntimeError("Figura 3: não foram encontradas duas linhas de Sharpe para a estratégia comum.")
+        raise RuntimeError("Figura 3: não foram encontradas duas linhas de Sharpe para a estratégia.")
     fig, ax = plt.subplots(figsize=(9, 5), dpi=300)
     ax.bar(data["model"], data["sharpe"], color=["#2ca02c", "#1f77b4"])
     for idx, row in data.iterrows():
         ax.text(idx, row["sharpe"], f"{row['sharpe']:.3f}", ha="center", va="bottom")
     ax.set_ylabel("Sharpe")
-    ax.set_title(f"Figura 3 – Comparativo de Modelos (Sharpe) | Estratégia: {common_strategy}")
+    ax.set_title(f"Figura 3 – Comparativo de Modelos (Sharpe) | Estratégia: {strategy_name}")
     ax.grid(axis="y", alpha=0.25)
     fig.tight_layout()
     _savefig(fig, OUTPUT_DIR / "Figura_3_comparativo_modelos.png")
 
 
-def table_metrics(results16: pd.DataFrame, backtest_stats: Dict[str, Dict[str, float]], common_strategy: str | None) -> None:
+def table_metrics(results16: pd.DataFrame, backtest_stats: Dict[str, Dict[str, float]], strategy_name: str | None) -> None:
     tfidf = results16.copy()
     tfidf = tfidf[tfidf["model"].isin(ANCHOR_MODELS)]
     tfidf["cagr"] = "—"
@@ -393,10 +437,10 @@ def table_metrics(results16: pd.DataFrame, backtest_stats: Dict[str, Dict[str, f
     tfidf["auc"] = tfidf["auc"].apply(lambda x: f"{float(x):.3f}" if pd.notna(x) else "—")
     tfidf["mda"] = tfidf["mda"].apply(lambda x: f"{float(x):.3f}" if pd.notna(x) else "—")
     back_rows = []
-    if common_strategy:
+    if strategy_name:
         for model in ANCHOR_MODELS:
             stats = backtest_stats.get(model, {})
-            back_rows.append({"model": model, "dataset": "backtest_daily", "strategy": common_strategy, "auc": "—", "mda": "—", "cagr": stats.get("cagr"), "sharpe": stats.get("sharpe")})
+            back_rows.append({"model": model, "dataset": "backtest_daily", "strategy": strategy_name, "auc": "—", "mda": "—", "cagr": stats.get("cagr"), "sharpe": stats.get("sharpe")})
     back = pd.DataFrame(back_rows)
     if not back.empty:
         back["cagr"] = back["cagr"].apply(lambda x: f"{float(x):+.2%}" if pd.notna(x) else "—")
@@ -405,7 +449,7 @@ def table_metrics(results16: pd.DataFrame, backtest_stats: Dict[str, Dict[str, f
     table.to_csv(OUTPUT_DIR / "Tabela_1_metricas.csv", index=False)
     note = ("Nota: AUC/MDA são métricas de classificação em tfidf_daily; backtest_daily reporta métricas econômicas (CAGR/Sharpe). "
             "Sharpe calculado sobre retornos diários (convenção 252); custos/atrito não modelados (implícitos = 0). "
-            f"Estratégia comparada nos modelos de backtest: {common_strategy or '—'}.")
+            f"Estratégia comparada nos modelos de backtest: {strategy_name or '—'}.")
     (OUTPUT_DIR / "nota_tabela1.txt").write_text(note, encoding="utf-8")
     fig, ax = plt.subplots(figsize=(10, 4), dpi=300)
     ax.axis("off")
@@ -441,6 +485,14 @@ def assert_required_outputs() -> None:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Gera figuras/tabelas finais (PNG) do TCC.")
+    parser.add_argument(
+        "--strategy",
+        choices=[cfg["name"] for cfg in STRATEGIES_CFG],
+        default=STRATEGIES_CFG[0]["name"],
+        help="Estratégia determinística para Figura 3/8 e Tabela 1.",
+    )
+    args = parser.parse_args()
     start_ts = time.time()
     _clean_outputs()
     print("[LOAD] Carregando dados de C:\\TCC_USP\\data_processed ...")
@@ -449,10 +501,14 @@ def main() -> None:
     sentiment_raw = load_sentiment()
     sentiment_daily = load_sentiment_daily(sentiment_raw)
     results16 = load_results16()
-    backtest = load_backtest_results()
-    backtest_curves = load_backtest_curves()
-    common_strategy, strategies_set = choose_common_strategy(backtest.loc[backtest["dataset"] == "backtest_daily"])
-    print(f"[EXPORT] Estratégias comuns (logreg_l2/rf_200): {strategies_set} | escolhida: {common_strategy}")
+    backtest_results = load_backtest_results()
+    oof = load_oof_predictions()
+    print(f"[EXPORT] Estratégia escolhida (flag --strategy): {args.strategy}")
+    equity_df, backtest_stats, strategy_used = figure_backtest_vs_benchmark(oof, ibov, args.strategy)
+    print(f"[BACKTEST] Estratégia utilizada: {strategy_used} (aplicada em Figura 3/8 e Tabela 1)")
+    print(f"[BACKTEST] nunique equity logreg_l2={equity_df['equity_logreg_l2'].nunique()} | rf_200={equity_df['equity_rf_200'].nunique()}")
+    print(f"[BACKTEST] Datas: {equity_df['date'].min()} -> {equity_df['date'].max()} | linhas={len(equity_df)}")
+
     figure_ibov_events(ibov, events)
     figure_sentiment_daily(sentiment_daily)
     figure_scatter(sentiment_daily, ibov, model="logreg_l2")
@@ -460,9 +516,8 @@ def main() -> None:
     figure_distribution(sentiment_daily)
     figure_latency(events)
     figure_caar_event_time(events, ibov, tau_max=5)
-    equity_df, backtest_stats = figure_backtest_vs_benchmark(backtest_curves, ibov, common_strategy)
-    figure_comparativo(backtest_stats, common_strategy)
-    table_metrics(results16, backtest_stats, common_strategy)
+    figure_comparativo(backtest_stats, strategy_used)
+    table_metrics(results16, backtest_stats, strategy_used)
     table_intersection(ibov, sentiment_daily)
     assert_required_outputs()
     _validate_png_mtimes(start_ts)
