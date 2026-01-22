@@ -69,11 +69,10 @@ def _clean_outputs() -> int:
     removed = 0
     for pattern in ("*.png", "*.csv", "*.txt"):
         for f in OUTPUT_DIR.glob(pattern):
-            try:
-                f.unlink()
-                removed += 1
-            except Exception:
-                pass
+            f.unlink(missing_ok=True)
+            if f.exists():
+                raise RuntimeError(f"Falha ao apagar antigo: {f}")
+            removed += 1
     print(f"[CLEAN] Removidos {removed} arquivos em {OUTPUT_DIR}")
     return removed
 
@@ -89,10 +88,9 @@ def _savefig(fig, path: Path, force: bool | None = None) -> None:
         plt.close(fig)
         return
     if path.exists():
-        try:
-            path.unlink()
-        except Exception:
-            pass
+        path.unlink()
+        if path.exists():
+            raise RuntimeError(f"Falha ao remover destino antes de salvar: {path}")
     fig.savefig(path, dpi=300, bbox_inches="tight")
     plt.close(fig)
     if (not path.exists()) or path.stat().st_size == 0:
