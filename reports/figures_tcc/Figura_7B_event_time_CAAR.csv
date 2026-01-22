@@ -1,4 +1,0 @@
-tau,n_boot,caar_neg_mean,caar_neg_ci_low,caar_neg_ci_high,n_events_neg,caar_pos_mean,caar_pos_ci_low,caar_pos_ci_high,n_events_pos
-1,1000,,,,0,,,,0
-3,1000,,,,0,,,,0
-5,1000,0.003721428803540589,0.0002615229852055853,0.007258412996276893,135,-0.00357896067725524,-0.011168680547440954,0.004214578783826107,135
