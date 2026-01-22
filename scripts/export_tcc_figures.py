@@ -21,7 +21,7 @@ import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
 BASE_DATA = Path(r"C:\TCC_USP\data_processed")
-OUTPUT_DIR = Path(__file__).resolve().parents[1] / "reports" / "figures"
+OUTPUT_DIR = (Path(__file__).resolve().parents[1] / "reports" / "figures").resolve()
 FORCE_OVERWRITE = True
 OFFICIAL_START = pd.Timestamp("2018-01-02")
 OFFICIAL_END = pd.Timestamp("2024-12-31")
