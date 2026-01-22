@@ -9,18 +9,20 @@ from __future__ import annotations
 import argparse
 import json
 import time
-import os
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Tuple
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
 BASE_DATA = Path(r"C:\TCC_USP\data_processed")
-OUTPUT_DIR = Path("reports") / "figures"
+OUTPUT_DIR = Path(__file__).resolve().parents[1] / "reports" / "figures"
+FORCE_OVERWRITE = True
 OFFICIAL_START = pd.Timestamp("2018-01-02")
 OFFICIAL_END = pd.Timestamp("2024-12-31")
 ANCHOR_MODELS = ["logreg_l2", "rf_200"]
@@ -45,6 +47,15 @@ REQUIRED_PNGS = [
 ]
 
 
+def _capture_prev_mtimes() -> Dict[str, float]:
+    prev = {}
+    for name in REQUIRED_PNGS:
+        path = (OUTPUT_DIR / name).resolve()
+        if path.exists():
+            prev[name] = path.stat().st_mtime
+    return prev
+
+
 def _clamp_period(df: pd.DataFrame, col: str) -> pd.DataFrame:
     if df.empty or col not in df.columns:
         return df
@@ -53,17 +64,30 @@ def _clamp_period(df: pd.DataFrame, col: str) -> pd.DataFrame:
     return df.loc[(df[col] >= OFFICIAL_START) & (df[col] <= OFFICIAL_END)].dropna(subset=[col])
 
 
-def _clean_outputs() -> None:
+def _clean_outputs() -> int:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    removed = 0
     for pattern in ("*.png", "*.csv", "*.txt"):
         for f in OUTPUT_DIR.glob(pattern):
             try:
                 f.unlink()
+                removed += 1
             except Exception:
                 pass
+    print(f"[CLEAN] Removidos {removed} arquivos em {OUTPUT_DIR}")
+    return removed
 
 
-def _savefig(fig, path: Path) -> None:
+def _savefig(fig, path: Path, force: bool | None = None) -> None:
+    if force is None:
+        force = FORCE_OVERWRITE
+    path.parent.mkdir(parents=True, exist_ok=True)
+    prev_mtime = path.stat().st_mtime if path.exists() else 0
+    prev_size = path.stat().st_size if path.exists() else 0
+    if (not force) and path.exists():
+        print(f"[SAVEFIG] skip (force=False) {path} | size={prev_size} | mtime={prev_mtime}")
+        plt.close(fig)
+        return
     if path.exists():
         try:
             path.unlink()
@@ -73,18 +97,33 @@ def _savefig(fig, path: Path) -> None:
     plt.close(fig)
     if (not path.exists()) or path.stat().st_size == 0:
         raise RuntimeError(f"Falha ao salvar figura: {path}")
+    stat = path.stat()
+    new_size = stat.st_size
+    new_mtime = stat.st_mtime
+    ts = datetime.fromtimestamp(new_mtime)
+    print(f"[SAVEFIG] {path} | bytes={new_size} (prev {prev_size}) | mtime={ts} (prev {prev_mtime})")
 
 
-def _validate_png_mtimes(start_ts: float) -> None:
+def _validate_png_mtimes(start_ts: float, prev_mtimes: Dict[str, float]) -> None:
     print("\n[VALIDAÇÃO PNGs]")
+    ok_count = 0
+    rows = []
     for name in REQUIRED_PNGS:
         path = (OUTPUT_DIR / name).resolve()
         exists = path.exists()
         size = path.stat().st_size if exists else 0
         mtime = path.stat().st_mtime if exists else 0
-        print(f"{path} | exists={exists} | size={size} | mtime={mtime}")
-        if (not exists) or size <= 30_000 or mtime < start_ts - 2:
-            raise RuntimeError(f"PNG inválido ou não atualizado: {path}")
+        prev_mt = prev_mtimes.get(name, 0)
+        ok = exists and size > 30_000 and mtime >= start_ts - 2 and mtime > prev_mt
+        rows.append((path, size, mtime, ok))
+        if not ok:
+            raise RuntimeError(f"PNG inválido/desatualizado: {path} | size={size} | mtime={mtime} | prev_mtime={prev_mt}")
+        ok_count += 1
+    print(f"[VALIDAÇÃO] {ok_count}/{len(REQUIRED_PNGS)} regravados")
+    print("arquivo | bytes | mtime | ok")
+    for path, size, mtime, ok in rows:
+        ts = datetime.fromtimestamp(mtime)
+        print(f"{path} | bytes={size} | mtime={ts} | ok={ok}")
 
 
 def load_ibov() -> pd.DataFrame:
@@ -492,9 +531,42 @@ def main() -> None:
         default=STRATEGIES_CFG[0]["name"],
         help="Estratégia determinística para Figura 3/8 e Tabela 1.",
     )
+    parser.add_argument(
+        "--force",
+        dest="force",
+        action="store_true",
+        default=True,
+        help="Sobrescreve sempre PNG/CSV/TXT (default).",
+    )
+    parser.add_argument(
+        "--no-force",
+        dest="force",
+        action="store_false",
+        help="Não sobrescreve arquivos existentes.",
+    )
+    parser.add_argument(
+        "--clean",
+        dest="clean",
+        action="store_true",
+        default=True,
+        help="Limpa artefatos de saída antes de gerar (default).",
+    )
+    parser.add_argument(
+        "--no-clean",
+        dest="clean",
+        action="store_false",
+        help="Não limpa artefatos antes de gerar.",
+    )
     args = parser.parse_args()
+    global FORCE_OVERWRITE
+    FORCE_OVERWRITE = args.force
+    print(f"[OUTPUT_DIR] {OUTPUT_DIR.resolve()}")
+    prev_mtimes = _capture_prev_mtimes()
     start_ts = time.time()
-    _clean_outputs()
+    if args.clean:
+        _clean_outputs()
+    else:
+        print("[CLEAN] Skip (clean=False)")
     print("[LOAD] Carregando dados de C:\\TCC_USP\\data_processed ...")
     ibov = load_ibov()
     events = load_events()
@@ -520,7 +592,7 @@ def main() -> None:
     table_metrics(results16, backtest_stats, strategy_used)
     table_intersection(ibov, sentiment_daily)
     assert_required_outputs()
-    _validate_png_mtimes(start_ts)
+    _validate_png_mtimes(start_ts, prev_mtimes)
     print("[OK] Todas as 11 figuras/tabelas geradas em reports/figures/.")
 
 if __name__ == "__main__":
