@@ -1,5 +1,5 @@
 model,dataset,auc,mda,strategy,cagr,sharpe
 logreg_l2,tfidf_daily,0.502,0.503,—,—,—
 rf_200,tfidf_daily,0.491,0.512,—,—,—
-logreg_l2,backtest_daily,—,—,long_only_60,+0.75%,0.716
-rf_200,backtest_daily,—,—,long_only_60,-0.21%,-0.453
+logreg_l2,backtest_daily,—,—,long_only_60,-2.65%,-0.155
+rf_200,backtest_daily,—,—,long_only_60,+2.22%,0.213
