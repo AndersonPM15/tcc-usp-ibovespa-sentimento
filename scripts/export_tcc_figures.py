@@ -69,11 +69,10 @@ def _clean_outputs() -> int:
     removed = 0
     for pattern in ("*.png", "*.csv", "*.txt"):
         for f in OUTPUT_DIR.glob(pattern):
-            try:
-                f.unlink()
-                removed += 1
-            except Exception:
-                pass
+            f.unlink(missing_ok=True)
+            if f.exists():
+                raise RuntimeError(f"Falha ao apagar antigo: {f}")
+            removed += 1
     print(f"[CLEAN] Removidos {removed} arquivos em {OUTPUT_DIR}")
     return removed
 
@@ -89,10 +88,9 @@ def _savefig(fig, path: Path, force: bool | None = None) -> None:
         plt.close(fig)
         return
     if path.exists():
-        try:
-            path.unlink()
-        except Exception:
-            pass
+        path.unlink()
+        if path.exists():
+            raise RuntimeError(f"Falha ao remover destino antes de salvar: {path}")
     fig.savefig(path, dpi=300, bbox_inches="tight")
     plt.close(fig)
     if (not path.exists()) or path.stat().st_size == 0:
@@ -523,6 +521,216 @@ def assert_required_outputs() -> None:
         raise FileNotFoundError(f"Arquivos obrigatórios ausentes: {missing}")
 
 
+# ------------------------- ROBUSTEZ / ARTEFATOS EXTRAS ------------------------- #
+
+
+def _parse_int_list(arg: str, default: List[int]) -> List[int]:
+    if not arg:
+        return default
+    return [int(x.strip()) for x in arg.split(",") if x.strip() != ""]
+
+
+def _parse_float_list(arg: str, default: List[float]) -> List[float]:
+    if not arg:
+        return default
+    return [float(x.strip()) for x in arg.split(",") if x.strip() != ""]
+
+
+def _max_drawdown(equity: pd.Series) -> float:
+    if equity.empty:
+        return np.nan
+    cummax = equity.cummax()
+    dd = (equity / cummax - 1).min()
+    return float(dd)
+
+
+def _run_strategy_quantile(
+    oof_model: pd.DataFrame,
+    cfg: Dict[str, float],
+    event_q: float,
+    lag: int,
+) -> pd.DataFrame:
+    df = oof_model.sort_values("day").copy()
+    allow_short = cfg.get("allow_short", True)
+    cost = cfg.get("cost", 0.0005)
+    long_th = df["proba"].quantile(event_q)
+    if allow_short:
+        short_th = df["proba"].quantile(1 - event_q)
+    else:
+        short_th = df["proba"].quantile(0.50)
+
+    positions = []
+    turnovers = []
+    pos_prev = 0
+    for proba in df["proba"]:
+        if proba >= long_th:
+            pos = 1
+        elif allow_short and proba <= short_th:
+            pos = -1
+        elif (not allow_short) and proba <= short_th:
+            pos = 0
+        else:
+            pos = pos_prev
+        turnovers.append(abs(pos - pos_prev))
+        positions.append(pos)
+        pos_prev = pos
+
+    df["signal"] = positions
+    df["turnover"] = turnovers
+    df["cost"] = df["turnover"] * cost
+    effective_pos = df["signal"].shift(lag + 1, fill_value=0)
+    df["strategy_ret"] = effective_pos * df["ret_next"].fillna(0) - df["cost"]
+    df["equity"] = (1 + df["strategy_ret"]).cumprod()
+    return df
+
+
+def _compute_metrics(ret: pd.Series, equity: pd.Series, turnover: pd.Series, cost: pd.Series, signal: pd.Series) -> Dict[str, float]:
+    ret = ret.fillna(0)
+    equity = equity.fillna(method="ffill")
+    cagr = equity.iloc[-1] ** (252 / len(equity)) - 1 if len(equity) > 1 else np.nan
+    vol = ret.std(ddof=0) * np.sqrt(252) if ret.std(ddof=0) != 0 else np.nan
+    sharpe = ret.mean() / ret.std(ddof=0) * np.sqrt(252) if ret.std(ddof=0) != 0 else np.nan
+    dd = _max_drawdown(equity)
+    n_trades = int((signal.diff().fillna(0) != 0).sum())
+    turnover_sum = float(turnover.sum())
+    hit_rate = float((ret > 0).mean()) if len(ret) else np.nan
+    exposure = float((signal != 0).mean()) if len(signal) else np.nan
+    total_cost = float(cost.sum())
+    return {
+        "cagr": cagr,
+        "sharpe": sharpe,
+        "vol_anual": vol,
+        "max_drawdown": dd,
+        "turnover": turnover_sum,
+        "n_trades": n_trades,
+        "hit_rate": hit_rate,
+        "exposure": exposure,
+        "total_cost": total_cost,
+    }
+
+
+def _run_robust_backtest_grid(
+    oof: pd.DataFrame,
+    ibov: pd.DataFrame,
+    strategy_name: str,
+    lags: List[int],
+    event_qs: List[float],
+) -> pd.DataFrame:
+    cfg = next((c for c in STRATEGIES_CFG if c["name"] == strategy_name), None)
+    if cfg is None:
+        raise RuntimeError(f"Estratégia {strategy_name} não configurada.")
+    rows = []
+    for lag in lags:
+        for eq in event_qs:
+            for model in ANCHOR_MODELS:
+                df_model = oof[oof["model"] == model].copy()
+                if df_model.empty:
+                    continue
+                strat = _run_strategy_quantile(df_model, cfg, event_q=eq, lag=lag)
+                ret = strat["strategy_ret"]
+                equity = strat["equity"]
+                metrics = _compute_metrics(ret, equity, strat["turnover"], strat["cost"], strat["signal"])
+                rows.append(
+                    {
+                        "model": model,
+                        "strategy": strategy_name,
+                        "lag": lag,
+                        "event_q": eq,
+                        **metrics,
+                    }
+                )
+    if not rows:
+        raise RuntimeError("Robustez: nenhuma linha gerada.")
+    return pd.DataFrame(rows)
+
+
+def _write_table_png(df: pd.DataFrame, path_csv: Path, path_png: Path, title: str) -> None:
+    df.to_csv(path_csv, index=False)
+    fig, ax = plt.subplots(figsize=(12, 0.6 + 0.35 * len(df)), dpi=300)
+    ax.axis("off")
+    tbl = ax.table(cellText=df.values, colLabels=df.columns, loc="center")
+    tbl.auto_set_font_size(False)
+    tbl.set_fontsize(9)
+    tbl.scale(1, 1.2)
+    ax.set_title(title)
+    fig.tight_layout()
+    _savefig(fig, path_png)
+
+
+def generate_table2_robustez(oof: pd.DataFrame, ibov: pd.DataFrame, strategy_name: str, lags: List[int], event_qs: List[float]) -> List[Path]:
+    df = _run_robust_backtest_grid(oof, ibov, strategy_name, lags, event_qs)
+    for col in ["cagr", "sharpe", "vol_anual", "max_drawdown", "turnover", "hit_rate", "exposure", "total_cost"]:
+        if col in df.columns:
+            df[col] = df[col].apply(lambda x: f"{x:.3f}" if pd.notna(x) else "—")
+    out_csv = OUTPUT_DIR / "Tabela_2_robustez_backtest.csv"
+    out_png = OUTPUT_DIR / "Tabela_2_robustez_backtest.png"
+    _write_table_png(df, out_csv, out_png, title="Tabela 2 – Robustez do backtest (lag x quantil)")
+    return [out_csv, out_png]
+
+
+def generate_table3_metricas_extendidas(oof: pd.DataFrame, ibov: pd.DataFrame, strategy_name: str, lag: int, event_q: float) -> List[Path]:
+    cfg = next((c for c in STRATEGIES_CFG if c["name"] == strategy_name), None)
+    if cfg is None:
+        raise RuntimeError(f"Estratégia {strategy_name} não configurada.")
+    rows = []
+    for model in ANCHOR_MODELS:
+        df_model = oof[oof["model"] == model].copy()
+        if df_model.empty:
+            continue
+        strat = _run_strategy_quantile(df_model, cfg, event_q=event_q, lag=lag)
+        metrics = _compute_metrics(strat["strategy_ret"], strat["equity"], strat["turnover"], strat["cost"], strat["signal"])
+        rows.append({"modelo": model, "dataset": "backtest_daily", "strategy": strategy_name, **metrics})
+    # benchmark
+    bench_ret = ibov.set_index("day")["ret"].dropna()
+    bench_eq = (1 + bench_ret).cumprod()
+    bench_eq = bench_eq / bench_eq.iloc[0]
+    bench_metrics = _compute_metrics(bench_ret, bench_eq, pd.Series([0]), pd.Series([0]), pd.Series([1] * len(bench_ret)))
+    rows.append({"modelo": "ibov_buyhold", "dataset": "benchmark", "strategy": "—", **bench_metrics})
+    df = pd.DataFrame(rows)
+    for col in ["cagr", "sharpe", "vol_anual", "max_drawdown", "turnover", "hit_rate", "exposure", "total_cost"]:
+        if col in df.columns:
+            df[col] = df[col].apply(lambda x: f"{x:.3f}" if pd.notna(x) else "—")
+    out_csv = OUTPUT_DIR / "Tabela_3_metricas_extendidas.csv"
+    out_png = OUTPUT_DIR / "Tabela_3_metricas_extendidas.png"
+    _write_table_png(df, out_csv, out_png, title="Tabela 3 – Métricas estendidas (cenário padrão)")
+    return [out_csv, out_png]
+
+
+def figure_robust_corr(sent_daily: pd.DataFrame, ibov: pd.DataFrame, windows: List[int]) -> Path:
+    sent_model = sent_daily[sent_daily["model"] == "logreg_l2"][["day", "sentiment"]]
+    merged = pd.merge(sent_model, ibov[["day", "ret"]], on="day", how="inner").sort_values("day")
+    fig, ax = plt.subplots(figsize=(11, 5.5), dpi=300)
+    for w in windows:
+        merged[f"corr_{w}"] = merged["sentiment"].rolling(w).corr(merged["ret"])
+        ax.plot(merged["day"], merged[f"corr_{w}"], label=f"Corr {w}d")
+    ax.axhline(0, color="gray", linestyle="--", linewidth=1)
+    ax.set_title("Figura 9 – Robustez da correlação móvel (sentimento x retorno)")
+    ax.set_ylabel("Correlação de Pearson")
+    ax.set_xlabel("Data")
+    ax.legend()
+    ax.grid(alpha=0.25)
+    fig.autofmt_xdate()
+    fig.tight_layout()
+    out_png = OUTPUT_DIR / "Figura_9_robustez_correlacao.png"
+    _savefig(fig, out_png)
+    return out_png
+
+
+def _validate_robust_outputs(paths: List[Path], start_ts: float) -> None:
+    for p in paths:
+        if not p.exists():
+            raise RuntimeError(f"Robustez: arquivo ausente {p}")
+        stat = p.stat()
+        if p.suffix.lower() == ".png":
+            if stat.st_size <= 30_000:
+                raise RuntimeError(f"Robustez: PNG muito pequeno {p} ({stat.st_size} bytes)")
+            if stat.st_mtime < start_ts - 2:
+                raise RuntimeError(f"Robustez: mtime antigo {p} ({stat.st_mtime})")
+        if stat.st_mtime < start_ts - 2:
+            raise RuntimeError(f"Robustez: mtime antigo {p} ({stat.st_mtime})")
+    print(f"[ROBUST][OK] {len(paths)} artefatos gerados e validados")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Gera figuras/tabelas finais (PNG) do TCC.")
     parser.add_argument(
@@ -556,6 +764,30 @@ def main() -> None:
         dest="clean",
         action="store_false",
         help="Não limpa artefatos antes de gerar.",
+    )
+    parser.add_argument(
+        "--run_robustness",
+        action="store_true",
+        default=False,
+        help="Gera artefatos extras de robustez (Tabelas 2/3 e Figura 9).",
+    )
+    parser.add_argument(
+        "--robust_lags",
+        type=str,
+        default="0,1,2",
+        help="Lista de lags (dias) separados por vírgula para robustez, ex.: \"0,1,2\".",
+    )
+    parser.add_argument(
+        "--robust_event_q",
+        type=str,
+        default="0.90,0.95",
+        help="Lista de quantis (0-1) para thresholds do sinal, ex.: \"0.90,0.95\".",
+    )
+    parser.add_argument(
+        "--robust_corr_windows",
+        type=str,
+        default="30,60,90",
+        help="Janelas de correlação móvel para a Figura 9, ex.: \"30,60,90\".",
     )
     args = parser.parse_args()
     global FORCE_OVERWRITE
@@ -594,6 +826,18 @@ def main() -> None:
     assert_required_outputs()
     _validate_png_mtimes(start_ts, prev_mtimes)
     print("[OK] Todas as 11 figuras/tabelas geradas em reports/figures/.")
+    if args.run_robustness:
+        robust_lags = _parse_int_list(args.robust_lags, [0, 1, 2])
+        robust_event_q = _parse_float_list(args.robust_event_q, [0.90, 0.95])
+        robust_corr = _parse_int_list(args.robust_corr_windows, [30, 60, 90])
+        print(f"[ROBUST] lags={robust_lags} | event_q={robust_event_q} | corr_windows={robust_corr}")
+        extra_paths: List[Path] = []
+        extra_paths += generate_table2_robustez(oof, ibov, strategy_used, robust_lags, robust_event_q)
+        extra_paths += generate_table3_metricas_extendidas(oof, ibov, strategy_used, robust_lags[0], robust_event_q[0])
+        extra_paths.append(figure_robust_corr(sentiment_daily, ibov, robust_corr))
+        print("[ROBUST] wrote:", ", ".join(str(p) for p in extra_paths))
+        _validate_robust_outputs(extra_paths, start_ts)
+        print("[ROBUST][OK] validations passed")
 
 if __name__ == "__main__":
     main()
