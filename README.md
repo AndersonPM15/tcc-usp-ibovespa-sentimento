@@ -1,15 +1,15 @@
-# Dashboard — Sentimento de Notícias (PT-BR) × Ibovespa (USP)
+﻿# Dashboard — Sentimento de Notícias (PT-BR) × Ibovespa (USP)
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
 ![Dash](https://img.shields.io/badge/Dash-Plotly-informational)
 ![Status](https://img.shields.io/badge/Status-Validado%20%7C%20v1.0--dashboard-success)
 
 ## Identificação acadêmica (USP)
-- **Autor:** Anderson Pantoja Machado  
-- **Orientador:** Prof. Vinicius Rocha Biscaro  
-- **Instituição:** Universidade de São Paulo (USP)  
-- **Curso/Programa:** MBA em Business Intelligence & Analytics — ECA/USP  
-- **Título do TCC:** *Análise do Sentimento de Notícias em Português e seu Efeito no Ibovespa: Evidência Empírica com Baselines Transparentes e Estudo de Eventos*  
+- **Autor:** Anderson Pantoja Machado
+- **Orientador:** Prof. Vinicius Rocha Biscaro
+- **Instituição:** Universidade de São Paulo (USP)
+- **Curso/Programa:** MBA em Business Intelligence & Analytics — ECA/USP
+- **Título do TCC:** *Análise do Sentimento de Notícias em Português e seu Efeito no Ibovespa: Evidência Empírica com Baselines Transparentes e Estudo de Eventos*
 
 > Projeto: investigar se o sentimento em notícias financeiras em português antecipa a direção do retorno diário do Ibovespa, usando baselines transparentes (TF-IDF + Regressão Logística/Random Forest), métricas AUC/MDA e estudo de eventos (CAR/latência).
 
@@ -22,7 +22,7 @@
 - [Estrutura do repositório](#estrutura-do-repositório)
 - [Como rodar (Windows)](#como-rodar-windows)
 - [Como usar o dashboard](#como-usar-o-dashboard)
-- [Como exportar as 8 figuras](#como-exportar-as-8-figuras)
+- [Como exportar as figuras (banca)](#como-exportar-as-figuras-banca)
 - [Validação e rastreabilidade](#validação-e-rastreabilidade)
 - [Dados, ética e conformidade](#dados-ética-e-conformidade)
 - [Como citar (ABNT — sugestão)](#como-citar-abnt--sugestão)
@@ -33,15 +33,15 @@
 ## Visão geral
 - Dashboard (Dash/Plotly) com 8 figuras: Ibovespa/eventos, sentimento diário, comparativo de modelos, dispersão, correlação móvel, distribuição de sentimento, latência (CAR), backtest.
 - Hard cap temporal: **2018-01-02 a 2024-12-31**; período efetivo ajustado pela interseção das séries (sentimento/backtest iniciam em 2019-08).
-- Conteúdo: código do app, CSS, scripts utilitários, relatórios de validação em `reports/`, guia de exportação para o TCC.
+- Conteúdo: app + CSS, scripts utilitários, exportação headless de figuras e relatórios de validação em `reports/`.
 
 ---
 
 ## Pergunta de pesquisa e hipóteses
 - **Pergunta:** o sentimento de notícias publicadas em T₀ está associado à direção do retorno do Ibovespa em T₀+1?
 - **Hipóteses (síntese):**
-  - H1: sentimento negativo em T₀ associa-se a retornos negativos em T₀+1.  
-  - H2: sentimento melhora desempenho vs modelos apenas técnicos (ganho em AUC/MDA).  
+  - H1: sentimento negativo em T₀ associa-se a retornos negativos em T₀+1.
+  - H2: sentimento melhora desempenho vs modelos apenas técnicos (ganho em AUC/MDA).
   - H3 (exploratória): latência de incorporação varia por fonte/horário (CAR).
 
 ---
@@ -59,7 +59,7 @@
 **Boas práticas**
 - Usar ambiente virtual (`venv`) e pinagem em `requirements.txt` (se presente).
 - **Não versionar dados** (`data_processed/` ignorado).
-- Reprodutibilidade com scripts e relatórios; usar `--find-port` para evitar conflito de porta; probe para checar HTTP 200.
+- Reprodutibilidade com scripts e logs; exportação headless determinística.
 
 ---
 
@@ -70,7 +70,8 @@
 ├── assets/
 │   └── styles.css                   # tema visual (USP-like) + export-mode
 ├── data_processed/                  # DADOS (NÃO versionados)
-├── reports/                         # auditorias, validações e blueprint do dashboard
+├── reports/                         # auditorias, validações e figuras finais
+│   ├── figures/                     # PNGs finais gerados via script
 │   ├── final_data_audit.md
 │   ├── final_sanity_checks.md
 │   ├── final_graph_validation.md
@@ -78,10 +79,10 @@
 │   ├── how_to_export_figures.md
 │   ├── dashboard_blueprint.md
 │   └── dashboard_graph_index.json
-├── scripts/                         # utilitários (diagnóstico/latência/preflight)
+├── scripts/                         # utilitários (export headless, diagnósticos)
 └── README.md
 ```
-> `data_processed/` não é versionado; mantenha os arquivos locais em `C:\TCC_USP\data_processed\`.
+> `data_processed/` não é versionado; manter os arquivos locais em `C:\TCC_USP\data_processed\`.
 
 ---
 
@@ -118,35 +119,54 @@ cd C:\TCC_USP\tcc-usp-ibovespa-sentimento
 
 ## Como usar o dashboard
 - **Período de Análise:** filtra todos os 8 gráficos (clamp dentro do hard cap).
-- **Modelo:** dropdown single (ex.: `logreg_l2`, `rf_200`); afeta comparativo, backtest e KPIs.
-- **Métrica:** `AUC`, `MDA`, `Sharpe` (comparativo, badge, KPIs).
+- **Modelo:** dropdown (ex.: `logreg_l2`, `rf_200`); afeta comparativo, backtest e KPIs.
+- **Métrica:** `AUC`, `MDA`, `Sharpe` (comparativo e KPIs).
   - AUC: discriminação (ROC) do classificador.
   - MDA: acerto direcional médio (↑/↓).
   - Sharpe: desempenho risco-retorno da estratégia (backtest).
-- **Modo Exportação:** 1 coluna, altura ampliada (~900px), cabeçalho/controles ocultos para recorte/PNG.
+- **Modo Exportação:** 1 coluna, altura ampliada (~900px), cabeçalho/controles ocultos para recorte/PNG manual.
 
 ---
 
-## Como exportar as 8 figuras
-1) Rodar o dashboard com `--open` e ativar **Modo Exportação**.  
-2) Cenário TCC: período padrão (interseção), modelo = melhor por Sharpe (ex.: `logreg_l2`), métrica = `sharpe`.  
-3) Em cada card, clique no ícone de câmera (Plotly) e salve em PNG (largura ≥ 1600px) com nomes:
-   - `fig01_ibov_eventos.png`
-   - `fig02_sentimento_medio.png`
-   - `fig03_comparativo_modelos.png`
-   - `fig04_scatter_sent_retorno.png`
-   - `fig05_corr_movel.png`
-   - `fig06_dist_sentimento.png`
-   - `fig07_event_study_latencia.png`
-   - `fig08_backtest_equity.png`
-4) Checklist: legenda não cortada; rodapé “Fonte | Período | N” visível; nenhum placeholder.  
+## Como exportar as figuras (banca)
+### Exportação headless (recomendado)
+Gera **11 PNGs finais** determinísticos em `reports/figures/`:
+```bat
+.\venv\Scripts\python.exe scripts\export_tcc_figures.py --strategy long_only_60
+```
+Arquivos gerados:
+- `Figura_1_ibov_eventos.png`
+- `Figura_2_sentimento_medio_diario.png`
+- `Figura_3_comparativo_modelos.png`
+- `Figura_4_dispersao_sentimento_retorno.png`
+- `Figura_5_correlacao_movel_60d_90d.png`
+- `Figura_6_distribuicao_sentimento.png`
+- `Figura_7A_latencia_boxplot.png`
+- `Figura_7B_event_time_CAAR.png`
+- `Figura_8_backtest_vs_benchmark.png`
+- `Tabela_1_metricas.png`
+- `Tabela_intersecao_periodo.png`
+
+### Robustez (opcional)
+Gera artefatos adicionais (mantendo as 11 figuras intactas):
+```bat
+.\venv\Scripts\python.exe scripts\export_tcc_figures.py --strategy long_only_60 --run_robustness
+```
+- `Tabela_2_robustez_backtest.csv/png`
+- `Tabela_3_metricas_extendidas.csv/png`
+- `Figura_9_robustez_correlacao.png`
+
+### Exportação manual (dashboard)
+1) Rodar o app com `--open` e ativar **Modo Exportação**.
+2) Cenário TCC: período padrão (interseção), modelo = melhor por Sharpe, métrica = `sharpe`.
+3) Em cada card, clique no ícone de câmera (Plotly) e salve PNG (largura ≥ 1600px).
 > Guia detalhado: `reports/how_to_export_figures.md`.
 
 ---
 
 ## Validação e rastreabilidade
 Relatórios em `reports/`:
-- `final_data_audit.md` — datas, colunas, nulos (max ≤ 2024-12-30/27).
+- `final_data_audit.md` — datas, colunas, nulos.
 - `final_sanity_checks.md` — retornos, distribuição de sentimento, interseção, backtest, latência.
 - `final_graph_validation.md` — 8/8 gráficos OK no estado padrão.
 - `final_runtime_checks.md` — `py_compile`, `pytest`, probe HTTP 200.
