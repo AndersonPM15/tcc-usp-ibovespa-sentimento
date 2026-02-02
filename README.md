@@ -32,6 +32,7 @@
 
 ## Visão geral
 - Dashboard (Dash/Plotly) com 8 figuras: Ibovespa/eventos, sentimento diário, comparativo de modelos, dispersão, correlação móvel, distribuição de sentimento, latência (CAR), backtest.
+- Exportação headless gera **14 figuras finais** para banca (11 base + 3 de robustez).
 - Hard cap temporal: **2018-01-02 a 2024-12-31**; período efetivo ajustado pela interseção das séries (sentimento/backtest iniciam em 2019-08).
 - Conteúdo: app + CSS, scripts utilitários, exportação headless de figuras e relatórios de validação em `reports/`.
 
@@ -71,7 +72,7 @@
 │   └── styles.css                   # tema visual (USP-like) + export-mode
 ├── data_processed/                  # DADOS (NÃO versionados)
 ├── reports/                         # auditorias, validações e figuras finais
-│   ├── figures/                     # PNGs finais gerados via script
+│   ├── figures/                     # PNGs finais gerados via script (11 base + 3 robustez)
 │   ├── final_data_audit.md
 │   ├── final_sanity_checks.md
 │   ├── final_graph_validation.md
@@ -130,7 +131,7 @@ cd C:\TCC_USP\tcc-usp-ibovespa-sentimento
 
 ## Como exportar as figuras (banca)
 ### Exportação headless (recomendado)
-Gera **11 PNGs finais** determinísticos em `reports/figures/`:
+Gera **11 PNGs base** determinísticos em `reports/figures/`:
 ```bat
 .\venv\Scripts\python.exe scripts\export_tcc_figures.py --strategy long_only_60
 ```
@@ -147,8 +148,8 @@ Arquivos gerados:
 - `Tabela_1_metricas.png`
 - `Tabela_intersecao_periodo.png`
 
-### Robustez (opcional)
-Gera artefatos adicionais (mantendo as 11 figuras intactas):
+### Robustez (complemento para banca)
+Gera **+3 figuras** adicionais (total = **14 PNGs**):
 ```bat
 .\venv\Scripts\python.exe scripts\export_tcc_figures.py --strategy long_only_60 --run_robustness
 ```
