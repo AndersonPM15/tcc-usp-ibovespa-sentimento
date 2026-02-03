@@ -273,13 +273,19 @@ def figure_ibov_events(ibov: pd.DataFrame, events: pd.DataFrame) -> None:
     ax.plot(ibov["day"], ibov["close"], color="#1f77b4", label="Ibovespa (close)")
     if not events.empty:
         thresh = events["car_max_abs"].quantile(0.9)
-        extreme = events.loc[events["car_max_abs"] >= thresh]
-        ymin, ymax = ax.get_ylim()
-        ax.vlines(extreme["event_day"], ymin=ymin, ymax=ymax, colors="tomato", alpha=0.35, linewidth=1.2, label="Eventos extremos (≥p90)")
+        extreme = events.loc[events["car_max_abs"] >= thresh].copy()
+        if not extreme.empty:
+            merged = extreme.merge(ibov[["day", "close"]], left_on="event_day", right_on="day", how="left").dropna(subset=["close"])
+            pos = merged[merged["polarity"] == "pos"]
+            neg = merged[merged["polarity"] == "neg"]
+            if not pos.empty:
+                ax.scatter(pos["event_day"], pos["close"], marker="^", color="green", label="Sentimento Positivo Extremo", zorder=5)
+            if not neg.empty:
+                ax.scatter(neg["event_day"], neg["close"], marker="v", color="red", label="Sentimento Negativo Extremo", zorder=5)
     ax.set_title("Figura 1 – Ibovespa com Eventos")
     ax.set_xlabel("Data")
     ax.set_ylabel("Pontos do Ibovespa")
-    ax.legend()
+    ax.legend(loc="upper left", framealpha=0.9)
     ax.grid(alpha=0.25)
     fig.autofmt_xdate()
     fig.tight_layout()
@@ -356,7 +362,7 @@ def figure_latency(events: pd.DataFrame) -> None:
     ax.boxplot(groups, labels=["pos", "neg"], showmeans=True, meanline=True, patch_artist=True, boxprops=dict(facecolor="#a6cee3"), medianprops=dict(color="black"), meanprops=dict(color="red"))
     ax.set_title("Figura 7A – CAR por polaridade (boxplot)")
     ax.set_xlabel("Polaridade")
-    ax.set_ylabel("CAR")
+    ax.set_ylabel("Retorno Anormal Acumulado (CAR)")
     ax.grid(alpha=0.2)
     fig.tight_layout()
     _savefig(fig, OUTPUT_DIR / "Figura_7A_latencia_boxplot.png")
@@ -455,9 +461,21 @@ def figure_comparativo(backtest_stats: Dict[str, Dict[str, float]], strategy_nam
     if len(data["model"].unique()) < 2:
         raise RuntimeError("Figura 3: não foram encontradas duas linhas de Sharpe para a estratégia.")
     fig, ax = plt.subplots(figsize=(9, 5), dpi=300)
-    ax.bar(data["model"], data["sharpe"], color=["#2ca02c", "#1f77b4"])
-    for idx, row in data.iterrows():
-        ax.text(idx, row["sharpe"], f"{row['sharpe']:.3f}", ha="center", va="bottom")
+    bars = ax.bar(data["model"], data["sharpe"], color=["#2ca02c", "#1f77b4"])
+    for bar in bars:
+        height = bar.get_height()
+        offset = 3 if height >= 0 else -12
+        va = "bottom" if height >= 0 else "top"
+        ax.annotate(
+            f"{height:.2f}",
+            xy=(bar.get_x() + bar.get_width() / 2, height),
+            xytext=(0, offset),
+            textcoords="offset points",
+            ha="center",
+            va=va,
+            fontsize=10,
+            fontweight="bold",
+        )
     ax.set_ylabel("Sharpe")
     ax.set_title(f"Figura 3 – Comparativo de Modelos (Sharpe) | Estratégia: {strategy_name}")
     ax.grid(axis="y", alpha=0.25)
