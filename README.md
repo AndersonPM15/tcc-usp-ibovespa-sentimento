@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
 ![Dash](https://img.shields.io/badge/Dash-Plotly-informational)
-![Status](https://img.shields.io/badge/Status-Validado%20%7C%20v1.0--dashboard-success)
+![Status](https://img.shields.io/badge/Status-Validado%20%7C%20v1.1--legend--labels-success)
 
 ## Identificação acadêmica (USP)
 - **Autor:** Anderson Pantoja Machado
@@ -120,7 +120,7 @@ cd C:\TCC_USP\tcc-usp-ibovespa-sentimento
 
 ## Como usar o dashboard
 - **Período de Análise:** filtra todos os 8 gráficos (clamp dentro do hard cap).
-- **Modelo:** dropdown (ex.: `logreg_l2`, `rf_200`); afeta comparativo, backtest e KPIs.
+- **Modelo:** dropdown (identificadores: `logreg_l2` = *Média simples do sentimento*, `rf_200` = *Média ponderada por volume*); afeta comparativo, backtest e KPIs. As legendas dos gráficos exibem os nomes descritivos.
 - **Métrica:** `AUC`, `MDA`, `Sharpe` (comparativo e KPIs).
   - AUC: discriminação (ROC) do classificador.
   - MDA: acerto direcional médio (↑/↓).
@@ -174,6 +174,7 @@ Relatórios em `reports/`:
 - `dashboard_blueprint.md` e `dashboard_graph_index.json` — mapa do layout/figuras.
 
 Versão estável: tag **v1.0-dashboard** (commit core: `cbee9db`).
+Versão atual: **v1.1** — legendas das Figuras 2, 4 e 8 atualizadas para nomes descritivos (`Média simples do sentimento` / `Média ponderada por volume`).
 
 ---
 
