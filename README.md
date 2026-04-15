@@ -2,7 +2,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.x-blue)
 ![Dash](https://img.shields.io/badge/Dash-Plotly-informational)
-![Status](https://img.shields.io/badge/Status-Validado%20%7C%20v1.1--legend--labels-success)
+![Status](https://img.shields.io/badge/Status-Validado%20%7C%20v1.2--legend--labels-success)
 
 ## Identificação acadêmica (USP)
 - **Autor:** Anderson Pantoja Machado
@@ -174,7 +174,7 @@ Relatórios em `reports/`:
 - `dashboard_blueprint.md` e `dashboard_graph_index.json` — mapa do layout/figuras.
 
 Versão estável: tag **v1.0-dashboard** (commit core: `cbee9db`).
-Versão atual: **v1.1** — legendas das Figuras 2, 4 e 8 atualizadas para nomes descritivos (`Média simples do sentimento` / `Média ponderada por volume`).
+Versão atual: **v1.2** — rótulos de legendas e eixos das Figuras 2, 3, 4 e 8 atualizados para nomes descritivos (`Média simples do sentimento` / `Média ponderada por volume`).
 
 ---
 
