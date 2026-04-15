@@ -45,6 +45,10 @@ LATENCY_PATH = cfg.get_arquivo("latency_events", BASE_PATH)
 PREFERRED_STRATEGY = "long_only_60"
 FALLBACK_STRATEGY = "long_only_55"
 COMPARE_MODELS_ANCHOR = ["logreg_l2", "rf_200"]
+MODEL_DISPLAY_NAMES = {
+    "logreg_l2": "Média simples do sentimento",
+    "rf_200": "Média ponderada por volume",
+}
 
 PLOTLY_CONFIG = dict(
     displayModeBar=True,
@@ -1009,7 +1013,7 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
                         x=grp["day"],
                         y=grp["equity"],
                         mode="lines",
-                        name=f"{model} | {strategy}",
+                        name=f"{MODEL_DISPLAY_NAMES.get(model, model)} | {strategy}",
                     )
                 )
         if backtest_fig.data:
