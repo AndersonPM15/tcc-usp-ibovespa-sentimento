@@ -26,6 +26,10 @@ FORCE_OVERWRITE = True
 OFFICIAL_START = pd.Timestamp("2018-01-02")
 OFFICIAL_END = pd.Timestamp("2024-12-31")
 ANCHOR_MODELS = ["logreg_l2", "rf_200"]
+MODEL_DISPLAY_NAMES = {
+    "logreg_l2": "Média simples do sentimento",
+    "rf_200": "Média ponderada por volume",
+}
 # ordem de preferência; caímos para a próxima se a curva diária ficar peça (nunique<=200)
 STRATEGIES_CFG = [
     {"name": "long_only_60", "long_th": 0.60, "short_th": 0.40, "allow_short": False, "cost": 0.0005},
@@ -295,7 +299,7 @@ def figure_ibov_events(ibov: pd.DataFrame, events: pd.DataFrame) -> None:
 def figure_sentiment_daily(sent_daily: pd.DataFrame) -> None:
     fig, ax = plt.subplots(figsize=(11, 5.5), dpi=300)
     for model, dfm in sent_daily.groupby("model"):
-        ax.plot(dfm["day"], dfm["sentiment"], label=model)
+        ax.plot(dfm["day"], dfm["sentiment"], label=MODEL_DISPLAY_NAMES.get(model, model))
     ax.axhline(0, color="gray", linestyle="--", linewidth=1)
     ax.set_title("Figura 2 – Sentimento médio diário")
     ax.set_xlabel("Data")
@@ -314,7 +318,7 @@ def figure_scatter(sent_daily: pd.DataFrame, ibov: pd.DataFrame, model: str = "l
     fig, ax = plt.subplots(figsize=(9, 5), dpi=300)
     ax.scatter(merged["sent"], merged["ret"], alpha=0.35, edgecolor="k", s=24)
     ax.set_title(f"Figura 4 – Dispersão Sentimento × Retorno (r={corr:.2f})")
-    ax.set_xlabel(f"Sentimento ({model})")
+    ax.set_xlabel(f"Sentimento ({MODEL_DISPLAY_NAMES.get(model, model)})")
     ax.set_ylabel("Retorno diário do Ibovespa")
     ax.grid(alpha=0.25)
     fig.tight_layout()
@@ -435,8 +439,8 @@ def figure_backtest_vs_benchmark(oof: pd.DataFrame, ibov: pd.DataFrame, strategy
     equity_df, stats, strategy = compute_backtest_mark_to_market(oof, ibov, strategy_name)
     equity_df.to_csv(OUTPUT_DIR / "Figura_8_backtest_vs_benchmark.csv", index=False)
     fig, ax = plt.subplots(figsize=(11, 5.5), dpi=300)
-    ax.plot(equity_df["date"], equity_df["equity_logreg_l2"], label=f"logreg_l2 ({strategy})")
-    ax.plot(equity_df["date"], equity_df["equity_rf_200"], label=f"rf_200 ({strategy})")
+    ax.plot(equity_df["date"], equity_df["equity_logreg_l2"], label=f"Média simples do sentimento ({strategy})")
+    ax.plot(equity_df["date"], equity_df["equity_rf_200"], label=f"Média ponderada por volume ({strategy})")
     ax.plot(equity_df["date"], equity_df["equity_ibov"], label="Ibov buy&hold", color="black", linestyle="--")
     ax.set_title("Figura 8 – Curva de backtest vs benchmark (normalizadas em 1.0)")
     ax.set_ylabel("Equity normalizado")
@@ -461,7 +465,8 @@ def figure_comparativo(backtest_stats: Dict[str, Dict[str, float]], strategy_nam
     if len(data["model"].unique()) < 2:
         raise RuntimeError("Figura 3: não foram encontradas duas linhas de Sharpe para a estratégia.")
     fig, ax = plt.subplots(figsize=(9, 5), dpi=300)
-    bars = ax.bar(data["model"], data["sharpe"], color=["#2ca02c", "#1f77b4"])
+    x_labels = [MODEL_DISPLAY_NAMES.get(m, m) for m in data["model"]]
+    bars = ax.bar(x_labels, data["sharpe"], color=["#2ca02c", "#1f77b4"])
     for bar in bars:
         height = bar.get_height()
         offset = 3 if height >= 0 else -12
