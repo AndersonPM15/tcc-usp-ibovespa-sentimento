@@ -17,6 +17,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Any, Tuple
 
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 import pandas as pd
 import numpy as np
 
