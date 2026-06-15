@@ -28,6 +28,10 @@ data_raw/
 data_processed/
 data_interim/
 
+# Arquivos binários de dados (gerados pelo pipeline)
+*.npy
+*.npz
+
 # Temporários / logs
 *.log
 *.tmp
@@ -35,6 +39,15 @@ tmp_*
 .tmp_*
 dash_out.txt
 dash_err.txt
+reports/logs/
+
+# Sistema operacional
+desktop.ini
+.DS_Store
+Thumbs.db
+
+# Ferramentas de desenvolvimento
+.claude/
 
 # Outros caches
 *.egg-info/

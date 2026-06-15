@@ -45,6 +45,10 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 # ---------------------------------------------------------------------------
 # Configuração dos notebooks do pipeline
 # ---------------------------------------------------------------------------
@@ -142,7 +146,7 @@ def main():
     O pipeline é interrompido imediatamente se qualquer etapa falhar,
     garantindo que erros sejam tratados antes de prosseguir.
     """
-    base_path = Path(__file__).parent / "notebooks"
+    base_path = Path(__file__).parent.parent / "notebooks"
     pipeline_start = datetime.now()
     
     # -----------------------------------------------------------------------
