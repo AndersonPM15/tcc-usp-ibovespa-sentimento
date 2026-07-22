@@ -734,34 +734,6 @@ app.clientside_callback(
 )
 
 
-@app.callback(
-    Output("ibov-graph", "figure"),
-    Output("sentiment-graph", "figure"),
-    Output("model-comparison-graph", "figure"),
-    Output("model-table", "data"),
-    Output("active-filters-indicator", "children"),
-    Output("metric-badge", "children"),
-    Output("ui-last-trigger", "children"),
-    Output("scatter-graph", "figure"),
-    Output("rolling-corr-graph", "figure"),
-    Output("sentiment-dist-graph", "figure"),
-    Output("latency-graph", "figure"),
-    Output("backtest-graph", "figure"),
-    Output("overview-kpis", "children"),
-    Output("ibov-meta", "children"),
-    Output("sentiment-meta", "children"),
-    Output("comparison-meta", "children"),
-    Output("scatter-meta", "children"),
-    Output("rolling-meta", "children"),
-    Output("dist-meta", "children"),
-    Output("latency-meta", "children"),
-    Output("backtest-meta", "children"),
-    Input("date-range", "start_date"),
-    Input("date-range", "end_date"),
-    Input("model-filter", "value"),
-    Input("metric-filter", "value"),
-    Input("export-toggle", "value"),
-)
 def _build_ibov_events_figure(ibov_filtered, event_filtered, graph_height):
     ibov_fig = go.Figure()
     if not ibov_filtered.empty:
@@ -1164,6 +1136,34 @@ def _build_backtest_figure(backtest_filtered, selected_models, graph_height):
     return backtest_fig, backtest_filtered
 
 
+@app.callback(
+    Output("ibov-graph", "figure"),
+    Output("sentiment-graph", "figure"),
+    Output("model-comparison-graph", "figure"),
+    Output("model-table", "data"),
+    Output("active-filters-indicator", "children"),
+    Output("metric-badge", "children"),
+    Output("ui-last-trigger", "children"),
+    Output("scatter-graph", "figure"),
+    Output("rolling-corr-graph", "figure"),
+    Output("sentiment-dist-graph", "figure"),
+    Output("latency-graph", "figure"),
+    Output("backtest-graph", "figure"),
+    Output("overview-kpis", "children"),
+    Output("ibov-meta", "children"),
+    Output("sentiment-meta", "children"),
+    Output("comparison-meta", "children"),
+    Output("scatter-meta", "children"),
+    Output("rolling-meta", "children"),
+    Output("dist-meta", "children"),
+    Output("latency-meta", "children"),
+    Output("backtest-meta", "children"),
+    Input("date-range", "start_date"),
+    Input("date-range", "end_date"),
+    Input("model-filter", "value"),
+    Input("metric-filter", "value"),
+    Input("export-toggle", "value"),
+)
 def update_dashboard(start_date, end_date, selected_model, metric, export_toggle):
     try:
         selected_models = (
