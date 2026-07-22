@@ -108,7 +108,7 @@ def _colab_base() -> Path:
 def _local_base() -> Path:
     """
     Retorna o caminho base local fixo: C:/TCC_USP.
-    
+
     Prioridade:
     1. Caminho fixo C:/TCC_USP (padrão do projeto)
     2. Fallback para o diretório pai do repositório se C:/TCC_USP não existir
@@ -116,12 +116,12 @@ def _local_base() -> Path:
     # Caminho padrão fixo do projeto
     if _LOCAL_BASE_PATH.exists():
         return _LOCAL_BASE_PATH
-    
+
     # Fallback: diretório pai do repositório
     repo_parent = _repo_root().parent
     if repo_parent.exists():
         return repo_parent
-    
+
     # Retorna o padrão mesmo se não existir (será criado depois)
     return _LOCAL_BASE_PATH
 

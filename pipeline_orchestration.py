@@ -31,10 +31,8 @@ except ModuleNotFoundError:  # pragma: no cover - papermill optional
 else:
     HAVE_PAPERMILL = True
 
-from src.config import loader as cfg
 from src.io import paths as path_utils
 from src.utils.logger import log_result
-
 
 NOTEBOOK_SEQUENCE: Sequence[str] = [
     "00_data_download",
@@ -84,7 +82,7 @@ def _ensure_pythonpath(repo_root: Path) -> None:
     Guarantee that the repository root is present on PYTHONPATH.
 
     This avoids `ModuleNotFoundError: src` when notebooks are executed via
-    nbconvert (fallback mode) even quando o ambiente nǜo tem papermill.
+    nbconvert (fallback mode) even quando o ambiente não tem papermill.
     """
     current = os.environ.get("PYTHONPATH", "")
     paths = [p for p in current.split(os.pathsep) if p]
@@ -104,9 +102,10 @@ def _execute_notebook(
 
     _ensure_pythonpath(repo_root)
 
-    src = notebooks_dir / f"{notebook_name}.ipynb"
-    if not src.exists():
-        raise FileNotFoundError(f"Notebook não encontrado: {src}")
+    # Named `notebook_path` (not `src`) to avoid shadowing the `src/` package.
+    notebook_path = notebooks_dir / f"{notebook_name}.ipynb"
+    if not notebook_path.exists():
+        raise FileNotFoundError(f"Notebook não encontrado: {notebook_path}")
 
     runs_dir.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -117,7 +116,7 @@ def _execute_notebook(
     try:
         if HAVE_PAPERMILL and pm is not None:
             pm.execute_notebook(
-                input_path=str(src),
+                input_path=str(notebook_path),
                 output_path=str(output),
                 parameters={
                     "base_path": str(base_path),
@@ -137,7 +136,7 @@ def _execute_notebook(
                 "--to",
                 "notebook",
                 "--execute",
-                str(src),
+                str(notebook_path),
                 "--output",
                 output.name,
                 "--output-dir",
@@ -215,7 +214,9 @@ def main() -> None:
     log_file = _setup_logging()
     args = parse_args()
     if args.only:
-        notebooks = [f"{nb if nb.endswith('.ipynb') else nb}".replace(".ipynb", "") for nb in args.only]
+        notebooks = [
+            f"{nb if nb.endswith('.ipynb') else nb}".replace(".ipynb", "") for nb in args.only
+        ]
     else:
         notebooks = list(NOTEBOOK_SEQUENCE)
 
@@ -227,7 +228,9 @@ def main() -> None:
         completed = run_pipeline(notebooks, continue_on_fail=args.continue_on_fail)
     except Exception as exc:  # noqa: BLE001
         logging.error("Pipeline interrompido: %s", exc)
-        logging.info("Notebooks concluídos antes da falha: %s", completed if 'completed' in locals() else [])
+        logging.info(
+            "Notebooks concluídos antes da falha: %s", completed if "completed" in locals() else []
+        )
         sys.exit(1)
 
     logging.info("Pipeline finalizado. Notebooks concluídos: %s", completed)
