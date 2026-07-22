@@ -43,7 +43,11 @@ def load_sentiment(path: Path) -> pd.DataFrame:
     df = df.dropna(subset=["day"])
     df = df[(df["day"] >= START) & (df["day"] <= END)]
     df["sentiment"] = df["proba"] * 2 - 1
-    agg = df.groupby("day").agg(sentiment_mean=("sentiment", "mean"), n_news=("sentiment", "count")).reset_index()
+    agg = (
+        df.groupby("day")
+        .agg(sentiment_mean=("sentiment", "mean"), n_news=("sentiment", "count"))
+        .reset_index()
+    )
     return agg.sort_values("day")
 
 
@@ -53,8 +57,12 @@ def generate_latency(ibov: pd.DataFrame, sent: pd.DataFrame, min_news: int = 1) 
         raise ValueError("Merge sentimento x Ibovespa vazio")
     q10 = merged["sentiment_mean"].quantile(0.10)
     q90 = merged["sentiment_mean"].quantile(0.90)
-    pos = merged[(merged["sentiment_mean"] >= q90) & (merged["n_news"] >= min_news)].assign(fonte="sent_pos")
-    neg = merged[(merged["sentiment_mean"] <= q10) & (merged["n_news"] >= min_news)].assign(fonte="sent_neg")
+    pos = merged[(merged["sentiment_mean"] >= q90) & (merged["n_news"] >= min_news)].assign(
+        fonte="sent_pos"
+    )
+    neg = merged[(merged["sentiment_mean"] <= q10) & (merged["n_news"] >= min_news)].assign(
+        fonte="sent_neg"
+    )
     events = pd.concat([pos, neg]).sort_values("day")
     if events.empty:
         raise ValueError("Nenhum evento de sentimento encontrado com os filtros atuais")
@@ -62,7 +70,9 @@ def generate_latency(ibov: pd.DataFrame, sent: pd.DataFrame, min_news: int = 1) 
     rows = []
     for _, ev in events.iterrows():
         start_day = ev["day"]
-        window = ibov[(ibov["day"] >= start_day) & (ibov["day"] <= start_day + pd.Timedelta(days=5))]
+        window = ibov[
+            (ibov["day"] >= start_day) & (ibov["day"] <= start_day + pd.Timedelta(days=5))
+        ]
         if window.empty:
             continue
         car = window["return"].sum()
@@ -88,9 +98,15 @@ def generate_latency(ibov: pd.DataFrame, sent: pd.DataFrame, min_news: int = 1) 
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Gera event_study_latency.csv a partir de sentimento e Ibovespa")
-    parser.add_argument("--data-dir", default=str(DATA_DIR), help="Diretório com arquivos processados")
-    parser.add_argument("--min-news", type=int, default=1, help="Mínimo de notícias por dia para considerar evento")
+    parser = argparse.ArgumentParser(
+        description="Gera event_study_latency.csv a partir de sentimento e Ibovespa"
+    )
+    parser.add_argument(
+        "--data-dir", default=str(DATA_DIR), help="Diretório com arquivos processados"
+    )
+    parser.add_argument(
+        "--min-news", type=int, default=1, help="Mínimo de notícias por dia para considerar evento"
+    )
     args = parser.parse_args()
     data_dir = Path(args.data_dir)
 
@@ -99,7 +115,9 @@ def main() -> None:
     lat = generate_latency(ibov, sent, min_news=args.min_news)
     out_path = data_dir / "event_study_latency.csv"
     lat.to_csv(out_path, index=False)
-    print(f"Latência gerada: {out_path} rows={len(lat)} min={lat['event_day'].min()} max={lat['event_day'].max()}")
+    print(
+        f"Latência gerada: {out_path} rows={len(lat)} min={lat['event_day'].min()} max={lat['event_day'].max()}"
+    )
 
 
 if __name__ == "__main__":

@@ -1,11 +1,13 @@
-﻿"""
+"""
 Pipeline headless para gerar TODAS as figuras/tabelas finais (PNG) do TCC.
 - Limpa outputs antigos em reports/figures (PNG/CSV/TXT)
 - Usa backend headless Agg
 - Recalcula backtest diário mark-to-market a partir de 16_oof_predictions (estratégias long_only_60/55/long_short_sym)
 - Valida mtime/size dos PNGs e fail se desatualizado
 """
+
 from __future__ import annotations
+
 import argparse
 import json
 import time
@@ -32,9 +34,27 @@ MODEL_DISPLAY_NAMES = {
 }
 # ordem de preferência; caímos para a próxima se a curva diária ficar peça (nunique<=200)
 STRATEGIES_CFG = [
-    {"name": "long_only_60", "long_th": 0.60, "short_th": 0.40, "allow_short": False, "cost": 0.0005},
-    {"name": "long_only_55", "long_th": 0.55, "short_th": 0.45, "allow_short": False, "cost": 0.0005},
-    {"name": "long_short_sym", "long_th": 0.55, "short_th": 0.45, "allow_short": True, "cost": 0.0007},
+    {
+        "name": "long_only_60",
+        "long_th": 0.60,
+        "short_th": 0.40,
+        "allow_short": False,
+        "cost": 0.0005,
+    },
+    {
+        "name": "long_only_55",
+        "long_th": 0.55,
+        "short_th": 0.45,
+        "allow_short": False,
+        "cost": 0.0005,
+    },
+    {
+        "name": "long_short_sym",
+        "long_th": 0.55,
+        "short_th": 0.45,
+        "allow_short": True,
+        "cost": 0.0007,
+    },
 ]
 REQUIRED_PNGS = [
     "Figura_1_ibov_eventos.png",
@@ -103,7 +123,9 @@ def _savefig(fig, path: Path, force: bool | None = None) -> None:
     new_size = stat.st_size
     new_mtime = stat.st_mtime
     ts = datetime.fromtimestamp(new_mtime)
-    print(f"[SAVEFIG] {path} | bytes={new_size} (prev {prev_size}) | mtime={ts} (prev {prev_mtime})")
+    print(
+        f"[SAVEFIG] {path} | bytes={new_size} (prev {prev_size}) | mtime={ts} (prev {prev_mtime})"
+    )
 
 
 def _validate_png_mtimes(start_ts: float, prev_mtimes: Dict[str, float]) -> None:
@@ -119,7 +141,9 @@ def _validate_png_mtimes(start_ts: float, prev_mtimes: Dict[str, float]) -> None
         ok = exists and size > 30_000 and mtime >= start_ts - 2 and mtime > prev_mt
         rows.append((path, size, mtime, ok))
         if not ok:
-            raise RuntimeError(f"PNG inválido/desatualizado: {path} | size={size} | mtime={mtime} | prev_mtime={prev_mt}")
+            raise RuntimeError(
+                f"PNG inválido/desatualizado: {path} | size={size} | mtime={mtime} | prev_mtime={prev_mt}"
+            )
         ok_count += 1
     print(f"[VALIDAÇÃO] {ok_count}/{len(REQUIRED_PNGS)} regravados")
     print("arquivo | bytes | mtime | ok")
@@ -170,7 +194,14 @@ def load_results16() -> pd.DataFrame:
         with open(path, "r", encoding="utf-8") as fh:
             data = json.load(fh)
         for model, vals in data.get("models", {}).items():
-            rows.append({"model": model, "dataset": "tfidf_daily", "auc": vals["auc"]["value"], "mda": vals["mda"]["value"]})
+            rows.append(
+                {
+                    "model": model,
+                    "dataset": "tfidf_daily",
+                    "auc": vals["auc"]["value"],
+                    "mda": vals["mda"]["value"],
+                }
+            )
     return pd.DataFrame(rows)
 
 
@@ -218,7 +249,9 @@ def _run_strategy_from_oof(oof: pd.DataFrame, cfg: Dict[str, float]) -> pd.DataF
     return df
 
 
-def compute_backtest_mark_to_market(oof: pd.DataFrame, ibov: pd.DataFrame, strategy_name: str) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
+def compute_backtest_mark_to_market(
+    oof: pd.DataFrame, ibov: pd.DataFrame, strategy_name: str
+) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
     cfg = next((c for c in STRATEGIES_CFG if c["name"] == strategy_name), None)
     if cfg is None:
         raise RuntimeError(f"Estratégia {strategy_name} não configurada.")
@@ -248,7 +281,9 @@ def compute_backtest_mark_to_market(oof: pd.DataFrame, ibov: pd.DataFrame, strat
     equity_df["equity_ibov"] = bench_eq.values
 
     for model in ANCHOR_MODELS:
-        sub = daily[(daily["model"] == model) & (daily["day"].isin(common_dates))].sort_values("day")
+        sub = daily[(daily["model"] == model) & (daily["day"].isin(common_dates))].sort_values(
+            "day"
+        )
         if sub.empty:
             raise RuntimeError(f"Sem dados para {model} em {strategy_name}.")
         eq = (1 + sub["strategy_ret"].fillna(0)).cumprod()
@@ -259,16 +294,22 @@ def compute_backtest_mark_to_market(oof: pd.DataFrame, ibov: pd.DataFrame, strat
         sharpe = ret.mean() / ret.std(ddof=0) * np.sqrt(252) if ret.std(ddof=0) != 0 else np.nan
         stats[model] = {"cagr": cagr, "sharpe": sharpe, "nunique_equity": eq.nunique()}
         if eq.nunique() <= 200:
-            raise RuntimeError(f"Curva diária insuficiente para {model} na estratégia {strategy_name}: {eq.nunique()} valores únicos.")
+            raise RuntimeError(
+                f"Curva diária insuficiente para {model} na estratégia {strategy_name}: {eq.nunique()} valores únicos."
+            )
     return equity_df, stats, strategy_name
 
 
-def load_backtest_curves_mark_to_market(oof: pd.DataFrame, ibov: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
+def load_backtest_curves_mark_to_market(
+    oof: pd.DataFrame, ibov: pd.DataFrame
+) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
     # wrapper mantido para compatibilidade
     return compute_backtest_mark_to_market(oof, ibov, STRATEGIES_CFG[0]["name"])
 
 
-def choose_common_strategy(stats: Dict[str, Dict[str, float]], chosen: str) -> Tuple[str | None, set[str]]:
+def choose_common_strategy(
+    stats: Dict[str, Dict[str, float]], chosen: str
+) -> Tuple[str | None, set[str]]:
     return chosen, set([chosen])
 
 
@@ -279,13 +320,29 @@ def figure_ibov_events(ibov: pd.DataFrame, events: pd.DataFrame) -> None:
         thresh = events["car_max_abs"].quantile(0.9)
         extreme = events.loc[events["car_max_abs"] >= thresh].copy()
         if not extreme.empty:
-            merged = extreme.merge(ibov[["day", "close"]], left_on="event_day", right_on="day", how="left").dropna(subset=["close"])
+            merged = extreme.merge(
+                ibov[["day", "close"]], left_on="event_day", right_on="day", how="left"
+            ).dropna(subset=["close"])
             pos = merged[merged["polarity"] == "pos"]
             neg = merged[merged["polarity"] == "neg"]
             if not pos.empty:
-                ax.scatter(pos["event_day"], pos["close"], marker="^", color="green", label="Sentimento Positivo Extremo", zorder=5)
+                ax.scatter(
+                    pos["event_day"],
+                    pos["close"],
+                    marker="^",
+                    color="green",
+                    label="Sentimento Positivo Extremo",
+                    zorder=5,
+                )
             if not neg.empty:
-                ax.scatter(neg["event_day"], neg["close"], marker="v", color="red", label="Sentimento Negativo Extremo", zorder=5)
+                ax.scatter(
+                    neg["event_day"],
+                    neg["close"],
+                    marker="v",
+                    color="red",
+                    label="Sentimento Negativo Extremo",
+                    zorder=5,
+                )
     ax.set_title("Figura 1 – Ibovespa com Eventos")
     ax.set_xlabel("Data")
     ax.set_ylabel("Pontos do Ibovespa")
@@ -325,7 +382,9 @@ def figure_scatter(sent_daily: pd.DataFrame, ibov: pd.DataFrame, model: str = "l
     _savefig(fig, OUTPUT_DIR / "Figura_4_dispersao_sentimento_retorno.png")
 
 
-def figure_rolling_corr(sent_daily: pd.DataFrame, ibov: pd.DataFrame, model: str = "logreg_l2") -> None:
+def figure_rolling_corr(
+    sent_daily: pd.DataFrame, ibov: pd.DataFrame, model: str = "logreg_l2"
+) -> None:
     sent_model = sent_daily[sent_daily["model"] == model][["day", "sentiment"]]
     merged = pd.merge(sent_model, ibov[["day", "ret"]], on="day", how="inner").sort_values("day")
     merged["corr_60"] = merged["sentiment"].rolling(60).corr(merged["ret"])
@@ -363,7 +422,16 @@ def figure_latency(events: pd.DataFrame) -> None:
     events["window"] = events["window"].astype(str)
     fig, ax = plt.subplots(figsize=(8, 5), dpi=300)
     groups = [events.loc[events["polarity"] == pol, "car_value"].dropna() for pol in ["pos", "neg"]]
-    ax.boxplot(groups, labels=["pos", "neg"], showmeans=True, meanline=True, patch_artist=True, boxprops=dict(facecolor="#a6cee3"), medianprops=dict(color="black"), meanprops=dict(color="red"))
+    ax.boxplot(
+        groups,
+        labels=["pos", "neg"],
+        showmeans=True,
+        meanline=True,
+        patch_artist=True,
+        boxprops=dict(facecolor="#a6cee3"),
+        medianprops=dict(color="black"),
+        meanprops=dict(color="red"),
+    )
     ax.set_title("Figura 7A – CAR por polaridade (boxplot)")
     ax.set_xlabel("Polaridade")
     ax.set_ylabel("Retorno Anormal Acumulado (CAR)")
@@ -372,7 +440,9 @@ def figure_latency(events: pd.DataFrame) -> None:
     _savefig(fig, OUTPUT_DIR / "Figura_7A_latencia_boxplot.png")
 
 
-def _bootstrap_mean_ci(values: np.ndarray, n_boot: int = 1000, alpha: float = 0.05) -> Tuple[float, float, float]:
+def _bootstrap_mean_ci(
+    values: np.ndarray, n_boot: int = 1000, alpha: float = 0.05
+) -> Tuple[float, float, float]:
     if len(values) == 0:
         return np.nan, np.nan, np.nan
     means = []
@@ -380,7 +450,11 @@ def _bootstrap_mean_ci(values: np.ndarray, n_boot: int = 1000, alpha: float = 0.
         sample = np.random.choice(values, size=len(values), replace=True)
         means.append(sample.mean())
     means = np.array(means)
-    return float(means.mean()), float(np.percentile(means, 100 * alpha / 2)), float(np.percentile(means, 100 * (1 - alpha / 2)))
+    return (
+        float(means.mean()),
+        float(np.percentile(means, 100 * alpha / 2)),
+        float(np.percentile(means, 100 * (1 - alpha / 2))),
+    )
 
 
 def figure_caar_event_time(events: pd.DataFrame, ibov: pd.DataFrame, tau_max: int = 5) -> None:
@@ -415,11 +489,19 @@ def figure_caar_event_time(events: pd.DataFrame, ibov: pd.DataFrame, tau_max: in
     if out_df["tau"].nunique() <= 1:
         raise RuntimeError("CAAR CSV: pontos tau insuficientes.")
     out_df.to_csv(OUTPUT_DIR / "Figura_7B_event_time_CAAR.csv", index=False)
-    print(f"[CAAR] n_events_pos={int(out_df['n_events_pos'].max())} | n_events_neg={int(out_df['n_events_neg'].max())} | taus={list(out_df['tau'])}")
+    print(
+        f"[CAAR] n_events_pos={int(out_df['n_events_pos'].max())} | n_events_neg={int(out_df['n_events_neg'].max())} | taus={list(out_df['tau'])}"
+    )
     fig, ax = plt.subplots(figsize=(10, 5), dpi=300)
     for pol, color in [("neg", "#d62728"), ("pos", "#2ca02c")]:
         ax.plot(out_df["tau"], out_df[f"caar_{pol}_mean"], marker="o", label=pol, color=color)
-        ax.fill_between(out_df["tau"], out_df[f"caar_{pol}_ci_low"], out_df[f"caar_{pol}_ci_high"], alpha=0.2, color=color)
+        ax.fill_between(
+            out_df["tau"],
+            out_df[f"caar_{pol}_ci_low"],
+            out_df[f"caar_{pol}_ci_high"],
+            alpha=0.2,
+            color=color,
+        )
     ax.axhline(0, color="k", linestyle="--", linewidth=1)
     ax.axvline(0, color="gray", linestyle=":", linewidth=1)
     ax.set_title("Figura 7B – CAAR por tempo de evento (IC 95%)")
@@ -431,17 +513,35 @@ def figure_caar_event_time(events: pd.DataFrame, ibov: pd.DataFrame, tau_max: in
     _savefig(fig, OUTPUT_DIR / "Figura_7B_event_time_CAAR.png")
 
 
-def _compute_backtest_equity_mark_to_market(oof: pd.DataFrame, ibov: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
+def _compute_backtest_equity_mark_to_market(
+    oof: pd.DataFrame, ibov: pd.DataFrame
+) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
     return compute_backtest_mark_to_market(oof, ibov)
 
 
-def figure_backtest_vs_benchmark(oof: pd.DataFrame, ibov: pd.DataFrame, strategy_name: str) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
+def figure_backtest_vs_benchmark(
+    oof: pd.DataFrame, ibov: pd.DataFrame, strategy_name: str
+) -> Tuple[pd.DataFrame, Dict[str, Dict[str, float]], str]:
     equity_df, stats, strategy = compute_backtest_mark_to_market(oof, ibov, strategy_name)
     equity_df.to_csv(OUTPUT_DIR / "Figura_8_backtest_vs_benchmark.csv", index=False)
     fig, ax = plt.subplots(figsize=(11, 5.5), dpi=300)
-    ax.plot(equity_df["date"], equity_df["equity_logreg_l2"], label=f"Média simples do sentimento ({strategy})")
-    ax.plot(equity_df["date"], equity_df["equity_rf_200"], label=f"Média ponderada por volume ({strategy})")
-    ax.plot(equity_df["date"], equity_df["equity_ibov"], label="Ibov buy&hold", color="black", linestyle="--")
+    ax.plot(
+        equity_df["date"],
+        equity_df["equity_logreg_l2"],
+        label=f"Média simples do sentimento ({strategy})",
+    )
+    ax.plot(
+        equity_df["date"],
+        equity_df["equity_rf_200"],
+        label=f"Média ponderada por volume ({strategy})",
+    )
+    ax.plot(
+        equity_df["date"],
+        equity_df["equity_ibov"],
+        label="Ibov buy&hold",
+        color="black",
+        linestyle="--",
+    )
     ax.set_title("Figura 8 – Curva de backtest vs benchmark (normalizadas em 1.0)")
     ax.set_ylabel("Equity normalizado")
     ax.set_xlabel("Data")
@@ -453,7 +553,9 @@ def figure_backtest_vs_benchmark(oof: pd.DataFrame, ibov: pd.DataFrame, strategy
     return equity_df, stats, strategy
 
 
-def figure_comparativo(backtest_stats: Dict[str, Dict[str, float]], strategy_name: str | None) -> None:
+def figure_comparativo(
+    backtest_stats: Dict[str, Dict[str, float]], strategy_name: str | None
+) -> None:
     if strategy_name is None:
         raise RuntimeError("Não há estratégia comum para Sharpe.")
     rows = []
@@ -463,7 +565,9 @@ def figure_comparativo(backtest_stats: Dict[str, Dict[str, float]], strategy_nam
             rows.append({"model": model, "sharpe": stats.get("sharpe")})
     data = pd.DataFrame(rows)
     if len(data["model"].unique()) < 2:
-        raise RuntimeError("Figura 3: não foram encontradas duas linhas de Sharpe para a estratégia.")
+        raise RuntimeError(
+            "Figura 3: não foram encontradas duas linhas de Sharpe para a estratégia."
+        )
     fig, ax = plt.subplots(figsize=(9, 5), dpi=300)
     x_labels = [MODEL_DISPLAY_NAMES.get(m, m) for m in data["model"]]
     bars = ax.bar(x_labels, data["sharpe"], color=["#2ca02c", "#1f77b4"])
@@ -488,7 +592,9 @@ def figure_comparativo(backtest_stats: Dict[str, Dict[str, float]], strategy_nam
     _savefig(fig, OUTPUT_DIR / "Figura_3_comparativo_modelos.png")
 
 
-def table_metrics(results16: pd.DataFrame, backtest_stats: Dict[str, Dict[str, float]], strategy_name: str | None) -> None:
+def table_metrics(
+    results16: pd.DataFrame, backtest_stats: Dict[str, Dict[str, float]], strategy_name: str | None
+) -> None:
     tfidf = results16.copy()
     tfidf = tfidf[tfidf["model"].isin(ANCHOR_MODELS)]
     tfidf["cagr"] = "—"
@@ -500,16 +606,31 @@ def table_metrics(results16: pd.DataFrame, backtest_stats: Dict[str, Dict[str, f
     if strategy_name:
         for model in ANCHOR_MODELS:
             stats = backtest_stats.get(model, {})
-            back_rows.append({"model": model, "dataset": "backtest_daily", "strategy": strategy_name, "auc": "—", "mda": "—", "cagr": stats.get("cagr"), "sharpe": stats.get("sharpe")})
+            back_rows.append(
+                {
+                    "model": model,
+                    "dataset": "backtest_daily",
+                    "strategy": strategy_name,
+                    "auc": "—",
+                    "mda": "—",
+                    "cagr": stats.get("cagr"),
+                    "sharpe": stats.get("sharpe"),
+                }
+            )
     back = pd.DataFrame(back_rows)
     if not back.empty:
         back["cagr"] = back["cagr"].apply(lambda x: f"{float(x):+.2%}" if pd.notna(x) else "—")
         back["sharpe"] = back["sharpe"].apply(lambda x: f"{float(x):.3f}" if pd.notna(x) else "—")
-    table = pd.concat([tfidf[["model", "dataset", "auc", "mda", "strategy", "cagr", "sharpe"]], back], ignore_index=True)
+    table = pd.concat(
+        [tfidf[["model", "dataset", "auc", "mda", "strategy", "cagr", "sharpe"]], back],
+        ignore_index=True,
+    )
     table.to_csv(OUTPUT_DIR / "Tabela_1_metricas.csv", index=False)
-    note = ("Nota: AUC/MDA são métricas de classificação em tfidf_daily; backtest_daily reporta métricas econômicas (CAGR/Sharpe). "
-            "Sharpe calculado sobre retornos diários (convenção 252); custos/atrito não modelados (implícitos = 0). "
-            f"Estratégia comparada nos modelos de backtest: {strategy_name or '—'}.")
+    note = (
+        "Nota: AUC/MDA são métricas de classificação em tfidf_daily; backtest_daily reporta métricas econômicas (CAGR/Sharpe). "
+        "Sharpe calculado sobre retornos diários (convenção 252); custos/atrito não modelados (implícitos = 0). "
+        f"Estratégia comparada nos modelos de backtest: {strategy_name or '—'}."
+    )
     (OUTPUT_DIR / "nota_tabela1.txt").write_text(note, encoding="utf-8")
     fig, ax = plt.subplots(figsize=(10, 4), dpi=300)
     ax.axis("off")
@@ -525,7 +646,10 @@ def table_intersection(ibov: pd.DataFrame, sent_daily: pd.DataFrame) -> None:
     ibov_days = set(ibov["day"])
     sent_days = set(sent_daily["day"])
     inter = ibov_days & sent_days
-    data = {"Conjunto": ["Pregões Ibov", "Dias com sentimento", "Interseção"], "Dias": [len(ibov_days), len(sent_days), len(inter)]}
+    data = {
+        "Conjunto": ["Pregões Ibov", "Dias com sentimento", "Interseção"],
+        "Dias": [len(ibov_days), len(sent_days), len(inter)],
+    }
     df = pd.DataFrame(data)
     df.to_csv(OUTPUT_DIR / "Tabela_intersecao_periodo.csv", index=False)
     fig, ax = plt.subplots(figsize=(6, 2.5), dpi=300)
@@ -607,7 +731,9 @@ def _run_strategy_quantile(
     return df
 
 
-def _compute_metrics(ret: pd.Series, equity: pd.Series, turnover: pd.Series, cost: pd.Series, signal: pd.Series) -> Dict[str, float]:
+def _compute_metrics(
+    ret: pd.Series, equity: pd.Series, turnover: pd.Series, cost: pd.Series, signal: pd.Series
+) -> Dict[str, float]:
     ret = ret.fillna(0)
     equity = equity.fillna(method="ffill")
     cagr = equity.iloc[-1] ** (252 / len(equity)) - 1 if len(equity) > 1 else np.nan
@@ -652,7 +778,9 @@ def _run_robust_backtest_grid(
                 strat = _run_strategy_quantile(df_model, cfg, event_q=eq, lag=lag)
                 ret = strat["strategy_ret"]
                 equity = strat["equity"]
-                metrics = _compute_metrics(ret, equity, strat["turnover"], strat["cost"], strat["signal"])
+                metrics = _compute_metrics(
+                    ret, equity, strat["turnover"], strat["cost"], strat["signal"]
+                )
                 rows.append(
                     {
                         "model": model,
@@ -680,9 +808,24 @@ def _write_table_png(df: pd.DataFrame, path_csv: Path, path_png: Path, title: st
     _savefig(fig, path_png)
 
 
-def generate_table2_robustez(oof: pd.DataFrame, ibov: pd.DataFrame, strategy_name: str, lags: List[int], event_qs: List[float]) -> List[Path]:
+def generate_table2_robustez(
+    oof: pd.DataFrame,
+    ibov: pd.DataFrame,
+    strategy_name: str,
+    lags: List[int],
+    event_qs: List[float],
+) -> List[Path]:
     df = _run_robust_backtest_grid(oof, ibov, strategy_name, lags, event_qs)
-    for col in ["cagr", "sharpe", "vol_anual", "max_drawdown", "turnover", "hit_rate", "exposure", "total_cost"]:
+    for col in [
+        "cagr",
+        "sharpe",
+        "vol_anual",
+        "max_drawdown",
+        "turnover",
+        "hit_rate",
+        "exposure",
+        "total_cost",
+    ]:
         if col in df.columns:
             df[col] = df[col].apply(lambda x: f"{x:.3f}" if pd.notna(x) else "—")
     out_csv = OUTPUT_DIR / "Tabela_2_robustez_backtest.csv"
@@ -691,7 +834,9 @@ def generate_table2_robustez(oof: pd.DataFrame, ibov: pd.DataFrame, strategy_nam
     return [out_csv, out_png]
 
 
-def generate_table3_metricas_extendidas(oof: pd.DataFrame, ibov: pd.DataFrame, strategy_name: str, lag: int, event_q: float) -> List[Path]:
+def generate_table3_metricas_extendidas(
+    oof: pd.DataFrame, ibov: pd.DataFrame, strategy_name: str, lag: int, event_q: float
+) -> List[Path]:
     cfg = next((c for c in STRATEGIES_CFG if c["name"] == strategy_name), None)
     if cfg is None:
         raise RuntimeError(f"Estratégia {strategy_name} não configurada.")
@@ -701,16 +846,37 @@ def generate_table3_metricas_extendidas(oof: pd.DataFrame, ibov: pd.DataFrame, s
         if df_model.empty:
             continue
         strat = _run_strategy_quantile(df_model, cfg, event_q=event_q, lag=lag)
-        metrics = _compute_metrics(strat["strategy_ret"], strat["equity"], strat["turnover"], strat["cost"], strat["signal"])
-        rows.append({"modelo": model, "dataset": "backtest_daily", "strategy": strategy_name, **metrics})
+        metrics = _compute_metrics(
+            strat["strategy_ret"],
+            strat["equity"],
+            strat["turnover"],
+            strat["cost"],
+            strat["signal"],
+        )
+        rows.append(
+            {"modelo": model, "dataset": "backtest_daily", "strategy": strategy_name, **metrics}
+        )
     # benchmark
     bench_ret = ibov.set_index("day")["ret"].dropna()
     bench_eq = (1 + bench_ret).cumprod()
     bench_eq = bench_eq / bench_eq.iloc[0]
-    bench_metrics = _compute_metrics(bench_ret, bench_eq, pd.Series([0]), pd.Series([0]), pd.Series([1] * len(bench_ret)))
-    rows.append({"modelo": "ibov_buyhold", "dataset": "benchmark", "strategy": "—", **bench_metrics})
+    bench_metrics = _compute_metrics(
+        bench_ret, bench_eq, pd.Series([0]), pd.Series([0]), pd.Series([1] * len(bench_ret))
+    )
+    rows.append(
+        {"modelo": "ibov_buyhold", "dataset": "benchmark", "strategy": "—", **bench_metrics}
+    )
     df = pd.DataFrame(rows)
-    for col in ["cagr", "sharpe", "vol_anual", "max_drawdown", "turnover", "hit_rate", "exposure", "total_cost"]:
+    for col in [
+        "cagr",
+        "sharpe",
+        "vol_anual",
+        "max_drawdown",
+        "turnover",
+        "hit_rate",
+        "exposure",
+        "total_cost",
+    ]:
         if col in df.columns:
             df[col] = df[col].apply(lambda x: f"{x:.3f}" if pd.notna(x) else "—")
     out_csv = OUTPUT_DIR / "Tabela_3_metricas_extendidas.csv"
@@ -798,19 +964,19 @@ def main() -> None:
         "--robust_lags",
         type=str,
         default="0,1,2",
-        help="Lista de lags (dias) separados por vírgula para robustez, ex.: \"0,1,2\".",
+        help='Lista de lags (dias) separados por vírgula para robustez, ex.: "0,1,2".',
     )
     parser.add_argument(
         "--robust_event_q",
         type=str,
         default="0.90,0.95",
-        help="Lista de quantis (0-1) para thresholds do sinal, ex.: \"0.90,0.95\".",
+        help='Lista de quantis (0-1) para thresholds do sinal, ex.: "0.90,0.95".',
     )
     parser.add_argument(
         "--robust_corr_windows",
         type=str,
         default="30,60,90",
-        help="Janelas de correlação móvel para a Figura 9, ex.: \"30,60,90\".",
+        help='Janelas de correlação móvel para a Figura 9, ex.: "30,60,90".',
     )
     args = parser.parse_args()
     global FORCE_OVERWRITE
@@ -828,13 +994,19 @@ def main() -> None:
     sentiment_raw = load_sentiment()
     sentiment_daily = load_sentiment_daily(sentiment_raw)
     results16 = load_results16()
-    backtest_results = load_backtest_results()
+    load_backtest_results()
     oof = load_oof_predictions()
     print(f"[EXPORT] Estratégia escolhida (flag --strategy): {args.strategy}")
-    equity_df, backtest_stats, strategy_used = figure_backtest_vs_benchmark(oof, ibov, args.strategy)
+    equity_df, backtest_stats, strategy_used = figure_backtest_vs_benchmark(
+        oof, ibov, args.strategy
+    )
     print(f"[BACKTEST] Estratégia utilizada: {strategy_used} (aplicada em Figura 3/8 e Tabela 1)")
-    print(f"[BACKTEST] nunique equity logreg_l2={equity_df['equity_logreg_l2'].nunique()} | rf_200={equity_df['equity_rf_200'].nunique()}")
-    print(f"[BACKTEST] Datas: {equity_df['date'].min()} -> {equity_df['date'].max()} | linhas={len(equity_df)}")
+    print(
+        f"[BACKTEST] nunique equity logreg_l2={equity_df['equity_logreg_l2'].nunique()} | rf_200={equity_df['equity_rf_200'].nunique()}"
+    )
+    print(
+        f"[BACKTEST] Datas: {equity_df['date'].min()} -> {equity_df['date'].max()} | linhas={len(equity_df)}"
+    )
 
     figure_ibov_events(ibov, events)
     figure_sentiment_daily(sentiment_daily)
@@ -853,14 +1025,21 @@ def main() -> None:
         robust_lags = _parse_int_list(args.robust_lags, [0, 1, 2])
         robust_event_q = _parse_float_list(args.robust_event_q, [0.90, 0.95])
         robust_corr = _parse_int_list(args.robust_corr_windows, [30, 60, 90])
-        print(f"[ROBUST] lags={robust_lags} | event_q={robust_event_q} | corr_windows={robust_corr}")
+        print(
+            f"[ROBUST] lags={robust_lags} | event_q={robust_event_q} | corr_windows={robust_corr}"
+        )
         extra_paths: List[Path] = []
-        extra_paths += generate_table2_robustez(oof, ibov, strategy_used, robust_lags, robust_event_q)
-        extra_paths += generate_table3_metricas_extendidas(oof, ibov, strategy_used, robust_lags[0], robust_event_q[0])
+        extra_paths += generate_table2_robustez(
+            oof, ibov, strategy_used, robust_lags, robust_event_q
+        )
+        extra_paths += generate_table3_metricas_extendidas(
+            oof, ibov, strategy_used, robust_lags[0], robust_event_q[0]
+        )
         extra_paths.append(figure_robust_corr(sentiment_daily, ibov, robust_corr))
         print("[ROBUST] wrote:", ", ".join(str(p) for p in extra_paths))
         _validate_robust_outputs(extra_paths, start_ts)
         print("[ROBUST][OK] validations passed")
+
 
 if __name__ == "__main__":
     main()

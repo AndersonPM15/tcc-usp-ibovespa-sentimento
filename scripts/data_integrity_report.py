@@ -14,9 +14,9 @@ Exit code != 0 quando existir:
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 import sys
+from pathlib import Path
+from typing import Dict, List, Optional
 
 import pandas as pd
 
@@ -25,7 +25,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from src.config.constants import START_DATE, END_DATE
+from src.config.constants import END_DATE, START_DATE
 from src.io import paths
 
 OFFICIAL_START = pd.Timestamp(START_DATE)
@@ -99,9 +99,7 @@ def _validate_dataset(
     return result
 
 
-def _build_intersection(
-    ibov_path: Path, sentiment_path: Path
-) -> Dict[str, object]:
+def _build_intersection(ibov_path: Path, sentiment_path: Path) -> Dict[str, object]:
     if not ibov_path.exists() or not sentiment_path.exists():
         return {
             "ibov_days": 0,
@@ -214,8 +212,7 @@ def main() -> int:
     issues = [
         r
         for r in results
-        if r["status"] in {"missing", "fail", "no-date-col"}
-        or (r["required"] and not r["exists"])
+        if r["status"] in {"missing", "fail", "no-date-col"} or (r["required"] and not r["exists"])
     ]
 
     if issues:

@@ -49,7 +49,9 @@ def _persist_registry(entries: List[Dict[str, Any]]) -> None:
         json.dump(entries, fh, indent=2, ensure_ascii=False)
 
 
-def _log_to_mlflow(model_name: str, dataset_name: str, metrics: Dict[str, Any], extra: Dict[str, Any]) -> None:
+def _log_to_mlflow(
+    model_name: str, dataset_name: str, metrics: Dict[str, Any], extra: Dict[str, Any]
+) -> None:
     if not _HAVE_MLFLOW:
         return
 

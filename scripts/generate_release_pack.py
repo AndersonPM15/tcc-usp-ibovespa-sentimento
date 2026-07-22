@@ -74,7 +74,7 @@ def write_file(path: Path, content: str) -> None:
 
 
 def build_runbook() -> None:
-    content = f"""# RUNBOOK — Release Pack Dashboard
+    content = """# RUNBOOK — Release Pack Dashboard
 
 ## Pré-requisitos
 - Python do venv: .\\\\venv\\\\Scripts\\\\python.exe
@@ -150,7 +150,9 @@ def main() -> None:
         text=True,
     )
     time.sleep(4)
-    probe_code, probe_out = run_cmd([sys.executable, "app_dashboard.py", "--probe", "--host", "127.0.0.1", "--port", str(port)])
+    probe_code, probe_out = run_cmd(
+        [sys.executable, "app_dashboard.py", "--probe", "--host", "127.0.0.1", "--port", str(port)]
+    )
     server.terminate()
     try:
         server.wait(timeout=5)
@@ -170,12 +172,15 @@ def main() -> None:
         intersection_summary(ibov_path, sent_path),
     ]
 
-    evidencias = f"""# EVIDENCIAS
+    evidencias = (
+        f"""# EVIDENCIAS
 
-Gerado em: {datetime.now().isoformat(timespec='seconds')}
+Gerado em: {datetime.now().isoformat(timespec="seconds")}
 
 ## Datasets
-- """ + "\n- ".join(summaries) + f"""
+- """
+        + "\n- ".join(summaries)
+        + f"""
 
 ## Export de figuras
 exit={exp_code}
@@ -193,6 +198,7 @@ exit={pytest_code}
 exit={probe_code}
 {probe_out}
 """
+    )
     write_file(RELEASE_DIR / "EVIDENCIAS.md", evidencias)
 
     build_runbook()

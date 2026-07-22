@@ -23,6 +23,40 @@ Este projeto investiga empiricamente se o sentimento extraído de notícias fina
 
 ---
 
+## Resultado Principal
+
+Os números abaixo reproduzem os artefatos finais versionados em `reports/figures/`
+(`Tabela_1_metricas.csv`, `Figura_8_backtest_vs_benchmark.csv`) e nos relatórios
+de auditoria em `reports/`. São os valores tal como consolidados para a banca —
+esta seção apenas os cita, sem reinterpretá-los.
+
+**Classificação direcional (TF-IDF diário, walk-forward):**
+
+| Modelo | Dataset | AUC | MDA |
+|---|---|---|---|
+| Regressão Logística (L2) | tfidf_daily | 0,502 | 0,503 |
+| Random Forest (200 árvores) | tfidf_daily | 0,491 | 0,512 |
+
+**Backtest econômico (estratégia `long_only_60`):**
+
+| Modelo | CAGR | Sharpe |
+|---|---|---|
+| Regressão Logística (L2) | −2,65% | −0,155 |
+| Random Forest (200 árvores) | +2,22% | +0,213 |
+
+Interpretação registrada no trabalho: os baselines de sentimento operam
+**próximos ao acaso** na previsão da direção do Ibovespa em T+1 (AUC/MDA ≈ 0,50),
+sem ganho consistente sobre um modelo puramente técnico — resultado tratado como
+evidência empírica transparente, não como estratégia operacional. O estudo de
+eventos (CAAR por horizonte τ, em `Figura_7B_event_time_CAAR.csv`) e o índice de
+latência complementam a análise da velocidade de incorporação do sentimento.
+
+> Detalhes metodológicos das métricas (convenção de Sharpe = 252 dias, custos de
+> atrito implícitos = 0, estratégia comparada = `long_only_60`) estão em
+> `reports/figures/nota_tabela1.txt`.
+
+---
+
 ## Estrutura do Repositório
 
 ```

@@ -80,7 +80,7 @@ def dataset_info(path: Path, preferred_col: str | None) -> Dict[str, str]:
 def main() -> None:
     LOG.parent.mkdir(parents=True, exist_ok=True)
 
-    lat_df = ensure_latency()
+    ensure_latency()
 
     artifacts = {
         "ibovespa_clean.csv": {"col": "day"},
@@ -139,7 +139,10 @@ def main() -> None:
     }
 
     status_lines = [f"{k}: {'OK' if v else 'FAIL'}" for k, v in checks.items()]
-    LOG.write_text(LOG.read_text(encoding="utf-8") + "\nSMOKE CALLBACK:\n" + "\n".join(status_lines), encoding="utf-8")
+    LOG.write_text(
+        LOG.read_text(encoding="utf-8") + "\nSMOKE CALLBACK:\n" + "\n".join(status_lines),
+        encoding="utf-8",
+    )
 
     # Audit report
     report = [
@@ -156,7 +159,9 @@ def main() -> None:
     for k, v in checks.items():
         report.append(f"- {k}: {'OK' if v else 'FAIL'}")
     report.append("")
-    report.append(f"DEFAULT_START={dash_app.DEFAULT_START.date()} DEFAULT_END={dash_app.DEFAULT_END.date()}")
+    report.append(
+        f"DEFAULT_START={dash_app.DEFAULT_START.date()} DEFAULT_END={dash_app.DEFAULT_END.date()}"
+    )
     REPORT.write_text("\n".join(report), encoding="utf-8")
 
 
