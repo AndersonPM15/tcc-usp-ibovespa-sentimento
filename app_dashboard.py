@@ -350,85 +350,300 @@ app = Dash(__name__, meta_tags=[{"charset": "utf-8"}])
 app.title = "Dashboard Sentimento x Ibovespa"
 
 
-def _build_controls():
+def _build_header_and_controls_section():
     return html.Div(
-        style={
-            "backgroundColor": "#f8f9fa",
-            "padding": "20px",
-            "borderRadius": "8px",
-            "marginBottom": "25px",
-            "boxShadow": "0 2px 4px rgba(0,0,0,0.1)",
-        },
+        className="card controls-card",
         children=[
-            html.H3(
-                "Controles de Análise",
-                style={"marginTop": "0", "marginBottom": "20px", "color": "#2c3e50"},
-            ),
             html.Div(
-                style={
-                    "display": "grid",
-                    "gridTemplateColumns": "repeat(auto-fit, minmax(250px, 1fr))",
-                    "gap": "20px",
-                },
+                className="header-flex",
                 children=[
                     html.Div(
-                        [
-                            html.Label(
-                                "Período de Análise",
-                                style={
-                                    "fontWeight": "bold",
-                                    "marginBottom": "8px",
-                                    "display": "block",
-                                },
+                        children=[
+                            html.H2(
+                                "Dashboard – Sentimento de Notícias x Ibovespa",
+                                className="title-main",
                             ),
+                            html.P(
+                                "Período oficial 2018-01-02 a 2024-12-31 • USP",
+                                className="title-sub",
+                            ),
+                        ]
+                    ),
+                    html.Div(
+                        className="export-toggle",
+                        children=[
+                            dcc.Checklist(
+                                id="export-toggle",
+                                options=[{"label": "Modo Exportação", "value": "export"}],
+                                value=[],
+                                inline=True,
+                            )
+                        ],
+                    ),
+                ],
+            ),
+            html.Div(
+                className="controls-bar",
+                children=[
+                    html.Div(
+                        children=[
+                            html.Label("Período de Análise"),
                             dcc.DatePickerRange(
                                 id="date-range",
                                 min_date_allowed=DATE_MIN,
                                 max_date_allowed=DATE_MAX,
-                                start_date=DATE_MIN,
-                                end_date=DATE_MAX,
+                                start_date=DEFAULT_START,
+                                end_date=DEFAULT_END,
                                 display_format="YYYY-MM-DD",
                             ),
                         ]
                     ),
                     html.Div(
-                        [
-                            html.Label(
-                                "Selecione os Modelos",
-                                style={
-                                    "fontWeight": "bold",
-                                    "marginBottom": "8px",
-                                    "display": "block",
-                                },
-                            ),
+                        children=[
+                            html.Label("Modelo"),
                             dcc.Dropdown(
                                 id="model-filter",
                                 options=[{"label": m, "value": m} for m in MODEL_OPTIONS],
                                 value=MODEL_DEFAULT_SELECTION,
                                 multi=True,
-                                placeholder="Escolha um ou mais modelos...",
+                                placeholder="Escolha um ou mais modelos",
+                                clearable=False,
                             ),
                         ]
                     ),
                     html.Div(
-                        [
-                            html.Label(
-                                "Métrica de Avaliação",
-                                style={
-                                    "fontWeight": "bold",
-                                    "marginBottom": "8px",
-                                    "display": "block",
-                                },
-                            ),
+                        children=[
+                            html.Label("Métrica"),
                             dcc.Dropdown(
                                 id="metric-filter",
                                 options=METRIC_OPTIONS,
                                 value="auc",
                                 clearable=False,
-                                placeholder="Selecione AUC, MDA ou Sharpe",
                             ),
                         ]
                     ),
+                ],
+            ),
+            html.Div(id="overview-kpis", className="kpi-grid"),
+            html.Div(
+                id="active-filters-indicator",
+                className="indicator-bar",
+                style={"marginTop": "8px"},
+            ),
+            html.Div(id="ui-last-trigger", className="last-trigger"),
+            html.Div(
+                className="interpret-block",
+                children=[
+                    html.Strong("Como interpretar:"),
+                    html.Ul(
+                        [
+                            html.Li(
+                                "Período padrão = interseção das séries para evitar gráficos vazios."
+                            ),
+                            html.Li(
+                                "Controles acima afetam todos os 8 gráficos (datas, modelo único, métrica)."
+                            ),
+                            html.Li(
+                                "Modo Exportação oculta o cabeçalho/controles e amplia os gráficos para recorte."
+                            ),
+                        ]
+                    ),
+                ],
+            ),
+        ],
+    )
+
+
+def _build_figures_row_1_2():
+    return html.Div(
+        className="grid-two",
+        children=[
+            html.Div(
+                className="card",
+                children=[
+                    html.H3("Figura 1 – Ibovespa com Eventos"),
+                    dcc.Graph(
+                        id="ibov-graph",
+                        config=PLOTLY_CONFIG,
+                        className="dash-graph",
+                        style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
+                    ),
+                    html.Div(id="ibov-meta", className="figure-meta"),
+                ],
+            ),
+            html.Div(
+                className="card figure-card",
+                children=[
+                    html.H3("Figura 2 – Sentimento Médio Diário"),
+                    dcc.Graph(
+                        id="sentiment-graph",
+                        config=PLOTLY_CONFIG,
+                        className="dash-graph",
+                        style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
+                    ),
+                    html.Div(id="sentiment-meta", className="figure-meta"),
+                ],
+            ),
+        ],
+    )
+
+
+def _build_figure_3_and_table():
+    return html.Div(
+        className="card figure-card",
+        children=[
+            html.Div(
+                style={
+                    "display": "flex",
+                    "justifyContent": "space-between",
+                    "alignItems": "center",
+                },
+                children=[
+                    html.H3("Figura 3 – Comparativo de Modelos", style={"margin": 0}),
+                    html.Span(id="metric-badge", className="badge"),
+                ],
+            ),
+            dcc.Graph(
+                id="model-comparison-graph",
+                config=PLOTLY_CONFIG,
+                className="dash-graph",
+                style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
+            ),
+            html.Div(id="comparison-meta", className="figure-meta"),
+            html.Hr(),
+            html.H4("Tabela de Métricas"),
+            dash_table.DataTable(
+                id="model-table",
+                columns=[
+                    {"name": "Modelo", "id": "model"},
+                    {"name": "Dataset", "id": "dataset"},
+                    {
+                        "name": "AUC",
+                        "id": "auc",
+                        "type": "numeric",
+                        "format": {"specifier": ".3f"},
+                    },
+                    {
+                        "name": "MDA",
+                        "id": "mda",
+                        "type": "numeric",
+                        "format": {"specifier": ".3f"},
+                    },
+                    {"name": "Estratégia", "id": "strategy"},
+                    {
+                        "name": "CAGR",
+                        "id": "cagr",
+                        "type": "numeric",
+                        "format": {"specifier": "+.2%"},
+                    },
+                    {
+                        "name": "Sharpe",
+                        "id": "sharpe",
+                        "type": "numeric",
+                        "format": {"specifier": ".2f"},
+                    },
+                ],
+                data=[],
+                sort_action="native",
+                filter_action="native",
+                page_size=10,
+                style_table={"overflowX": "auto"},
+                style_header={
+                    "backgroundColor": "#1f2933",
+                    "color": "white",
+                    "fontWeight": "bold",
+                    "textAlign": "center",
+                },
+                style_cell={
+                    "textAlign": "center",
+                    "padding": "10px",
+                },
+                style_data_conditional=[
+                    {"if": {"row_index": 0}, "backgroundColor": "#e8f5e9", "fontWeight": "600"}
+                ],
+            ),
+        ],
+    )
+
+
+def _build_figures_row_4_5():
+    return html.Div(
+        className="grid-two",
+        children=[
+            html.Div(
+                className="card figure-card",
+                children=[
+                    html.H3("Figura 4 – Dispersão Sentimento x Retorno Diário"),
+                    dcc.Graph(
+                        id="scatter-graph",
+                        config=PLOTLY_CONFIG,
+                        className="dash-graph",
+                        style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
+                    ),
+                    html.Div(id="scatter-meta", className="figure-meta"),
+                ],
+            ),
+            html.Div(
+                className="card figure-card",
+                children=[
+                    html.H3("Figura 5 – Correlação Móvel (60d/90d)"),
+                    dcc.Graph(
+                        id="rolling-corr-graph",
+                        config=PLOTLY_CONFIG,
+                        className="dash-graph",
+                        style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
+                    ),
+                    html.Div(id="rolling-meta", className="figure-meta"),
+                ],
+            ),
+        ],
+    )
+
+
+def _build_figure_6():
+    return html.Div(
+        className="card figure-card",
+        children=[
+            html.H3("Figura 6 – Distribuição do Sentimento"),
+            dcc.Graph(
+                id="sentiment-dist-graph",
+                config=PLOTLY_CONFIG,
+                className="dash-graph",
+                style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
+            ),
+            html.Div(id="dist-meta", className="figure-meta"),
+        ],
+    )
+
+
+def _build_figures_row_7_8():
+    return html.Div(
+        className="grid-two",
+        children=[
+            html.Div(
+                className="card figure-card",
+                children=[
+                    html.H3("Figura 7 – Latência por Fonte/Daypart"),
+                    dcc.Graph(
+                        id="latency-graph",
+                        config=PLOTLY_CONFIG,
+                        className="dash-graph",
+                        style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
+                    ),
+                    html.Div(id="latency-meta", className="figure-meta"),
+                ],
+            ),
+            html.Div(
+                className="card figure-card",
+                children=[
+                    html.H3("Figura 8 – Curva de Backtest"),
+                    dcc.Graph(
+                        id="backtest-graph",
+                        config=PLOTLY_CONFIG,
+                        className="dash-graph",
+                        style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
+                    ),
+                    html.Div(id="backtest-meta", className="figure-meta"),
                 ],
             ),
         ],
@@ -439,288 +654,12 @@ app.layout = html.Div(
     id="page-container",
     className="page-container",
     children=[
-        html.Div(
-            className="card controls-card",
-            children=[
-                html.Div(
-                    className="header-flex",
-                    children=[
-                        html.Div(
-                            children=[
-                                html.H2(
-                                    "Dashboard – Sentimento de Notícias x Ibovespa",
-                                    className="title-main",
-                                ),
-                                html.P(
-                                    "Período oficial 2018-01-02 a 2024-12-31 • USP",
-                                    className="title-sub",
-                                ),
-                            ]
-                        ),
-                        html.Div(
-                            className="export-toggle",
-                            children=[
-                                dcc.Checklist(
-                                    id="export-toggle",
-                                    options=[{"label": "Modo Exportação", "value": "export"}],
-                                    value=[],
-                                    inline=True,
-                                )
-                            ],
-                        ),
-                    ],
-                ),
-                html.Div(
-                    className="controls-bar",
-                    children=[
-                        html.Div(
-                            children=[
-                                html.Label("Período de Análise"),
-                                dcc.DatePickerRange(
-                                    id="date-range",
-                                    min_date_allowed=DATE_MIN,
-                                    max_date_allowed=DATE_MAX,
-                                    start_date=DEFAULT_START,
-                                    end_date=DEFAULT_END,
-                                    display_format="YYYY-MM-DD",
-                                ),
-                            ]
-                        ),
-                        html.Div(
-                            children=[
-                                html.Label("Modelo"),
-                                dcc.Dropdown(
-                                    id="model-filter",
-                                    options=[{"label": m, "value": m} for m in MODEL_OPTIONS],
-                                    value=MODEL_DEFAULT_SELECTION,
-                                    multi=True,
-                                    placeholder="Escolha um ou mais modelos",
-                                    clearable=False,
-                                ),
-                            ]
-                        ),
-                        html.Div(
-                            children=[
-                                html.Label("Métrica"),
-                                dcc.Dropdown(
-                                    id="metric-filter",
-                                    options=METRIC_OPTIONS,
-                                    value="auc",
-                                    clearable=False,
-                                ),
-                            ]
-                        ),
-                    ],
-                ),
-                html.Div(id="overview-kpis", className="kpi-grid"),
-                html.Div(
-                    id="active-filters-indicator",
-                    className="indicator-bar",
-                    style={"marginTop": "8px"},
-                ),
-                html.Div(id="ui-last-trigger", className="last-trigger"),
-                html.Div(
-                    className="interpret-block",
-                    children=[
-                        html.Strong("Como interpretar:"),
-                        html.Ul(
-                            [
-                                html.Li(
-                                    "Período padrão = interseção das séries para evitar gráficos vazios."
-                                ),
-                                html.Li(
-                                    "Controles acima afetam todos os 8 gráficos (datas, modelo único, métrica)."
-                                ),
-                                html.Li(
-                                    "Modo Exportação oculta o cabeçalho/controles e amplia os gráficos para recorte."
-                                ),
-                            ]
-                        ),
-                    ],
-                ),
-            ],
-        ),
-        html.Div(
-            className="grid-two",
-            children=[
-                html.Div(
-                    className="card",
-                    children=[
-                        html.H3("Figura 1 – Ibovespa com Eventos"),
-                        dcc.Graph(
-                            id="ibov-graph",
-                            config=PLOTLY_CONFIG,
-                            className="dash-graph",
-                            style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
-                        ),
-                        html.Div(id="ibov-meta", className="figure-meta"),
-                    ],
-                ),
-                html.Div(
-                    className="card figure-card",
-                    children=[
-                        html.H3("Figura 2 – Sentimento Médio Diário"),
-                        dcc.Graph(
-                            id="sentiment-graph",
-                            config=PLOTLY_CONFIG,
-                            className="dash-graph",
-                            style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
-                        ),
-                        html.Div(id="sentiment-meta", className="figure-meta"),
-                    ],
-                ),
-            ],
-        ),
-        html.Div(
-            className="card figure-card",
-            children=[
-                html.Div(
-                    style={
-                        "display": "flex",
-                        "justifyContent": "space-between",
-                        "alignItems": "center",
-                    },
-                    children=[
-                        html.H3("Figura 3 – Comparativo de Modelos", style={"margin": 0}),
-                        html.Span(id="metric-badge", className="badge"),
-                    ],
-                ),
-                dcc.Graph(
-                    id="model-comparison-graph",
-                    config=PLOTLY_CONFIG,
-                    className="dash-graph",
-                    style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
-                ),
-                html.Div(id="comparison-meta", className="figure-meta"),
-                html.Hr(),
-                html.H4("Tabela de Métricas"),
-                dash_table.DataTable(
-                    id="model-table",
-                    columns=[
-                        {"name": "Modelo", "id": "model"},
-                        {"name": "Dataset", "id": "dataset"},
-                        {
-                            "name": "AUC",
-                            "id": "auc",
-                            "type": "numeric",
-                            "format": {"specifier": ".3f"},
-                        },
-                        {
-                            "name": "MDA",
-                            "id": "mda",
-                            "type": "numeric",
-                            "format": {"specifier": ".3f"},
-                        },
-                        {"name": "Estratégia", "id": "strategy"},
-                        {
-                            "name": "CAGR",
-                            "id": "cagr",
-                            "type": "numeric",
-                            "format": {"specifier": "+.2%"},
-                        },
-                        {
-                            "name": "Sharpe",
-                            "id": "sharpe",
-                            "type": "numeric",
-                            "format": {"specifier": ".2f"},
-                        },
-                    ],
-                    data=[],
-                    sort_action="native",
-                    filter_action="native",
-                    page_size=10,
-                    style_table={"overflowX": "auto"},
-                    style_header={
-                        "backgroundColor": "#1f2933",
-                        "color": "white",
-                        "fontWeight": "bold",
-                        "textAlign": "center",
-                    },
-                    style_cell={
-                        "textAlign": "center",
-                        "padding": "10px",
-                    },
-                    style_data_conditional=[
-                        {"if": {"row_index": 0}, "backgroundColor": "#e8f5e9", "fontWeight": "600"}
-                    ],
-                ),
-            ],
-        ),
-        html.Div(
-            className="grid-two",
-            children=[
-                html.Div(
-                    className="card figure-card",
-                    children=[
-                        html.H3("Figura 4 – Dispersão Sentimento x Retorno Diário"),
-                        dcc.Graph(
-                            id="scatter-graph",
-                            config=PLOTLY_CONFIG,
-                            className="dash-graph",
-                            style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
-                        ),
-                        html.Div(id="scatter-meta", className="figure-meta"),
-                    ],
-                ),
-                html.Div(
-                    className="card figure-card",
-                    children=[
-                        html.H3("Figura 5 – Correlação Móvel (60d/90d)"),
-                        dcc.Graph(
-                            id="rolling-corr-graph",
-                            config=PLOTLY_CONFIG,
-                            className="dash-graph",
-                            style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
-                        ),
-                        html.Div(id="rolling-meta", className="figure-meta"),
-                    ],
-                ),
-            ],
-        ),
-        html.Div(
-            className="card figure-card",
-            children=[
-                html.H3("Figura 6 – Distribuição do Sentimento"),
-                dcc.Graph(
-                    id="sentiment-dist-graph",
-                    config=PLOTLY_CONFIG,
-                    className="dash-graph",
-                    style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
-                ),
-                html.Div(id="dist-meta", className="figure-meta"),
-            ],
-        ),
-        html.Div(
-            className="grid-two",
-            children=[
-                html.Div(
-                    className="card figure-card",
-                    children=[
-                        html.H3("Figura 7 – Latência por Fonte/Daypart"),
-                        dcc.Graph(
-                            id="latency-graph",
-                            config=PLOTLY_CONFIG,
-                            className="dash-graph",
-                            style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
-                        ),
-                        html.Div(id="latency-meta", className="figure-meta"),
-                    ],
-                ),
-                html.Div(
-                    className="card figure-card",
-                    children=[
-                        html.H3("Figura 8 – Curva de Backtest"),
-                        dcc.Graph(
-                            id="backtest-graph",
-                            config=PLOTLY_CONFIG,
-                            className="dash-graph",
-                            style={"height": f"{H_NORMAL}px", "flex": "1 1 auto"},
-                        ),
-                        html.Div(id="backtest-meta", className="figure-meta"),
-                    ],
-                ),
-            ],
-        ),
+        _build_header_and_controls_section(),
+        _build_figures_row_1_2(),
+        _build_figure_3_and_table(),
+        _build_figures_row_4_5(),
+        _build_figure_6(),
+        _build_figures_row_7_8(),
     ],
 )
 
@@ -823,6 +762,408 @@ app.clientside_callback(
     Input("metric-filter", "value"),
     Input("export-toggle", "value"),
 )
+def _build_ibov_events_figure(ibov_filtered, event_filtered, graph_height):
+    ibov_fig = go.Figure()
+    if not ibov_filtered.empty:
+        ibov_fig.add_trace(
+            go.Scatter(
+                x=ibov_filtered["day"],
+                y=ibov_filtered["close"],
+                mode="lines",
+                name="Ibovespa",
+                line=dict(color="#1f77b4", width=2.5),
+            )
+        )
+    if not event_filtered.empty:
+        ibov_fig.add_trace(
+            go.Scatter(
+                x=event_filtered["event_day"],
+                y=[ibov_filtered["close"].median()] * len(event_filtered)
+                if not ibov_filtered.empty
+                else event_filtered.index,
+                mode="markers",
+                marker=dict(size=10, color="red", symbol="triangle-up"),
+                name="Eventos",
+                text=event_filtered["event_name"]
+                if "event_name" in event_filtered.columns
+                else event_filtered["fonte"]
+                if "fonte" in event_filtered.columns
+                else event_filtered.index.astype(str),
+                hovertemplate="%{text} - %{x|%Y-%m-%d}",
+            )
+        )
+    if ibov_fig.data:
+        ibov_fig.update_layout(
+            xaxis_title="Data",
+            yaxis_title="Preço do Ibovespa (pontos)",
+            hovermode="x unified",
+            template="plotly_white",
+            font=dict(size=14),
+            xaxis=dict(tickformat="%b %d\n%Y", showgrid=True, gridcolor="rgba(0,0,0,0.08)"),
+            yaxis=dict(showgrid=True, gridcolor="rgba(0,0,0,0.08)", tickformat=",.0f"),
+            margin=MARGIN_BASE,
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+            height=graph_height,
+            title=None,
+        )
+    else:
+        ibov_fig = _placeholder_fig(
+            "Ibovespa com Eventos", "Sem dados no intervalo selecionado; ajuste o período."
+        )
+        ibov_fig.update_layout(height=graph_height)
+    return ibov_fig
+
+
+def _build_sentiment_figure(sentiment_filtered, graph_height):
+    sentiment_fig = go.Figure()
+    if not sentiment_filtered.empty:
+        sentiment_fig.add_trace(
+            go.Scatter(
+                x=sentiment_filtered["day"],
+                y=sentiment_filtered["sentiment"],
+                mode="lines",
+                fill="tozeroy",
+                name="Sentimento",
+                line=dict(color="#666", width=2),
+                fillcolor="rgba(100, 100, 100, 0.2)",
+            )
+        )
+        sentiment_fig.add_hline(y=0, line_dash="dash", line_color="rgba(0,0,0,0.3)", line_width=1)
+    if sentiment_fig.data:
+        sentiment_fig.update_layout(
+            xaxis_title="Data",
+            yaxis_title="Sentimento (escala -1 a +1)",
+            hovermode="x unified",
+            template="plotly_white",
+            font=dict(size=14),
+            xaxis=dict(tickformat="%b %d\n%Y", showgrid=True, gridcolor="rgba(0,0,0,0.08)"),
+            yaxis=dict(
+                showgrid=True,
+                gridcolor="rgba(0,0,0,0.08)",
+                zeroline=True,
+                zerolinecolor="rgba(0,0,0,0.3)",
+                zerolinewidth=2,
+            ),
+            margin=MARGIN_BASE,
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+            height=graph_height,
+            title=None,
+        )
+    else:
+        sentiment_fig = _placeholder_fig(
+            "Sentimento Médio Diário", "Sem dados no intervalo selecionado; ajuste o período."
+        )
+        sentiment_fig.update_layout(height=graph_height)
+    return sentiment_fig
+
+
+def _build_comparison_figure_and_table(
+    base_df, selected_models, metric, active_model, graph_height
+):
+    comparison_fig = go.Figure()
+    comparison_meta = _meta_text(
+        "results_16_models_tfidf.json + 18_backtest_results.csv", base_df, None, "Modelos"
+    )
+    backtest_common_df = pd.DataFrame()
+    display_df_for_bars = base_df
+    common_strategy = None
+    if metric == "sharpe":
+        # força comparação justa logreg_l2 vs rf_200 sempre com estratégia comum
+        anchor_models = [m for m in COMPARE_MODELS_ANCHOR if m in MODEL_OPTIONS]
+        comparison_models = [m for m in selected_models if m in anchor_models] or anchor_models
+        common_strategy, common_set = choose_common_strategy(
+            BACKTEST_RESULTS_DF.loc[
+                (BACKTEST_RESULTS_DF.get("dataset", "backtest_daily") == "backtest_daily")
+                & (BACKTEST_RESULTS_DF["model"].isin(comparison_models))
+            ],
+            comparison_models,
+        )
+        if common_strategy:
+            mask_common = (
+                (BACKTEST_RESULTS_DF["model"].isin(comparison_models))
+                & (BACKTEST_RESULTS_DF["strategy"] == common_strategy)
+                & (BACKTEST_RESULTS_DF.get("dataset", "backtest_daily") == "backtest_daily")
+            )
+            backtest_common_df = BACKTEST_RESULTS_DF.loc[mask_common].copy()
+            if not backtest_common_df.empty:
+                print(
+                    backtest_common_df[["model", "strategy", "cagr", "sharpe"]].to_string(
+                        index=False
+                    )
+                )
+            display_df_for_bars = backtest_common_df
+        else:
+            comparison_fig = _placeholder_fig(
+                "Comparativo de Modelos",
+                "Sem estratégia comum entre logreg_l2 e rf_200 em backtest_daily; recalcule o backtest.",
+            )
+            comparison_fig.update_layout(height=graph_height)
+            display_df_for_bars = pd.DataFrame()
+    table_df_display = (
+        base_df
+        if metric != "sharpe"
+        else pd.concat(
+            [base_df.loc[base_df["dataset"] != "backtest_daily"], backtest_common_df],
+            ignore_index=True,
+        )
+    )
+    if metric == "sharpe":
+        comparison_meta = f"{comparison_meta} • Estratégia (comparação): {common_strategy or '—'}"
+    best_model_name = None
+    best_metric_val = None
+    metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
+    if (
+        metric in {"auc", "mda", "sharpe"}
+        and not display_df_for_bars.empty
+        and metric in display_df_for_bars.columns
+    ):
+        table_df_sorted = display_df_for_bars.dropna(subset=[metric]).sort_values(
+            metric, ascending=False
+        )
+        if not table_df_sorted.empty:
+            best_model_name = table_df_sorted.iloc[0]["model"]
+            best_metric_val = table_df_sorted.iloc[0][metric]
+            colors = []
+            text_values = [
+                f"{v:.3f}" if metric in {"auc", "mda"} else f"{v:.2f}"
+                for v in table_df_sorted[metric]
+            ]
+            outlines = []
+            for model in table_df_sorted["model"]:
+                base_color = "#3498db"
+                outline_color = "#2980b9"
+                if model == best_model_name:
+                    base_color = "#2ecc71"
+                    outline_color = "#27ae60"
+                if active_model and model == active_model:
+                    outline_color = "#fcb421"
+                colors.append(base_color)
+                outlines.append(outline_color)
+            comparison_fig.add_trace(
+                go.Bar(
+                    x=table_df_sorted["model"],
+                    y=table_df_sorted[metric],
+                    text=text_values,
+                    textposition="outside",
+                    name=metric_labels.get(metric, metric.upper()),
+                    marker=dict(
+                        color=colors,
+                        line=dict(color=outlines, width=2.5),
+                    ),
+                )
+            )
+    if comparison_fig.data:
+        comparison_fig.update_layout(
+            xaxis_title="Modelos",
+            yaxis_title=metric.upper(),
+            template="plotly_white",
+            hovermode="x",
+            uniformtext_minsize=10,
+            uniformtext_mode="hide",
+            margin=MARGIN_BASE,
+            font=dict(size=14),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+            height=graph_height,
+            title=None,
+        )
+    else:
+        comparison_fig = _placeholder_fig(
+            "Comparativo de Modelos",
+            "Sem dados no intervalo selecionado; ajuste o período ou modelo.",
+        )
+        comparison_fig.update_layout(height=graph_height)
+    if metric in {"auc", "mda", "sharpe"} and metric in table_df_display.columns:
+        table_df_display = table_df_display.sort_values(metric, ascending=False, na_position="last")
+    table_df_display = table_df_display.fillna("—")
+    if metric == "sharpe":
+        if COMMON_STRATEGY:
+            comparison_meta = f"{comparison_meta} | Estratégia comparada: {COMMON_STRATEGY}"
+        else:
+            comparison_meta = f"{comparison_meta} | Estratégia comparada: (nenhuma disponível)"
+    return comparison_fig, comparison_meta, table_df_display, best_model_name, best_metric_val
+
+
+def _compute_sentiment_return_merge(sentiment_filtered, ibov_filtered):
+    merged_sr = (
+        sentiment_filtered.merge(ibov_filtered[["day", "return"]], on="day", how="left")
+        if not sentiment_filtered.empty and not ibov_filtered.empty
+        else pd.DataFrame()
+    )
+    merged_sr = merged_sr.dropna(subset=["return"]) if not merged_sr.empty else merged_sr
+    return merged_sr
+
+
+def _build_scatter_figure(merged_sr, graph_height):
+    scatter_fig = go.Figure()
+    if not merged_sr.empty:
+        corr = merged_sr["sentiment"].corr(merged_sr["return"])
+        scatter_fig.add_trace(
+            go.Scatter(
+                x=merged_sr["sentiment"],
+                y=merged_sr["return"],
+                mode="markers",
+                marker=dict(color="#1f77b4", size=6, opacity=0.6),
+                name="Sentimento x Retorno",
+            )
+        )
+        scatter_fig.add_annotation(
+            text=f"Corr(Pearson)={corr:.3f} | N={len(merged_sr)}",
+            xref="paper",
+            yref="paper",
+            x=0,
+            y=1.1,
+            showarrow=False,
+        )
+    if scatter_fig.data:
+        scatter_fig.update_layout(
+            title=None,
+            xaxis_title="Sentimento",
+            yaxis_title="Retorno diário",
+            template="plotly_white",
+            height=graph_height,
+            margin=MARGIN_BASE,
+            font=dict(size=14),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+        )
+    else:
+        scatter_fig = _placeholder_fig(
+            "Dispersão Sentimento x Retorno diário",
+            "Sem dados no intervalo selecionado; ajuste o período.",
+        )
+        scatter_fig.update_layout(height=graph_height)
+    return scatter_fig
+
+
+def _build_rolling_corr_figure(merged_sr, graph_height):
+    rolling_fig = go.Figure()
+    if not merged_sr.empty:
+        merged_sr = merged_sr.sort_values("day")
+        for window in [60, 90]:
+            merged_sr[f"corr_{window}d"] = (
+                merged_sr["sentiment"].rolling(window).corr(merged_sr["return"])
+            )
+            rolling_fig.add_trace(
+                go.Scatter(
+                    x=merged_sr["day"],
+                    y=merged_sr[f"corr_{window}d"],
+                    mode="lines",
+                    name=f"Corr {window}d",
+                )
+            )
+    if rolling_fig.data:
+        rolling_fig.update_layout(
+            title=None,
+            xaxis_title="Data",
+            yaxis_title="Correlação",
+            template="plotly_white",
+            height=graph_height,
+            margin=MARGIN_BASE,
+            font=dict(size=14),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+        )
+    else:
+        rolling_fig = _placeholder_fig(
+            "Correlação móvel", "Sem dados no intervalo selecionado; ajuste o período."
+        )
+        rolling_fig.update_layout(height=graph_height)
+    return rolling_fig, merged_sr
+
+
+def _build_distribution_figure(sentiment_filtered, graph_height):
+    dist_fig = go.Figure()
+    if not sentiment_filtered.empty:
+        dist_fig.add_trace(
+            go.Histogram(
+                x=sentiment_filtered["sentiment"], nbinsx=40, name="Histograma", opacity=0.6
+            )
+        )
+        dist_fig.add_trace(
+            go.Box(
+                x=sentiment_filtered["sentiment"],
+                name="Boxplot",
+                boxpoints="outliers",
+                marker_color="#e74c3c",
+            )
+        )
+    if dist_fig.data:
+        dist_fig.update_layout(
+            title=None,
+            xaxis_title="Sentimento",
+            template="plotly_white",
+            barmode="overlay",
+            height=graph_height,
+            margin=MARGIN_BASE,
+            font=dict(size=14),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+        )
+    else:
+        dist_fig = _placeholder_fig(
+            "Distribuição do Sentimento", "Sem dados de sentimento para distribuir"
+        )
+        dist_fig.update_layout(height=graph_height)
+    return dist_fig
+
+
+def _build_latency_figure(event_filtered, graph_height):
+    if not event_filtered.empty and "fonte" in event_filtered.columns:
+        latency_fig = go.Figure()
+        latency_fig.add_trace(
+            go.Bar(
+                x=event_filtered["fonte"],
+                y=event_filtered.get("car_max_abs", 0),
+                name="Latência por fonte",
+            )
+        )
+        latency_fig.update_layout(
+            title=None,
+            xaxis_title="Fonte",
+            yaxis_title="Latência / CAR",
+            template="plotly_white",
+            height=graph_height,
+            margin=MARGIN_BASE,
+            font=dict(size=14),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+        )
+    else:
+        latency_fig = _placeholder_fig(
+            "Latência",
+            "Sem eventos de latência no período (arquivo vazio ou não gerado). Para gerar: executar notebook 11 / pipeline de latência.",
+        )
+        latency_fig.update_layout(height=graph_height)
+    return latency_fig
+
+
+def _build_backtest_figure(backtest_filtered, selected_models, graph_height):
+    backtest_fig = go.Figure()
+    if selected_models and "model" in backtest_filtered.columns:
+        backtest_filtered = backtest_filtered[backtest_filtered["model"].isin(selected_models)]
+    if not backtest_filtered.empty:
+        for (model, strategy), grp in backtest_filtered.groupby(["model", "strategy"]):
+            backtest_fig.add_trace(
+                go.Scatter(
+                    x=grp["day"],
+                    y=grp["equity"],
+                    mode="lines",
+                    name=f"{MODEL_DISPLAY_NAMES.get(model, model)} | {strategy}",
+                )
+            )
+    if backtest_fig.data:
+        backtest_fig.update_layout(
+            title=None,
+            xaxis_title="Data",
+            yaxis_title="Equity",
+            template="plotly_white",
+            height=graph_height,
+            margin=MARGIN_BASE,
+            font=dict(size=14),
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+        )
+    else:
+        backtest_fig = _placeholder_fig("Curva de Backtest", "Sem curva de backtest disponível")
+        backtest_fig.update_layout(height=graph_height)
+    return backtest_fig, backtest_filtered
+
+
 def update_dashboard(start_date, end_date, selected_model, metric, export_toggle):
     try:
         selected_models = (
@@ -850,385 +1191,31 @@ def update_dashboard(start_date, end_date, selected_model, metric, export_toggle
         _log_df("Backtest filtrado", backtest_filtered, "day")
         _log_df("Latência filtrada", event_filtered, "event_day")
 
-        ibov_fig = go.Figure()
-        if not ibov_filtered.empty:
-            ibov_fig.add_trace(
-                go.Scatter(
-                    x=ibov_filtered["day"],
-                    y=ibov_filtered["close"],
-                    mode="lines",
-                    name="Ibovespa",
-                    line=dict(color="#1f77b4", width=2.5),
-                )
-            )
-        if not event_filtered.empty:
-            ibov_fig.add_trace(
-                go.Scatter(
-                    x=event_filtered["event_day"],
-                    y=[ibov_filtered["close"].median()] * len(event_filtered)
-                    if not ibov_filtered.empty
-                    else event_filtered.index,
-                    mode="markers",
-                    marker=dict(size=10, color="red", symbol="triangle-up"),
-                    name="Eventos",
-                    text=event_filtered["event_name"]
-                    if "event_name" in event_filtered.columns
-                    else event_filtered["fonte"]
-                    if "fonte" in event_filtered.columns
-                    else event_filtered.index.astype(str),
-                    hovertemplate="%{text} - %{x|%Y-%m-%d}",
-                )
-            )
-        if ibov_fig.data:
-            ibov_fig.update_layout(
-                xaxis_title="Data",
-                yaxis_title="Preço do Ibovespa (pontos)",
-                hovermode="x unified",
-                template="plotly_white",
-                font=dict(size=14),
-                xaxis=dict(tickformat="%b %d\n%Y", showgrid=True, gridcolor="rgba(0,0,0,0.08)"),
-                yaxis=dict(showgrid=True, gridcolor="rgba(0,0,0,0.08)", tickformat=",.0f"),
-                margin=MARGIN_BASE,
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
-                height=graph_height,
-                title=None,
-            )
-        else:
-            ibov_fig = _placeholder_fig(
-                "Ibovespa com Eventos", "Sem dados no intervalo selecionado; ajuste o período."
-            )
-            ibov_fig.update_layout(height=graph_height)
+        ibov_fig = _build_ibov_events_figure(ibov_filtered, event_filtered, graph_height)
+        sentiment_fig = _build_sentiment_figure(sentiment_filtered, graph_height)
 
-        sentiment_fig = go.Figure()
-        if not sentiment_filtered.empty:
-            sentiment_fig.add_trace(
-                go.Scatter(
-                    x=sentiment_filtered["day"],
-                    y=sentiment_filtered["sentiment"],
-                    mode="lines",
-                    fill="tozeroy",
-                    name="Sentimento",
-                    line=dict(color="#666", width=2),
-                    fillcolor="rgba(100, 100, 100, 0.2)",
-                )
-            )
-            sentiment_fig.add_hline(
-                y=0, line_dash="dash", line_color="rgba(0,0,0,0.3)", line_width=1
-            )
-        if sentiment_fig.data:
-            sentiment_fig.update_layout(
-                xaxis_title="Data",
-                yaxis_title="Sentimento (escala -1 a +1)",
-                hovermode="x unified",
-                template="plotly_white",
-                font=dict(size=14),
-                xaxis=dict(tickformat="%b %d\n%Y", showgrid=True, gridcolor="rgba(0,0,0,0.08)"),
-                yaxis=dict(
-                    showgrid=True,
-                    gridcolor="rgba(0,0,0,0.08)",
-                    zeroline=True,
-                    zerolinecolor="rgba(0,0,0,0.3)",
-                    zerolinewidth=2,
-                ),
-                margin=MARGIN_BASE,
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
-                height=graph_height,
-                title=None,
-            )
-        else:
-            sentiment_fig = _placeholder_fig(
-                "Sentimento Médio Diário", "Sem dados no intervalo selecionado; ajuste o período."
-            )
-            sentiment_fig.update_layout(height=graph_height)
-
-        comparison_fig = go.Figure()
         base_df = RESULTS_DF.copy()
         if selected_models:
             base_df = base_df[base_df["model"].isin(selected_models)]
-        comparison_meta = _meta_text(
-            "results_16_models_tfidf.json + 18_backtest_results.csv", base_df, None, "Modelos"
+        (
+            comparison_fig,
+            comparison_meta,
+            table_df_display,
+            best_model_name,
+            best_metric_val,
+        ) = _build_comparison_figure_and_table(
+            base_df, selected_models, metric, active_model, graph_height
         )
-        backtest_common_df = pd.DataFrame()
-        display_df_for_bars = base_df
-        if metric == "sharpe":
-            # força comparação justa logreg_l2 vs rf_200 sempre com estratégia comum
-            anchor_models = [m for m in COMPARE_MODELS_ANCHOR if m in MODEL_OPTIONS]
-            comparison_models = [m for m in selected_models if m in anchor_models] or anchor_models
-            common_strategy, common_set = choose_common_strategy(
-                BACKTEST_RESULTS_DF.loc[
-                    (BACKTEST_RESULTS_DF.get("dataset", "backtest_daily") == "backtest_daily")
-                    & (BACKTEST_RESULTS_DF["model"].isin(comparison_models))
-                ],
-                comparison_models,
-            )
-            if common_strategy:
-                mask_common = (
-                    (BACKTEST_RESULTS_DF["model"].isin(comparison_models))
-                    & (BACKTEST_RESULTS_DF["strategy"] == common_strategy)
-                    & (BACKTEST_RESULTS_DF.get("dataset", "backtest_daily") == "backtest_daily")
-                )
-                backtest_common_df = BACKTEST_RESULTS_DF.loc[mask_common].copy()
-                if not backtest_common_df.empty:
-                    print(
-                        backtest_common_df[["model", "strategy", "cagr", "sharpe"]].to_string(
-                            index=False
-                        )
-                    )
-                display_df_for_bars = backtest_common_df
-            else:
-                comparison_fig = _placeholder_fig(
-                    "Comparativo de Modelos",
-                    "Sem estratégia comum entre logreg_l2 e rf_200 em backtest_daily; recalcule o backtest.",
-                )
-                comparison_fig.update_layout(height=graph_height)
-                display_df_for_bars = pd.DataFrame()
-        table_df_display = (
-            base_df
-            if metric != "sharpe"
-            else pd.concat(
-                [base_df.loc[base_df["dataset"] != "backtest_daily"], backtest_common_df],
-                ignore_index=True,
-            )
+
+        merged_sr = _compute_sentiment_return_merge(sentiment_filtered, ibov_filtered)
+        scatter_fig = _build_scatter_figure(merged_sr, graph_height)
+        rolling_fig, merged_sr = _build_rolling_corr_figure(merged_sr, graph_height)
+
+        dist_fig = _build_distribution_figure(sentiment_filtered, graph_height)
+        latency_fig = _build_latency_figure(event_filtered, graph_height)
+        backtest_fig, backtest_filtered = _build_backtest_figure(
+            backtest_filtered, selected_models, graph_height
         )
-        if metric == "sharpe":
-            comparison_meta = (
-                f"{comparison_meta} • Estratégia (comparação): {common_strategy or '—'}"
-            )
-        best_model_name = None
-        best_metric_val = None
-        metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
-        if (
-            metric in {"auc", "mda", "sharpe"}
-            and not display_df_for_bars.empty
-            and metric in display_df_for_bars.columns
-        ):
-            table_df_sorted = display_df_for_bars.dropna(subset=[metric]).sort_values(
-                metric, ascending=False
-            )
-            if not table_df_sorted.empty:
-                best_model_name = table_df_sorted.iloc[0]["model"]
-                best_metric_val = table_df_sorted.iloc[0][metric]
-                colors = []
-                text_values = [
-                    f"{v:.3f}" if metric in {"auc", "mda"} else f"{v:.2f}"
-                    for v in table_df_sorted[metric]
-                ]
-                outlines = []
-                for model in table_df_sorted["model"]:
-                    base_color = "#3498db"
-                    outline_color = "#2980b9"
-                    if model == best_model_name:
-                        base_color = "#2ecc71"
-                        outline_color = "#27ae60"
-                    if active_model and model == active_model:
-                        outline_color = "#fcb421"
-                    colors.append(base_color)
-                    outlines.append(outline_color)
-                comparison_fig.add_trace(
-                    go.Bar(
-                        x=table_df_sorted["model"],
-                        y=table_df_sorted[metric],
-                        text=text_values,
-                        textposition="outside",
-                        name=metric_labels.get(metric, metric.upper()),
-                        marker=dict(
-                            color=colors,
-                            line=dict(color=outlines, width=2.5),
-                        ),
-                    )
-                )
-        if comparison_fig.data:
-            comparison_fig.update_layout(
-                xaxis_title="Modelos",
-                yaxis_title=metric.upper(),
-                template="plotly_white",
-                hovermode="x",
-                uniformtext_minsize=10,
-                uniformtext_mode="hide",
-                margin=MARGIN_BASE,
-                font=dict(size=14),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
-                height=graph_height,
-                title=None,
-            )
-        else:
-            comparison_fig = _placeholder_fig(
-                "Comparativo de Modelos",
-                "Sem dados no intervalo selecionado; ajuste o período ou modelo.",
-            )
-            comparison_fig.update_layout(height=graph_height)
-        if metric in {"auc", "mda", "sharpe"} and metric in table_df_display.columns:
-            table_df_display = table_df_display.sort_values(
-                metric, ascending=False, na_position="last"
-            )
-        table_df_display = table_df_display.fillna("—")
-        if metric == "sharpe":
-            if COMMON_STRATEGY:
-                comparison_meta = f"{comparison_meta} | Estratégia comparada: {COMMON_STRATEGY}"
-            else:
-                comparison_meta = f"{comparison_meta} | Estratégia comparada: (nenhuma disponível)"
-
-        scatter_fig = go.Figure()
-        merged_sr = (
-            sentiment_filtered.merge(ibov_filtered[["day", "return"]], on="day", how="left")
-            if not sentiment_filtered.empty and not ibov_filtered.empty
-            else pd.DataFrame()
-        )
-        merged_sr = merged_sr.dropna(subset=["return"]) if not merged_sr.empty else merged_sr
-        if not merged_sr.empty:
-            corr = merged_sr["sentiment"].corr(merged_sr["return"])
-            scatter_fig.add_trace(
-                go.Scatter(
-                    x=merged_sr["sentiment"],
-                    y=merged_sr["return"],
-                    mode="markers",
-                    marker=dict(color="#1f77b4", size=6, opacity=0.6),
-                    name="Sentimento x Retorno",
-                )
-            )
-            scatter_fig.add_annotation(
-                text=f"Corr(Pearson)={corr:.3f} | N={len(merged_sr)}",
-                xref="paper",
-                yref="paper",
-                x=0,
-                y=1.1,
-                showarrow=False,
-            )
-        if scatter_fig.data:
-            scatter_fig.update_layout(
-                title=None,
-                xaxis_title="Sentimento",
-                yaxis_title="Retorno diário",
-                template="plotly_white",
-                height=graph_height,
-                margin=MARGIN_BASE,
-                font=dict(size=14),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
-            )
-        else:
-            scatter_fig = _placeholder_fig(
-                "Dispersão Sentimento x Retorno diário",
-                "Sem dados no intervalo selecionado; ajuste o período.",
-            )
-            scatter_fig.update_layout(height=graph_height)
-
-        rolling_fig = go.Figure()
-        if not merged_sr.empty:
-            merged_sr = merged_sr.sort_values("day")
-            for window in [60, 90]:
-                merged_sr[f"corr_{window}d"] = (
-                    merged_sr["sentiment"].rolling(window).corr(merged_sr["return"])
-                )
-                rolling_fig.add_trace(
-                    go.Scatter(
-                        x=merged_sr["day"],
-                        y=merged_sr[f"corr_{window}d"],
-                        mode="lines",
-                        name=f"Corr {window}d",
-                    )
-                )
-        if rolling_fig.data:
-            rolling_fig.update_layout(
-                title=None,
-                xaxis_title="Data",
-                yaxis_title="Correlação",
-                template="plotly_white",
-                height=graph_height,
-                margin=MARGIN_BASE,
-                font=dict(size=14),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
-            )
-        else:
-            rolling_fig = _placeholder_fig(
-                "Correlação móvel", "Sem dados no intervalo selecionado; ajuste o período."
-            )
-            rolling_fig.update_layout(height=graph_height)
-
-        dist_fig = go.Figure()
-        if not sentiment_filtered.empty:
-            dist_fig.add_trace(
-                go.Histogram(
-                    x=sentiment_filtered["sentiment"], nbinsx=40, name="Histograma", opacity=0.6
-                )
-            )
-            dist_fig.add_trace(
-                go.Box(
-                    x=sentiment_filtered["sentiment"],
-                    name="Boxplot",
-                    boxpoints="outliers",
-                    marker_color="#e74c3c",
-                )
-            )
-        if dist_fig.data:
-            dist_fig.update_layout(
-                title=None,
-                xaxis_title="Sentimento",
-                template="plotly_white",
-                barmode="overlay",
-                height=graph_height,
-                margin=MARGIN_BASE,
-                font=dict(size=14),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
-            )
-        else:
-            dist_fig = _placeholder_fig(
-                "Distribuição do Sentimento", "Sem dados de sentimento para distribuir"
-            )
-            dist_fig.update_layout(height=graph_height)
-
-        if not event_filtered.empty and "fonte" in event_filtered.columns:
-            latency_fig = go.Figure()
-            latency_fig.add_trace(
-                go.Bar(
-                    x=event_filtered["fonte"],
-                    y=event_filtered.get("car_max_abs", 0),
-                    name="Latência por fonte",
-                )
-            )
-            latency_fig.update_layout(
-                title=None,
-                xaxis_title="Fonte",
-                yaxis_title="Latência / CAR",
-                template="plotly_white",
-                height=graph_height,
-                margin=MARGIN_BASE,
-                font=dict(size=14),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
-            )
-        else:
-            latency_fig = _placeholder_fig(
-                "Latência",
-                "Sem eventos de latência no período (arquivo vazio ou não gerado). Para gerar: executar notebook 11 / pipeline de latência.",
-            )
-            latency_fig.update_layout(height=graph_height)
-
-        backtest_fig = go.Figure()
-        if selected_models and "model" in backtest_filtered.columns:
-            backtest_filtered = backtest_filtered[backtest_filtered["model"].isin(selected_models)]
-        if not backtest_filtered.empty:
-            for (model, strategy), grp in backtest_filtered.groupby(["model", "strategy"]):
-                backtest_fig.add_trace(
-                    go.Scatter(
-                        x=grp["day"],
-                        y=grp["equity"],
-                        mode="lines",
-                        name=f"{MODEL_DISPLAY_NAMES.get(model, model)} | {strategy}",
-                    )
-                )
-        if backtest_fig.data:
-            backtest_fig.update_layout(
-                title=None,
-                xaxis_title="Data",
-                yaxis_title="Equity",
-                template="plotly_white",
-                height=graph_height,
-                margin=MARGIN_BASE,
-                font=dict(size=14),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
-            )
-        else:
-            backtest_fig = _placeholder_fig("Curva de Backtest", "Sem curva de backtest disponível")
-            backtest_fig.update_layout(height=graph_height)
 
         metric_labels = {"auc": "AUC", "mda": "MDA", "sharpe": "Sharpe Ratio"}
         days_count = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days + 1
