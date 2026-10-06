@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from tcc import reproduce
 from tcc.config import BASE_DIR_ENV, Settings, load_settings
 from tcc.datasets import IBOVESPA_FILE, TFIDF_INDEX_FILE, TFIDF_MATRIX_FILE, missing_inputs
 
@@ -28,3 +29,9 @@ def settings(tmp_path_factory: pytest.TempPathFactory) -> Settings:
     if missing:
         pytest.skip(f"Arquivos de entrada ausentes: {[str(path) for path in missing]}")
     return config
+
+
+@pytest.fixture(scope="session")
+def article_results(settings: Settings) -> reproduce.ArticleResults:
+    """Resultados do artigo recalculados uma vez por sessão de testes."""
+    return reproduce.compute_article(settings)

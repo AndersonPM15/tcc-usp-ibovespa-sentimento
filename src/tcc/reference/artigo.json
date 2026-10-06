@@ -1,0 +1,11 @@
+{
+  "fonte": "XXIX SemeAd (2026), artigo 160; valores completos dos arquivos de resultado da rodada do artigo",
+  "tabela_1": {"pregoes_ibovespa": 1737, "dias_com_sentimento": 1341, "intersecao": 1341},
+  "tabela_2": {
+    "logreg_l2": {"auc": 0.5015378221113882, "auc_low": 0.4739878216337317, "auc_high": 0.5319980068370906, "mda": 0.5025773195876289, "n_obs": 1552},
+    "rf_200": {"auc": 0.4912635078969243, "auc_low": 0.46285592310485124, "auc_high": 0.5211218602628767, "mda": 0.5115979381443299, "n_obs": 1552}
+  },
+  "figura_3_sharpe": {"logreg_l2": -0.15541758121670646, "rf_200": 0.2134549284542668},
+  "figura_4_pearson": -0.12740289189868295,
+  "figura_8_cagr": {"logreg_l2": -0.026479016125162458, "rf_200": 0.02216856378698573}
+}

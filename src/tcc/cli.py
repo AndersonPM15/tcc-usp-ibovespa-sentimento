@@ -6,7 +6,7 @@ import argparse
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
-from tcc import market
+from tcc import market, reproduce
 from tcc.config import Settings, load_settings
 from tcc.datasets import IBOVESPA_FILE
 
@@ -23,8 +23,21 @@ def _download_ibovespa(settings: Settings, _args: argparse.Namespace) -> None:
     )
 
 
+def _reproduce(settings: Settings, args: argparse.Namespace) -> None:
+    """Reproduz tabelas, figuras e verificações e compara com os números do artigo."""
+    checks = reproduce.run(settings, with_verifications=not args.skip_verifications)
+    for check in checks:
+        print(f"[{'OK' if check.ok else 'DIFERENTE'}] {check.item}: {check.detail}")
+    print(f"Tabelas e figuras: {settings.figures_dir}")
+    if not args.skip_verifications:
+        print(f"Verificações pós-submissão: {settings.verification_dir}")
+    if not all(check.ok for check in checks):
+        raise SystemExit("Algum número difere do artigo (ver linhas DIFERENTE acima).")
+
+
 COMMANDS: dict[str, tuple[str, Callable[[Settings, argparse.Namespace], None]]] = {
     "download-ibovespa": ("baixa o Ibovespa diário (02/01/2018 a 18/11/2025)", _download_ibovespa),
+    "reproduce": ("reproduz as Tabelas 1–4, as figuras e as verificações a–e", _reproduce),
 }
 
 
@@ -39,7 +52,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
     for name, (help_text, _) in COMMANDS.items():
-        subparsers.add_parser(name, help=help_text)
+        subparser = subparsers.add_parser(name, help=help_text)
+        if name == "reproduce":
+            subparser.add_argument(
+                "--skip-verifications",
+                action="store_true",
+                help="só o artigo, sem as verificações pós-submissão (mais rápido)",
+            )
     return parser
 
 

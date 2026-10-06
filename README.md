@@ -40,10 +40,10 @@ testes automáticos (ver [Reprodução](#reprodução)).
 
 | Resultado | Arquivo em `reports/figures/` | Cálculo no código |
 |---|---|---|
-| Tabela 1 (amostra) | `Tabela_intersecao_periodo.csv` | 1.737 pregões (2018–2024); 1.341 dias com sentimento |
-| Tabela 2 (AUC/MDA) | `Tabela_1_metricas.csv` | Notebook 16, sobre 1.552 dias fora da amostra (05/08/2019–17/11/2025). MDA = acurácia de (p ≥ 0,5). IC 95% por bootstrap i.i.d. (1.000 reamostragens, semente 42) |
-| Tabela 3 (backtest, cenário padrão) | `Tabela_3_metricas_extendidas.csv` | Compra se p ≥ quantil 0,90 de p no período inteiro; vende se p ≤ mediana; posição aplicada com 1 dia de defasagem (lag 0); custo de 0,0005 por turnover. Benchmark: buy-and-hold de 2018 a 2024 |
-| Tabela 4 (robustez) | `Tabela_2_robustez_backtest.csv` | Mesma regra, com quantis 0,90 e 0,95 e lags 0, 1 e 2 (defasagem efetiva = lag + 1) |
+| Tabela 1 (amostra) | `Tabela_1_amostra.csv` | 1.737 pregões (2018–2024); 1.341 dias com sentimento |
+| Tabela 2 (AUC/MDA) | `Tabela_2_auc_mda.csv` (valores completos em `Tabela_2_auc_mda_valores.csv`) | Notebook 16, sobre 1.552 dias fora da amostra (05/08/2019–17/11/2025). MDA = acurácia de (p ≥ 0,5). IC 95% por bootstrap i.i.d. (1.000 reamostragens, semente 42) |
+| Tabela 3 (backtest, cenário padrão) | `Tabela_3_backtest_padrao.csv` | Compra se p ≥ quantil 0,90 de p no período inteiro; vende se p ≤ mediana; posição aplicada com 1 dia de defasagem (lag 0); custo de 0,0005 por turnover. Benchmark: buy-and-hold de 2018 a 2024 |
+| Tabela 4 (robustez) | `Tabela_4_robustez_backtest.csv` | Mesma regra, com quantis 0,90 e 0,95 e lags 0, 1 e 2 (defasagem efetiva = lag + 1) |
 | Figura 1 | `Figura_1_ibov_eventos.png` | Eventos de sentimento extremo cujo \|CAR\| está no percentil 90 ou acima |
 | Figura 3 | `Figura_3_comparativo_modelos.png` | Sharpe da regra `long_only_60`: compra se p ≥ 0,60, vende se p ≤ 0,40, mantém entre os dois |
 | Figura 4 | `Figura_4_dispersao_sentimento_retorno.png` | Pearson entre o sentimento da Regressão Logística e o retorno do **mesmo dia** (D−1 → D) |
@@ -76,12 +76,12 @@ completo.
 
 ```bash
 python3.11 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements-dev.txt
+pip install --upgrade pip
 export TCC_USP_BASE=/caminho/para/TCC_USP                # pasta que contém data_processed/
 
-pytest                                                   # confere os números do artigo
-python scripts/export_tcc_figures.py --strategy long_only_60 --run_robustness   # regenera reports/figures
-python scripts/run_post_submission_checks.py             # verificações pós-submissão (reports/verificacao)
+pip install -e ".[dev]"                                  # instala o pacote tcc
+python -m tcc reproduce                                  # Tabelas 1–4, figuras e verificações a–e
+pytest                                                   # testes, incluindo a regressão do artigo
 ```
 
 O teste `tests/test_article_reproduction.py` confere as Tabelas 1 a 4, as Figuras 3, 4 e 8 e o
