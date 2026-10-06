@@ -1,0 +1,61 @@
+{
+  "files": [
+    {
+      "path": "data_processed/ibovespa_clean.csv",
+      "origin": "Yahoo Finance, ^BVSP sem ajuste (`python -m tcc download-ibovespa`)",
+      "used_by": "reproduce",
+      "date_column": "date",
+      "bytes": 169652,
+      "sha256": "5f996b2ec54545a1503f5772586e8e2cfa4c13b8f0f02fda5b87256be726e302",
+      "content_sha256": "d5a6ba96f52b2ad61ed12734a267a7810ff6e3e0552df5f72f73a7f261111552",
+      "rows": 1960,
+      "start": "2018-01-02",
+      "end": "2025-11-18"
+    },
+    {
+      "path": "data_processed/tfidf_daily_matrix.npz",
+      "origin": "TF-IDF diário das notícias limpas (`python -m tcc build-tfidf`)",
+      "used_by": "reproduce",
+      "date_column": null,
+      "bytes": 4698958,
+      "sha256": "f0d85034fe0bb9d891b25fd43ff2cc0a757e82f6b7aea16d6670336c45f443eb",
+      "content_sha256": "610a1fdfedbb5143412ddcb94fb1cc53d574ccc21ba5530848c11b14de2dfb69",
+      "rows": 2771,
+      "columns": 45473
+    },
+    {
+      "path": "data_processed/tfidf_daily_index.csv",
+      "origin": "dia de cada linha da matriz TF-IDF (`python -m tcc build-tfidf`)",
+      "used_by": "reproduce",
+      "date_column": "day",
+      "bytes": 46009,
+      "sha256": "eacd097fc4331b6d2a12d33623265485a9df5faf210eb18c442c6620cc564eb1",
+      "content_sha256": "0a9e48e83b9ec5c97e617b1893beb946efa53619f433691b597afb0c0403cf10",
+      "rows": 2771,
+      "start": "2018-01-02",
+      "end": "2025-11-19"
+    },
+    {
+      "path": "data_interim/news_clean_multisource.parquet",
+      "origin": "manchetes do GDELT deduplicadas (`python -m tcc clean-news`)",
+      "used_by": "build-tfidf",
+      "date_column": "date",
+      "bytes": 6062772,
+      "sha256": "fca98032d0b012bb26f7e293b19824a938dfce6dc374cc13c6cbf3e734f83c22",
+      "content_sha256": "b94a786816f27348af1786a954010938efece7d4b0fb65d24759cdbdb86214ee",
+      "rows": 91941,
+      "start": "2018-01-02",
+      "end": "2025-11-19"
+    },
+    {
+      "path": "data_raw/news_multisource.parquet",
+      "origin": "coleta do GDELT DOC 2.0 (`python -m tcc collect-news`)",
+      "used_by": "clean-news",
+      "date_column": "date",
+      "bytes": 8503620,
+      "sha256": null,
+      "content_sha256": null,
+      "observacao": "arquivo não disponível nesta máquina; rode python -m tcc manifest --write onde ele estiver"
+    }
+  ]
+}

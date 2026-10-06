@@ -152,7 +152,7 @@ no código e cobertos por teste:
 
 Os dados não são versionados (licenças das fontes de notícias). O manifesto
 [`data/MANIFEST.md`](data/MANIFEST.md) lista cada arquivo com origem, período, número de linhas
-e SHA-256; `python -m tcc manifest --check` confere a sua pasta. Para reproduzir o artigo
+e SHA-256; `python -m tcc manifest` confere a sua pasta. Para reproduzir o artigo
 bastam, em `data_processed/`:
 
 | Arquivo | Conteúdo | Como obter |

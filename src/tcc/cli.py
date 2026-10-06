@@ -15,7 +15,7 @@ from pathlib import Path
 import pandas as pd
 from scipy.sparse import save_npz
 
-from tcc import market, reproduce
+from tcc import manifest, market, reproduce
 from tcc.config import Settings, load_settings
 from tcc.datasets import (
     IBOVESPA_FILE,
@@ -26,6 +26,7 @@ from tcc.datasets import (
 )
 from tcc.news import etl, gdelt, text
 
+MANIFEST_JSON = Path("data/MANIFEST.json")
 COLLECTION_START = date(2018, 1, 2)
 COLLECTION_END = date(2025, 11, 19)
 CHECKPOINT_DAYS = 30
@@ -88,8 +89,39 @@ def _download_ibovespa(settings: Settings, _args: argparse.Namespace) -> None:
     )
 
 
+def _manifest(settings: Settings, args: argparse.Namespace) -> None:
+    """Confere a pasta dos dados contra o manifesto (ou o regrava com `--write`)."""
+    if args.write:
+        known = manifest.read_manifest(MANIFEST_JSON) if MANIFEST_JSON.exists() else []
+        entries = manifest.build_manifest(settings)
+        present = {entry["path"] for entry in entries}
+        # arquivos ausentes nesta máquina mantêm a descrição anterior
+        entries += [entry for entry in known if entry["path"] not in present]
+        order = [spec.path for spec in manifest.DATA_FILES]
+        entries.sort(key=lambda entry: order.index(entry["path"]))
+        manifest.write_manifest(entries, MANIFEST_JSON, MANIFEST_JSON.with_suffix(".md"))
+        print(f"Manifesto gravado: {MANIFEST_JSON} ({len(entries)} arquivos)")
+        return
+    problems = manifest.check_manifest(settings, manifest.read_manifest(MANIFEST_JSON))
+    for problem in problems:
+        print(f"[DIFERENTE] {problem}")
+    if problems:
+        raise SystemExit("A pasta dos dados não confere com o manifesto.")
+    print("Todos os arquivos conferem com o manifesto.")
+
+
+def _warn_about_inputs(settings: Settings) -> None:
+    """Avisa se alguma entrada da reprodução difere do manifesto (os números podem mudar)."""
+    if not MANIFEST_JSON.exists():
+        return
+    inputs = [e for e in manifest.read_manifest(MANIFEST_JSON) if e["used_by"] == "reproduce"]
+    for problem in manifest.check_manifest(settings, inputs):
+        print(f"[AVISO] entrada diferente do artigo — {problem}")
+
+
 def _reproduce(settings: Settings, args: argparse.Namespace) -> None:
     """Reproduz tabelas, figuras e verificações e compara com os números do artigo."""
+    _warn_about_inputs(settings)
     checks = reproduce.run(settings, with_verifications=not args.skip_verifications)
     for check in checks:
         print(f"[{'OK' if check.ok else 'DIFERENTE'}] {check.item}: {check.detail}")
@@ -107,6 +139,7 @@ COMMANDS: dict[str, tuple[str, Command]] = {
     "build-tfidf": ("gera a matriz TF-IDF diária a partir das notícias limpas", _build_tfidf),
     "download-ibovespa": ("baixa o Ibovespa diário (02/01/2018 a 18/11/2025)", _download_ibovespa),
     "reproduce": ("reproduz as Tabelas 1–4, as figuras e as verificações a–e", _reproduce),
+    "manifest": ("confere os dados contra data/MANIFEST.json (--write regrava)", _manifest),
 }
 
 
@@ -129,6 +162,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="só o artigo, sem as verificações pós-submissão (mais rápido)",
     )
+    commands["manifest"].add_argument("--write", action="store_true", help="regrava o manifesto")
     commands["collect-news"].add_argument(
         "--start", type=date.fromisoformat, default=COLLECTION_START
     )
