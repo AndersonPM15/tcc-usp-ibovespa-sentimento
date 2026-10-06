@@ -22,6 +22,17 @@ FIGURE_4_MODEL = "logreg_l2"
 ROLLING_WINDOWS = (60, 90)
 ROBUSTNESS_WINDOWS = (30, 60, 90)
 EXTREME_EVENT_QUANTILE = 0.9
+CSV_FLOAT_FORMAT = "%.12g"
+
+
+def write_csv(frame: pd.DataFrame, path: Path) -> None:
+    """Grava um resultado em CSV com 12 algarismos significativos.
+
+    Bem acima da precisão do artigo, e evita que diferenças de ponto flutuante entre
+    máquinas (bibliotecas numéricas, processador) apareçam como mudanças nos arquivos.
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    frame.to_csv(path, index=False, float_format=CSV_FLOAT_FORMAT)
 
 
 def _save(fig: Any, path: Path) -> None:
@@ -33,7 +44,7 @@ def _save(fig: Any, path: Path) -> None:
 def write_table(frame: pd.DataFrame, output_dir: Path, stem: str, title: str) -> None:
     """Grava a tabela em CSV e uma imagem dela em PNG."""
     output_dir.mkdir(parents=True, exist_ok=True)
-    frame.to_csv(output_dir / f"{stem}.csv", index=False)
+    write_csv(frame, output_dir / f"{stem}.csv")
     fig, ax = plt.subplots(figsize=(12, 0.6 + 0.35 * len(frame)), dpi=DPI)
     ax.axis("off")
     table = ax.table(
@@ -105,8 +116,7 @@ def figure_2_daily_sentiment(sentiment: pd.DataFrame, output_dir: Path) -> None:
 
 def figure_3_model_comparison(summary: pd.DataFrame, output_dir: Path) -> None:
     """Sharpe da regra de limiar fixo por modelo (com o CSV de Sharpe e CAGR)."""
-    output_dir.mkdir(parents=True, exist_ok=True)
-    summary.to_csv(output_dir / "Figura_3_comparativo_modelos.csv", index=False)
+    write_csv(summary, output_dir / "Figura_3_comparativo_modelos.csv")
     fig, ax = plt.subplots(figsize=(9, 5), dpi=DPI)
     labels = [MODEL_LABELS.get(model, model) for model in summary["model"]]
     bars = ax.bar(labels, summary["sharpe"], color=["#2ca02c", "#1f77b4"])
@@ -240,8 +250,7 @@ def figure_7a_car_boxplot(events: pd.DataFrame, output_dir: Path) -> None:
 
 def figure_7b_caar(caar: pd.DataFrame, output_dir: Path) -> None:
     """CAAR por τ (dias corridos) com IC 95%, e o CSV com os valores."""
-    output_dir.mkdir(parents=True, exist_ok=True)
-    caar.to_csv(output_dir / "Figura_7B_event_time_CAAR.csv", index=False)
+    write_csv(caar, output_dir / "Figura_7B_event_time_CAAR.csv")
     fig, ax = plt.subplots(figsize=(10, 5), dpi=DPI)
     for polarity, color in (("neg", "#d62728"), ("pos", "#2ca02c")):
         ax.plot(caar["tau"], caar[f"caar_{polarity}_mean"], marker="o", label=polarity, color=color)
@@ -265,8 +274,7 @@ def figure_7b_caar(caar: pd.DataFrame, output_dir: Path) -> None:
 
 def figure_8_backtest(curves: pd.DataFrame, strategy: str, output_dir: Path) -> None:
     """Curvas da regra de limiar fixo e do Ibovespa, normalizadas em 1, e o CSV delas."""
-    output_dir.mkdir(parents=True, exist_ok=True)
-    curves.to_csv(output_dir / "Figura_8_backtest_vs_benchmark.csv", index=False)
+    write_csv(curves, output_dir / "Figura_8_backtest_vs_benchmark.csv")
     fig, ax = plt.subplots(figsize=(11, 5.5), dpi=DPI)
     for model, label in MODEL_LABELS.items():
         ax.plot(curves["date"], curves[f"equity_{model}"], label=f"{label} ({strategy})")

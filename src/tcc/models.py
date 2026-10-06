@@ -27,6 +27,9 @@ def baseline_models() -> dict[str, Any]:
 
     A penalidade L2 do notebook é o padrão da LogisticRegression; o argumento `penalty`
     foi descontinuado no scikit-learn 1.8 e por isso não é passado (resultado idêntico).
+    O Random Forest roda com `n_jobs=1`: em paralelo, a ordem da soma das árvores varia e o
+    resultado muda a partir da 15ª casa entre execuções; em sequência, sai idêntico bit a bit
+    (no mesmo tempo, nesta escala).
     """
     return {
         "logreg_l2": LogisticRegression(
@@ -41,7 +44,7 @@ def baseline_models() -> dict[str, Any]:
             max_depth=5,
             min_samples_leaf=2,
             random_state=RANDOM_SEED,
-            n_jobs=-1,
+            n_jobs=1,
         ),
     }
 

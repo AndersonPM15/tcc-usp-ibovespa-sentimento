@@ -1,65 +1,65 @@
 periodo,modelo,retorno,estatistica,estimativa,bloco,regra_bloco,ic95_inferior,ic95_superior,ic_inclui_zero,reamostragens,semente,rotulo
-artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),pearson,-0.12740289189868298,11,n^(1/3) (principal),-0.1772795891441755,-0.08412829549405719,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),spearman,-0.14910833265035411,11,n^(1/3) (principal),-0.2051628302040138,-0.09711100234669148,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),pearson,-0.12740289189868298,5,sensibilidade,-0.17647641007274534,-0.08183372759284417,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),spearman,-0.14910833265035411,5,sensibilidade,-0.20489186342194082,-0.09626127898536659,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),pearson,-0.12740289189868298,10,sensibilidade,-0.17923195131880573,-0.08625111250919781,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),spearman,-0.14910833265035411,10,sensibilidade,-0.20624049297050143,-0.09864380424666634,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),pearson,-0.12740289189868298,20,sensibilidade,-0.17993918465161915,-0.08427546802424504,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),spearman,-0.14910833265035411,20,sensibilidade,-0.20397629509893672,-0.09402923770884249,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),pearson,0.020194900552403895,11,n^(1/3) (principal),-0.03135033797656433,0.0781086846779687,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),spearman,0.02492371656754386,11,n^(1/3) (principal),-0.026911706110488938,0.07987414021735223,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),pearson,0.020194900552403895,5,sensibilidade,-0.028093959287884565,0.07483222313760317,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),spearman,0.02492371656754386,5,sensibilidade,-0.027742726368944537,0.0789321886273331,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),pearson,0.020194900552403895,10,sensibilidade,-0.030088567025924908,0.07722474192127779,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),spearman,0.02492371656754386,10,sensibilidade,-0.024899383034658724,0.07783079549023735,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),pearson,0.020194900552403895,20,sensibilidade,-0.030204753958976004,0.08381612950096327,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),spearman,0.02492371656754386,20,sensibilidade,-0.024429645710780403,0.08062283613079638,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),pearson,-0.13993225812421084,11,n^(1/3) (principal),-0.20014719734527495,-0.07309671499982015,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),spearman,-0.12460003665446362,11,n^(1/3) (principal),-0.16966667533196778,-0.07456213565113977,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),pearson,-0.13993225812421084,5,sensibilidade,-0.2051850591022157,-0.059880636588222666,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),spearman,-0.12460003665446362,5,sensibilidade,-0.17233337584717925,-0.07192597868843052,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),pearson,-0.13993225812421084,10,sensibilidade,-0.20027097175141506,-0.07110814324187623,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),spearman,-0.12460003665446362,10,sensibilidade,-0.17248753234005287,-0.07193943166568192,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),pearson,-0.13993225812421084,20,sensibilidade,-0.19244656982158753,-0.07871898420191031,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),spearman,-0.12460003665446362,20,sensibilidade,-0.17032248114078954,-0.07460671356435344,False,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),pearson,0.0031101021413084077,11,n^(1/3) (principal),-0.05343522643795753,0.05735565254675309,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),spearman,0.006338326073351026,11,n^(1/3) (principal),-0.043198065699164435,0.05668442171528055,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),pearson,0.0031101021413084077,5,sensibilidade,-0.056314459486826694,0.06057240029698332,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),spearman,0.006338326073351026,5,sensibilidade,-0.04323768935361865,0.0558277332351692,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),pearson,0.0031101021413084077,10,sensibilidade,-0.05610104904024222,0.057418381121746125,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),spearman,0.006338326073351026,10,sensibilidade,-0.042267541287616124,0.060210693419410294,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),pearson,0.0031101021413084077,20,sensibilidade,-0.050236283455047284,0.05905122504975258,True,2000,42,pós-submissão; não consta do artigo
-artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),spearman,0.006338326073351026,20,sensibilidade,-0.04271249770993917,0.05745584905586282,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),pearson,-0.11881121961648972,12,n^(1/3) (principal),-0.1632999911964165,-0.07756368573302534,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),spearman,-0.1339810038333031,12,n^(1/3) (principal),-0.18356731827666187,-0.08492654565143146,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),pearson,-0.11881121961648972,5,sensibilidade,-0.16384443007370394,-0.07471235648014948,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),spearman,-0.1339810038333031,5,sensibilidade,-0.18295419269122656,-0.08611559686397656,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),pearson,-0.11881121961648972,10,sensibilidade,-0.16391031863414957,-0.07978674747845876,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),spearman,-0.1339810038333031,10,sensibilidade,-0.18283968940778395,-0.0852398968677889,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),pearson,-0.11881121961648972,20,sensibilidade,-0.16687192096248615,-0.07986434246517145,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),spearman,-0.1339810038333031,20,sensibilidade,-0.18291959188392748,-0.0851837191081448,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),pearson,0.012212402149714289,12,n^(1/3) (principal),-0.03544590217338801,0.06596153239574452,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),spearman,0.01820983000600259,12,n^(1/3) (principal),-0.03166381094138338,0.06893863022855992,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),pearson,0.012212402149714289,5,sensibilidade,-0.035599608413563244,0.06120855413953433,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),spearman,0.01820983000600259,5,sensibilidade,-0.031432792456443016,0.06888155096762733,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),pearson,0.012212402149714289,10,sensibilidade,-0.035675268450636795,0.06465153056089931,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),spearman,0.01820983000600259,10,sensibilidade,-0.032621017723061564,0.06772872585385893,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),pearson,0.012212402149714289,20,sensibilidade,-0.03797166478834847,0.06548560990942345,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),spearman,0.01820983000600259,20,sensibilidade,-0.03134286015225646,0.06480525734178925,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),pearson,-0.13415824873004042,12,n^(1/3) (principal),-0.18800161064583049,-0.07001267679546888,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),spearman,-0.11102761484876805,12,n^(1/3) (principal),-0.15473803856404383,-0.06097913888700273,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),pearson,-0.13415824873004042,5,sensibilidade,-0.19592687556860572,-0.05627207924335922,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),spearman,-0.11102761484876805,5,sensibilidade,-0.1583642669684243,-0.06613697270999581,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),pearson,-0.13415824873004042,10,sensibilidade,-0.19059184125959508,-0.06821838656120909,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),spearman,-0.11102761484876805,10,sensibilidade,-0.15501507447816318,-0.06064117843072164,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),pearson,-0.13415824873004042,20,sensibilidade,-0.18502067710023268,-0.07453566119970918,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),spearman,-0.11102761484876805,20,sensibilidade,-0.1507829341181311,-0.06343805153937537,False,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),pearson,-0.006819568087466525,12,n^(1/3) (principal),-0.06097649324611582,0.04416661932020916,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),spearman,-0.00545422933284055,12,n^(1/3) (principal),-0.05419993641540504,0.04265979580946857,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),pearson,-0.006819568087466525,5,sensibilidade,-0.06154426470950723,0.04429471362704406,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),spearman,-0.00545422933284055,5,sensibilidade,-0.0535268460119617,0.03810037911783144,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),pearson,-0.006819568087466525,10,sensibilidade,-0.06086235320111704,0.04501567605736091,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),spearman,-0.00545422933284055,10,sensibilidade,-0.05404496984837436,0.04216739940642375,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),pearson,-0.006819568087466525,20,sensibilidade,-0.059846082089776376,0.047857095701785694,True,2000,42,pós-submissão; não consta do artigo
-completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),spearman,-0.00545422933284055,20,sensibilidade,-0.048812505705453445,0.04153215166654636,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),pearson,-0.127402891899,11,n^(1/3) (principal),-0.177279589144,-0.0841282954941,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),spearman,-0.14910833265,11,n^(1/3) (principal),-0.205162830204,-0.0971110023467,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),pearson,-0.127402891899,5,sensibilidade,-0.176476410073,-0.0818337275928,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),spearman,-0.14910833265,5,sensibilidade,-0.204891863422,-0.0962612789854,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),pearson,-0.127402891899,10,sensibilidade,-0.179231951319,-0.0862511125092,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),spearman,-0.14910833265,10,sensibilidade,-0.206240492971,-0.0986438042467,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),pearson,-0.127402891899,20,sensibilidade,-0.179939184652,-0.0842754680242,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,mesmo dia (D−1→D),spearman,-0.14910833265,20,sensibilidade,-0.203976295099,-0.0940292377088,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),pearson,0.0201949005524,11,n^(1/3) (principal),-0.0313503379766,0.078108684678,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),spearman,0.0249237165675,11,n^(1/3) (principal),-0.0269117061105,0.0798741402174,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),pearson,0.0201949005524,5,sensibilidade,-0.0280939592879,0.0748322231376,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),spearman,0.0249237165675,5,sensibilidade,-0.0277427263689,0.0789321886273,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),pearson,0.0201949005524,10,sensibilidade,-0.0300885670259,0.0772247419213,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),spearman,0.0249237165675,10,sensibilidade,-0.0248993830347,0.0778307954902,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),pearson,0.0201949005524,20,sensibilidade,-0.030204753959,0.083816129501,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Regressão Logística,dia seguinte (D→D+1),spearman,0.0249237165675,20,sensibilidade,-0.0244296457108,0.0806228361308,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),pearson,-0.139932258124,11,n^(1/3) (principal),-0.200147197345,-0.0730967149998,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),spearman,-0.124600036654,11,n^(1/3) (principal),-0.169666675332,-0.0745621356511,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),pearson,-0.139932258124,5,sensibilidade,-0.205185059102,-0.0598806365882,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),spearman,-0.124600036654,5,sensibilidade,-0.172333375847,-0.0719259786884,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),pearson,-0.139932258124,10,sensibilidade,-0.200270971751,-0.0711081432419,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),spearman,-0.124600036654,10,sensibilidade,-0.17248753234,-0.0719394316657,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),pearson,-0.139932258124,20,sensibilidade,-0.192446569822,-0.0787189842019,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,mesmo dia (D−1→D),spearman,-0.124600036654,20,sensibilidade,-0.170322481141,-0.0746067135644,False,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),pearson,0.00311010214131,11,n^(1/3) (principal),-0.053435226438,0.0573556525468,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),spearman,0.00633832607335,11,n^(1/3) (principal),-0.0431980656992,0.0566844217153,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),pearson,0.00311010214131,5,sensibilidade,-0.0563144594868,0.060572400297,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),spearman,0.00633832607335,5,sensibilidade,-0.0432376893536,0.0558277332352,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),pearson,0.00311010214131,10,sensibilidade,-0.0561010490402,0.0574183811217,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),spearman,0.00633832607335,10,sensibilidade,-0.0422675412876,0.0602106934194,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),pearson,0.00311010214131,20,sensibilidade,-0.050236283455,0.0590512250498,True,2000,42,pós-submissão; não consta do artigo
+artigo (05/08/2019–30/12/2024),Random Forest,dia seguinte (D→D+1),spearman,0.00633832607335,20,sensibilidade,-0.0427124977099,0.0574558490559,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),pearson,-0.118811219616,12,n^(1/3) (principal),-0.163299991196,-0.077563685733,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),spearman,-0.133981003833,12,n^(1/3) (principal),-0.183567318277,-0.0849265456514,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),pearson,-0.118811219616,5,sensibilidade,-0.163844430074,-0.0747123564801,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),spearman,-0.133981003833,5,sensibilidade,-0.182954192691,-0.086115596864,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),pearson,-0.118811219616,10,sensibilidade,-0.163910318634,-0.0797867474785,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),spearman,-0.133981003833,10,sensibilidade,-0.182839689408,-0.0852398968678,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),pearson,-0.118811219616,20,sensibilidade,-0.166871920962,-0.0798643424652,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,mesmo dia (D−1→D),spearman,-0.133981003833,20,sensibilidade,-0.182919591884,-0.0851837191081,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),pearson,0.0122124021497,12,n^(1/3) (principal),-0.0354459021734,0.0659615323957,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),spearman,0.018209830006,12,n^(1/3) (principal),-0.0316638109414,0.0689386302286,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),pearson,0.0122124021497,5,sensibilidade,-0.0355996084136,0.0612085541395,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),spearman,0.018209830006,5,sensibilidade,-0.0314327924564,0.0688815509676,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),pearson,0.0122124021497,10,sensibilidade,-0.0356752684506,0.0646515305609,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),spearman,0.018209830006,10,sensibilidade,-0.0326210177231,0.0677287258539,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),pearson,0.0122124021497,20,sensibilidade,-0.0379716647883,0.0654856099094,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Regressão Logística,dia seguinte (D→D+1),spearman,0.018209830006,20,sensibilidade,-0.0313428601523,0.0648052573418,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),pearson,-0.13415824873,12,n^(1/3) (principal),-0.188001610646,-0.0700126767955,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),spearman,-0.111027614849,12,n^(1/3) (principal),-0.154738038564,-0.060979138887,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),pearson,-0.13415824873,5,sensibilidade,-0.195926875569,-0.0562720792434,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),spearman,-0.111027614849,5,sensibilidade,-0.158364266968,-0.06613697271,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),pearson,-0.13415824873,10,sensibilidade,-0.19059184126,-0.0682183865612,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),spearman,-0.111027614849,10,sensibilidade,-0.155015074478,-0.0606411784307,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),pearson,-0.13415824873,20,sensibilidade,-0.1850206771,-0.0745356611997,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,mesmo dia (D−1→D),spearman,-0.111027614849,20,sensibilidade,-0.150782934118,-0.0634380515394,False,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),pearson,-0.00681956808747,12,n^(1/3) (principal),-0.0609764932461,0.0441666193202,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),spearman,-0.00545422933284,12,n^(1/3) (principal),-0.0541999364154,0.0426597958095,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),pearson,-0.00681956808747,5,sensibilidade,-0.0615442647095,0.044294713627,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),spearman,-0.00545422933284,5,sensibilidade,-0.053526846012,0.0381003791178,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),pearson,-0.00681956808747,10,sensibilidade,-0.0608623532011,0.0450156760574,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),spearman,-0.00545422933284,10,sensibilidade,-0.0540449698484,0.0421673994064,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),pearson,-0.00681956808747,20,sensibilidade,-0.0598460820898,0.0478570957018,True,2000,42,pós-submissão; não consta do artigo
+completo (05/08/2019–17/11/2025),Random Forest,dia seguinte (D→D+1),spearman,-0.00545422933284,20,sensibilidade,-0.0488125057055,0.0415321516665,True,2000,42,pós-submissão; não consta do artigo

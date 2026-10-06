@@ -94,3 +94,13 @@ def test_labels_match_the_article_file(settings: Settings) -> None:
     reference = pd.read_csv(reference_path, parse_dates=["day"])
     pd.testing.assert_frame_equal(labels, reference, check_exact=False, rtol=0, atol=1e-15)
     assert labels["y"].notna().sum() == 1942
+
+
+def test_build_labels_never_invents_labels_without_prices() -> None:
+    # Regressão: sem interseção com o Ibovespa, o notebook 15 gerava rótulos falsos alternados
+    # (0, 1, 0, 1…) e seguia em frente; agora os dias ficam sem rótulo.
+    index = pd.DataFrame({"day": pd.date_range("2030-01-01", periods=4), "row_id": range(4)})
+    prices = pd.DataFrame(
+        {"date": pd.to_datetime(["2024-01-02", "2024-01-03"]), "close": [1.0, 2.0]}
+    )
+    assert market.build_labels(index, prices)["y"].isna().all()

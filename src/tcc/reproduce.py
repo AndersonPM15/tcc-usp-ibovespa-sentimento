@@ -142,7 +142,7 @@ def write_article_outputs(results: ArticleResults, settings: Settings) -> None:
     figures.write_table(
         results.table1, output, "Tabela_1_amostra", "Tabela 1 – Amostra (2018–2024)"
     )
-    results.table2.to_csv(output / "Tabela_2_auc_mda_valores.csv", index=False)
+    figures.write_csv(results.table2, output / "Tabela_2_auc_mda_valores.csv")
     figures.write_table(
         _table2_for_display(results.table2),
         output,
@@ -183,7 +183,7 @@ def write_verifications(results: ArticleResults, settings: Settings) -> dict[str
     )
     settings.verification_dir.mkdir(parents=True, exist_ok=True)
     for name, table in tables.items():
-        table.to_csv(settings.verification_dir / f"{name}.csv", index=False)
+        figures.write_csv(table, settings.verification_dir / f"{name}.csv")
     return tables
 
 
