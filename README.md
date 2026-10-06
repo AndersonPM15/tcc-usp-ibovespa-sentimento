@@ -104,8 +104,9 @@ Testadas em ambiente limpo com **Python 3.11.15**:
 | `requirements-dev.txt` | Testes, lint e pré-commit | pytest 9.1.1, ruff 0.16.10, pre-commit 4.6.2 |
 | `requirements-optional.txt` | Recoleta, pré-processamento, dashboard e orquestração | nltk 3.10.3, spacy 3.8.16, dash 4.4.1, papermill 2.7.0 |
 
-Os notebooks-protótipo de embeddings e LSTM (04, 08 e 09) usam TensorFlow e
-sentence-transformers. Eles não fazem parte do artigo e essas bibliotecas não estão fixadas.
+Os protótipos de desenvolvimento (notebooks 01 a 11 e 19, com dados sintéticos, fonte única,
+embeddings e LSTM), os scripts de preparação do dashboard e os relatórios de verificação de
+2025 foram retirados do repositório. Eles continuam disponíveis na tag `v1.0-semead2026`.
 
 ---
 
@@ -152,8 +153,6 @@ configs/config_tcc.yaml       Período do estudo e nomes de arquivos
 notebooks/
   12_…ipynb a 18_…ipynb, 20_  Pipeline do artigo: coleta, ETL, pré-processamento, TF-IDF,
                               modelos, validação e backtest
-  00_…ipynb a 11_…, 19_       Protótipos de desenvolvimento (dados sintéticos ou fonte única),
-                              fora do pipeline do artigo
 scripts/export_tcc_figures.py Figuras e tabelas do artigo (reports/figures)
 scripts/generate_event_study_latency.py  Eventos do estudo de eventos
 scripts/run_post_submission_checks.py    Verificações pós-submissão (reports/verificacao)

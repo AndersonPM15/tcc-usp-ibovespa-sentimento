@@ -1,10 +1,10 @@
 """
-Pipeline orchestration script for the TCC USP project.
+Orquestração do pipeline do artigo.
 
-Runs the notebooks 00→20 in sequence, logs progress, and stores executed
-versions under `notebooks/_runs/`.
+Executa em sequência os notebooks do pipeline (00 e 12 a 20), registra o progresso e
+guarda as versões executadas em `notebooks/_runs/` (não versionada).
 
-Usage:
+Uso:
     python pipeline_orchestration.py
     python pipeline_orchestration.py --continue-on-fail
     python pipeline_orchestration.py --only 16 17 18
@@ -16,37 +16,26 @@ import argparse
 import logging
 import os
 import sys
+from collections.abc import Iterable, Sequence
 from datetime import datetime
 from importlib import import_module
 from pathlib import Path
 from types import ModuleType
-from typing import Iterable, List, Sequence
+
+from src.io import paths as path_utils
+from src.utils.logger import log_result
 
 pm: ModuleType | None
 try:
     pm = import_module("papermill")
-except ModuleNotFoundError:  # pragma: no cover - papermill optional
+except ModuleNotFoundError:  # pragma: no cover - papermill é opcional
     pm = None
     HAVE_PAPERMILL = False
 else:
     HAVE_PAPERMILL = True
 
-from src.io import paths as path_utils
-from src.utils.logger import log_result
-
 NOTEBOOK_SEQUENCE: Sequence[str] = [
     "00_data_download",
-    "01_preprocessing",
-    "02_baseline_logit",
-    "03_tfidf_models",
-    "04_embeddings_models",
-    "05_data_collection_real",
-    "06_preprocessing_real",
-    "07_tfidf_real",
-    "08_embeddings_real",
-    "09_lstm_real",
-    "10_dashboard_results",
-    "11_event_study_latency",
     "12_data_collection_multisource",
     "13_etl_dedup",
     "14_preprocess_ptbr",
@@ -54,7 +43,6 @@ NOTEBOOK_SEQUENCE: Sequence[str] = [
     "16_models_tfidf_baselines",
     "17_sentiment_validation",
     "18_backtest_simulation",
-    "19_future_extension",
     "20_final_dashboard_analysis",
 ]
 
@@ -178,12 +166,12 @@ def _execute_notebook(
 def run_pipeline(
     notebooks: Iterable[str],
     continue_on_fail: bool = False,
-) -> List[str]:
+) -> list[str]:
     data_paths = path_utils.get_data_paths()
     base_path = data_paths["base"]
     runs_dir = path_utils.get_project_paths()["notebooks"] / "_runs"
 
-    completed: List[str] = []
+    completed: list[str] = []
     for nb_name in notebooks:
         try:
             _execute_notebook(nb_name, base_path=base_path, runs_dir=runs_dir)
@@ -195,8 +183,22 @@ def run_pipeline(
     return completed
 
 
+def resolve_notebook_names(selection: Iterable[str]) -> list[str]:
+    """Converte números ou nomes ("16", "16_models_tfidf_baselines.ipynb") em nomes do pipeline."""
+    names = []
+    for item in selection:
+        stem = item.removesuffix(".ipynb")
+        matches = [
+            name for name in NOTEBOOK_SEQUENCE if name == stem or name.startswith(f"{stem}_")
+        ]
+        if len(matches) != 1:
+            raise ValueError(f"Notebook {item!r} não está no pipeline: {list(NOTEBOOK_SEQUENCE)}")
+        names.append(matches[0])
+    return names
+
+
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Executa o pipeline 00→20.")
+    parser = argparse.ArgumentParser(description="Executa os notebooks do pipeline do artigo.")
     parser.add_argument(
         "--continue-on-fail",
         action="store_true",
@@ -214,9 +216,7 @@ def main() -> None:
     log_file = _setup_logging()
     args = parse_args()
     if args.only:
-        notebooks = [
-            f"{nb if nb.endswith('.ipynb') else nb}".replace(".ipynb", "") for nb in args.only
-        ]
+        notebooks = resolve_notebook_names(args.only)
     else:
         notebooks = list(NOTEBOOK_SEQUENCE)
 
