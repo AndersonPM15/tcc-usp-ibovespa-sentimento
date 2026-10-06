@@ -53,9 +53,9 @@
       "used_by": "clean-news",
       "date_column": "date",
       "bytes": 8503620,
-      "sha256": null,
+      "sha256": "7209f8051132c5bf14d44cbe525cdec45c2e271f3e719cf1bc9b3c35259b10f1",
       "content_sha256": null,
-      "observacao": "o arquivo (8,5 MB) está só no Google Drive do autor e não pôde ser baixado para o ambiente em nuvem (limite de tamanho do conector; tentativa em 06/10/2026); rode python -m tcc manifest --write na pasta onde ele estiver"
+      "observacao": "calculado com o certutil do Windows em 06/10/2026, na cópia baixada do Google Drive (8.503.620 bytes); hash do conteúdo, linhas e período não calculados (máquina sem Python): rode python -m tcc manifest --write onde o arquivo estiver para completá-los"
     }
   ]
 }

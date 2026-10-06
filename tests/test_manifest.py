@@ -66,6 +66,27 @@ def test_build_and_check_manifest(tmp_path: Path) -> None:
     assert manifest.check_manifest(settings, missing)[0].startswith("ausente")
 
 
+def test_file_hash_is_checked_when_content_hash_is_missing(tmp_path: Path) -> None:
+    # Ex.: base bruta registrada pelo `certutil` do Windows, numa máquina sem Python.
+    settings = _data_dir_with_ibovespa(tmp_path)
+    path = settings.processed_dir / "ibovespa_clean.csv"
+    entry = {
+        "path": "data_processed/ibovespa_clean.csv",
+        "used_by": "reproduce",
+        "sha256": manifest.file_sha256(path),
+        "content_sha256": None,
+    }
+    assert manifest.check_manifest(settings, [entry]) == []
+    path.write_text("date,close\n2018-01-02,1.0\n", encoding="utf-8")
+    assert manifest.check_manifest(settings, [entry]) == [
+        "arquivo diferente: data_processed/ibovespa_clean.csv"
+    ]
+    no_hash = {**entry, "sha256": None}
+    assert manifest.check_manifest(settings, [no_hash])[0].startswith("sem SHA-256")
+    markdown = manifest.manifest_markdown([{**entry, "origin": "GDELT", "observacao": "certutil"}])
+    assert f"`{entry['sha256']}` (do arquivo: certutil)" in markdown
+
+
 def test_write_and_read_round_trip(tmp_path: Path) -> None:
     entries = manifest.build_manifest(_data_dir_with_ibovespa(tmp_path / "dados"))
     manifest.write_manifest(entries, tmp_path / "MANIFEST.json", tmp_path / "MANIFEST.md")

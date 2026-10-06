@@ -144,6 +144,19 @@ def build_manifest(settings: Settings) -> list[dict[str, Any]]:
     ]
 
 
+def _mismatch(path: Path, expected: dict[str, Any]) -> str | None:
+    """Diferença entre um arquivo presente e o manifesto (None = confere).
+
+    Compara o SHA-256 do conteúdo; sem ele, o do arquivo (registrado, por exemplo, pelo
+    `certutil` do Windows numa máquina sem Python).
+    """
+    if expected.get("content_sha256"):
+        return None if content_sha256(path) == expected["content_sha256"] else "conteúdo diferente"
+    if expected.get("sha256"):
+        return None if file_sha256(path) == expected["sha256"] else "arquivo diferente"
+    return "sem SHA-256 no manifesto (rode --write)"
+
+
 def check_manifest(settings: Settings, manifest: list[dict[str, Any]]) -> list[str]:
     """Diferenças entre a pasta dos dados e o manifesto (vazio = tudo confere)."""
     problems = []
@@ -151,10 +164,8 @@ def check_manifest(settings: Settings, manifest: list[dict[str, Any]]) -> list[s
         path = settings.base_dir / expected["path"]
         if not path.exists():
             problems.append(f"ausente: {expected['path']} (usado por {expected['used_by']})")
-        elif not expected.get("content_sha256"):
-            problems.append(f"sem SHA-256 no manifesto: {expected['path']} (rode --write)")
-        elif content_sha256(path) != expected["content_sha256"]:
-            problems.append(f"conteúdo diferente: {expected['path']}")
+        elif mismatch := _mismatch(path, expected):
+            problems.append(f"{mismatch}: {expected['path']}")
     return problems
 
 
@@ -182,7 +193,8 @@ def manifest_markdown(entries: list[dict[str, Any]]) -> str:
         "versionados (licenças das fontes de notícias). Gerado por `python -m tcc manifest --write`;",
         "`python -m tcc manifest` confere a sua pasta. O SHA-256 abaixo é o do conteúdo (tabela em",
         "CSV canônico ou valores da matriz), que não depende do sistema em que o arquivo foi",
-        "gravado; o do arquivo está em `MANIFEST.json`.",
+        "gravado; o do arquivo está em `MANIFEST.json`. Sem o do conteúdo, a tabela mostra o do",
+        "arquivo, e é ele que `python -m tcc manifest` confere.",
         "",
         "| Arquivo | Origem | Usado por | Período | Linhas | SHA-256 |",
         "|---|---|---|---|---|---|",
@@ -192,11 +204,12 @@ def manifest_markdown(entries: list[dict[str, Any]]) -> str:
         rows = f"{entry['rows']:,}".replace(",", ".") if "rows" in entry else "—"
         if "columns" in entry:
             rows += f" × {entry['columns']:,}".replace(",", ".")
-        digest = (
-            f"`{entry['content_sha256']}`"
-            if entry.get("content_sha256")
-            else f"pendente: {entry.get('observacao', '')}"
-        )
+        if entry.get("content_sha256"):
+            digest = f"`{entry['content_sha256']}`"
+        elif entry.get("sha256"):
+            digest = f"`{entry['sha256']}` (do arquivo: {entry.get('observacao', '')})"
+        else:
+            digest = f"pendente: {entry.get('observacao', '')}"
         lines.append(
             f"| `{entry['path']}` | {entry['origin']} | `{entry['used_by']}` | {period} | {rows} | {digest} |"
         )

@@ -4,7 +4,8 @@ Arquivos de entrada do pipeline, na pasta apontada por `TCC_USP_BASE`. Os dados 
 versionados (licenças das fontes de notícias). Gerado por `python -m tcc manifest --write`;
 `python -m tcc manifest` confere a sua pasta. O SHA-256 abaixo é o do conteúdo (tabela em
 CSV canônico ou valores da matriz), que não depende do sistema em que o arquivo foi
-gravado; o do arquivo está em `MANIFEST.json`.
+gravado; o do arquivo está em `MANIFEST.json`. Sem o do conteúdo, a tabela mostra o do
+arquivo, e é ele que `python -m tcc manifest` confere.
 
 | Arquivo | Origem | Usado por | Período | Linhas | SHA-256 |
 |---|---|---|---|---|---|
@@ -12,4 +13,4 @@ gravado; o do arquivo está em `MANIFEST.json`.
 | `data_processed/tfidf_daily_matrix.npz` | TF-IDF diário das notícias limpas (`python -m tcc build-tfidf`) | `reproduce` | — | 2.771 × 45.473 | `610a1fdfedbb5143412ddcb94fb1cc53d574ccc21ba5530848c11b14de2dfb69` |
 | `data_processed/tfidf_daily_index.csv` | dia de cada linha da matriz TF-IDF (`python -m tcc build-tfidf`) | `reproduce` | 2018-01-02 a 2025-11-19 | 2.771 | `0a9e48e83b9ec5c97e617b1893beb946efa53619f433691b597afb0c0403cf10` |
 | `data_interim/news_clean_multisource.parquet` | manchetes do GDELT deduplicadas (`python -m tcc clean-news`) | `build-tfidf` | 2018-01-02 a 2025-11-19 | 91.941 | `b94a786816f27348af1786a954010938efece7d4b0fb65d24759cdbdb86214ee` |
-| `data_raw/news_multisource.parquet` | coleta do GDELT DOC 2.0 (`python -m tcc collect-news`) | `clean-news` | — | — | pendente: o arquivo (8,5 MB) está só no Google Drive do autor e não pôde ser baixado para o ambiente em nuvem (limite de tamanho do conector; tentativa em 06/10/2026); rode python -m tcc manifest --write na pasta onde ele estiver |
+| `data_raw/news_multisource.parquet` | coleta do GDELT DOC 2.0 (`python -m tcc collect-news`) | `clean-news` | — | — | `7209f8051132c5bf14d44cbe525cdec45c2e271f3e719cf1bc9b3c35259b10f1` (do arquivo: calculado com o certutil do Windows em 06/10/2026, na cópia baixada do Google Drive (8.503.620 bytes); hash do conteúdo, linhas e período não calculados (máquina sem Python): rode python -m tcc manifest --write onde o arquivo estiver para completá-los) |
