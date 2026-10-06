@@ -7,12 +7,18 @@ repos:
         name: ruff (lint)
         entry: ruff check
         language: system
-        types_or: [python, jupyter]
+        types: [python]
       - id: ruff-format
         name: ruff (formatação)
         entry: ruff format --check
         language: system
-        types_or: [python, jupyter]
+        types: [python]
+      - id: mypy
+        name: mypy (tipos)
+        entry: mypy
+        language: system
+        pass_filenames: false
+        types: [python]
       - id: article-reproduction
         name: números do artigo (pytest)
         entry: pytest -q tests/test_article_reproduction.py

@@ -17,12 +17,6 @@ from tcc.news import etl, gdelt, text
 STOPWORDS = frozenset({"de", "a", "o", "em"})
 
 
-@pytest.fixture
-def small_stopwords(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Evita baixar o corpus do NLTK nos testes unitários."""
-    monkeypatch.setattr(text, "portuguese_stopwords", lambda: STOPWORDS)
-
-
 # --------------------------------------------------------------------------- GDELT
 
 
@@ -168,7 +162,8 @@ def test_keep_valid_tokens_drops_html_residue() -> None:
     assert text.keep_valid_tokens("alta href=x nbsp queda pré-sal") == "alta queda pré-sal"
 
 
-def test_daily_documents_join_headlines_in_order(small_stopwords: None) -> None:
+def test_daily_documents_join_headlines_in_order(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(text, "portuguese_stopwords", lambda: STOPWORDS)  # sem baixar o NLTK
     news = pd.DataFrame(
         {
             "date": pd.to_datetime(["2024-01-03", "2024-01-02", "2024-01-02"]),

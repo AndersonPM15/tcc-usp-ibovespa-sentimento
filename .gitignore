@@ -1,55 +1,29 @@
-# Environments
+# Ambientes e segredos
 .env
-.envrc
 .venv/
 venv/
-env/
-ENV/
-.vscode/
 
-# Python caches
+# Caches e artefatos de build
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+*.egg-info/
+build/
+dist/
 
-# Jupyter
-.ipynb_checkpoints/
-notebooks/_runs/
-
-# MLflow
-mlruns/
-
-# Dados / artefatos (não versionar)
+# Dados: ficam fora do repositório (licenças das fontes; ver data/MANIFEST.md)
 data_raw/
-data_processed/
 data_interim/
-
-# Arquivos binários de dados (gerados pelo pipeline)
-*.npy
+data_processed/
+*.parquet
 *.npz
 
-# Temporários / logs
-data/results_registry.json
-*.log
-*.tmp
-tmp_*
-.tmp_*
-dash_out.txt
-dash_err.txt
-reports/logs/
-
 # Sistema operacional
-desktop.ini
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Ferramentas de desenvolvimento
 .claude/
-
-# Outros caches
-*.egg-info/
-.cache/

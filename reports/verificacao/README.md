@@ -6,11 +6,11 @@
 > do artigo com o método descrito no texto ou com uma inferência mais robusta, usando as
 > mesmas previsões fora da amostra.
 
-Gerado por `python scripts/run_post_submission_checks.py` (cerca de 2 minutos), com a variável
-`TCC_USP_BASE` apontando para os dados. Bootstraps com semente 42: os resultados são idênticos a
+Gerado por `python -m tcc reproduce` (cerca de 2,5 minutos), com a variável `TCC_USP_BASE`
+apontando para os dados (código em `src/tcc/verification.py`). Bootstraps com semente 42: os resultados são idênticos a
 cada execução. As opções novas estão no mesmo código do artigo (por exemplo,
 `threshold_mode="rolling"` no backtest e `window_unit="trading_days"` no estudo de eventos), e
-o padrão de cada uma reproduz o artigo. Testes: `tests/test_post_submission.py`.
+o padrão de cada uma reproduz o artigo. Testes: `tests/test_verification_reproduction.py` (números congelados) e testes unitários de cada opção.
 
 ## Resumo
 

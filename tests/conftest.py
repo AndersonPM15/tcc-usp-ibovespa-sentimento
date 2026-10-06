@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import sys
 from pathlib import Path
 
 import pytest
@@ -11,9 +10,6 @@ import pytest
 from tcc import reproduce
 from tcc.config import BASE_DIR_ENV, Settings, load_settings
 from tcc.datasets import IBOVESPA_FILE, TFIDF_INDEX_FILE, TFIDF_MATRIX_FILE, missing_inputs
-
-# Código antigo (scripts/ e src/ fora do pacote) ainda importado por alguns testes.
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 REPRODUCTION_INPUTS = (IBOVESPA_FILE, TFIDF_MATRIX_FILE, TFIDF_INDEX_FILE)
 
