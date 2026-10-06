@@ -1,294 +1,146 @@
-# Análise do Sentimento de Notícias em Português e seu Efeito no Ibovespa
+# Análise do Sentimento de Notícias e seu Efeito no Ibovespa
 
-**Trabalho de Conclusão de Curso — MBA em Business Intelligence & Analytics — ECA/USP**
+**Artigo:** *Análise do Sentimento de Notícias e seu Efeito no Ibovespa: Um Estudo Empírico com
+Baselines Transparentes* — XXIX SemeAd (2026), artigo 160.
+**Trabalho de Conclusão de Curso:** MBA em Business Intelligence & Analytics — ECA/USP.
+**Autor:** Anderson Pantoja Machado · **Orientador:** Prof. Vinicius Rocha Biscaro
 
-**Autor:** Anderson Pantoja Machado  
-**Orientador:** Prof. Vinicius Rocha Biscaro  
-**Instituição:** Universidade de São Paulo (USP)
-
----
-
-## Descrição
-
-Este projeto investiga empiricamente se o sentimento extraído de notícias financeiras em português antecipa a direção do retorno diário do Ibovespa (T+1). O pipeline vai da coleta e limpeza de notícias multisource até a validação de modelos classificadores (TF-IDF + Regressão Logística / Random Forest) com walk-forward e estudo de eventos (CAR/latência).
-
-**Pergunta de pesquisa:** o sentimento de notícias publicadas em T₀ está associado à direção do retorno do Ibovespa em T₀+1?
-
-**Hipóteses:**
-- H1: sentimento negativo em T₀ associa-se a retornos negativos em T₀+1.
-- H2: sentimento melhora o desempenho versus modelos puramente técnicos (ganho em AUC/MDA).
-- H3 (exploratória): a latência de incorporação de sentimento varia por fonte e horário de publicação (CAR).
-
-**Período de análise:** 2018-01-02 a 2024-12-31 (hard cap); período efetivo ajustado pela interseção das séries (sentimento e backtest iniciam em 2019-08).
+**Versão do código usada no artigo:** commit `0b3f78b` (tag `v1.0-semead2026`). Commits
+posteriores reorganizam o código sem alterar nenhum número do artigo, o que é verificado por
+testes automáticos (ver [Reprodução](#reprodução)).
 
 ---
 
-## Resultado Principal
+## O que o pipeline faz
 
-Os números abaixo reproduzem os artefatos finais versionados em `reports/figures/`
-(`Tabela_1_metricas.csv`, `Figura_8_backtest_vs_benchmark.csv`) e nos relatórios
-de auditoria em `reports/`. São os valores tal como consolidados para a banca —
-esta seção apenas os cita, sem reinterpretá-los.
+1. **Notícias:** manchetes em português coletadas do GDELT 2.0 (notebook 12), de 02/01/2018 a
+   19/11/2025: 91.941 manchetes de 508 domínios, após deduplicação pela URL normalizada, ou
+   por data + título quando não há URL (notebook 13).
+2. **Pré-processamento (notebook 14):** remoção de URLs, e-mails e números, minúsculas e
+   stopwords do NLTK. O spaCy `pt_core_news_lg` (lematização) é usado se estiver instalado;
+   na rodada que gerou o artigo ele não estava, então o texto não foi lematizado.
+3. **Texto → vetor (notebook 15):** um documento por dia (todas as manchetes do dia
+   concatenadas) e TF-IDF com `min_df=2`, `max_df=0.95`, n-gramas 1–2 e sem limite de termos
+   (45.473 termos).
+4. **Escore (notebook 16):** dois classificadores preveem a alta do Ibovespa entre D e D+1
+   usando apenas o TF-IDF do dia D:
+   - Regressão Logística (`saga`, L2, C=1, `class_weight="balanced"`);
+   - Random Forest (200 árvores, profundidade máxima 5).
+   As probabilidades *p* são geradas fora da amostra, em validação *walk-forward* com janela
+   expansiva (`TimeSeriesSplit` com 4 blocos de teste de 388 pregões, treino inicial de 390
+   pregões, sem embargo). O sentimento diário é **2p − 1**.
+5. **Análises (`scripts/export_tcc_figures.py`):** correlação com retornos, backtests e
+   estudo de eventos sobre 05/08/2019–30/12/2024 (1.341 pregões).
 
-**Classificação direcional (TF-IDF diário, walk-forward):**
+> **Rótulos no artigo:** as séries chamadas no artigo de "média simples do sentimento" e
+> "média ponderada por volume" correspondem, respectivamente, à **Regressão Logística** e ao
+> **Random Forest**. O código não agrega notícias nem pondera por volume.
 
-| Modelo | Dataset | AUC | MDA |
-|---|---|---|---|
-| Regressão Logística (L2) | tfidf_daily | 0,502 | 0,503 |
-| Random Forest (200 árvores) | tfidf_daily | 0,491 | 0,512 |
+### Como cada resultado do artigo é calculado
 
-**Backtest econômico (estratégia `long_only_60`):**
-
-| Modelo | CAGR | Sharpe |
+| Resultado | Arquivo em `reports/figures/` | Cálculo no código |
 |---|---|---|
-| Regressão Logística (L2) | −2,65% | −0,155 |
-| Random Forest (200 árvores) | +2,22% | +0,213 |
-
-Interpretação registrada no trabalho: os baselines de sentimento operam
-**próximos ao acaso** na previsão da direção do Ibovespa em T+1 (AUC/MDA ≈ 0,50),
-sem ganho consistente sobre um modelo puramente técnico — resultado tratado como
-evidência empírica transparente, não como estratégia operacional. O estudo de
-eventos (CAAR por horizonte τ, em `Figura_7B_event_time_CAAR.csv`) e o índice de
-latência complementam a análise da velocidade de incorporação do sentimento.
-
-> Detalhes metodológicos das métricas (convenção de Sharpe = 252 dias, custos de
-> atrito implícitos = 0, estratégia comparada = `long_only_60`) estão em
-> `reports/figures/nota_tabela1.txt`.
+| Tabela 1 (amostra) | `Tabela_intersecao_periodo.csv` | 1.737 pregões (2018–2024); 1.341 dias com sentimento |
+| Tabela 2 (AUC/MDA) | `Tabela_1_metricas.csv` | Notebook 16, sobre 1.552 dias fora da amostra (05/08/2019–17/11/2025). MDA = acurácia de (p ≥ 0,5). IC 95% por bootstrap i.i.d. (1.000 reamostragens, semente 42) |
+| Tabela 3 (backtest, cenário padrão) | `Tabela_3_metricas_extendidas.csv` | Compra se p ≥ quantil 0,90 de p no período inteiro; vende se p ≤ mediana; posição aplicada com 1 dia de defasagem (lag 0); custo de 0,0005 por turnover. Benchmark: buy-and-hold de 2018 a 2024 |
+| Tabela 4 (robustez) | `Tabela_2_robustez_backtest.csv` | Mesma regra, com quantis 0,90 e 0,95 e lags 0, 1 e 2 (defasagem efetiva = lag + 1) |
+| Figura 1 | `Figura_1_ibov_eventos.png` | Eventos de sentimento extremo cujo \|CAR\| está no percentil 90 ou acima |
+| Figura 3 | `Figura_3_comparativo_modelos.png` | Sharpe da regra `long_only_60`: compra se p ≥ 0,60, vende se p ≤ 0,40, mantém entre os dois |
+| Figura 4 | `Figura_4_dispersao_sentimento_retorno.png` | Pearson entre o sentimento da Regressão Logística e o retorno do **mesmo dia** (D−1 → D) |
+| Figura 7B | `Figura_7B_event_time_CAAR.*` | Eventos = dias com a média do sentimento dos dois modelos no percentil 90 ou acima, ou no 10 ou abaixo. CAR = soma dos retornos brutos de D0 até D0+τ **dias corridos** |
+| Figura 8 | `Figura_8_backtest_vs_benchmark.*` | Curvas da regra `long_only_60` e do Ibovespa nos mesmos 1.341 dias |
 
 ---
 
-## Estrutura do Repositório
+## Dados
 
-```
-.
-├── app_dashboard.py            # Dashboard interativo (Dash/Plotly, 8 figuras)
-├── main.py                     # Ponto de entrada stub do pipeline
-├── pipeline_orchestration.py   # Orquestra execução sequencial dos notebooks 00→20
-│
-├── assets/
-│   └── styles.css              # Tema visual do dashboard
-│
-├── configs/
-│   └── config_tcc.yaml         # Parâmetros globais: período, colunas, arquivos-chave
-│
-├── notebooks/                  # Pipeline analítico (21 notebooks numerados 00→20)
-│   ├── 00_data_download.ipynb
-│   ├── 01_preprocessing.ipynb
-│   ├── ...
-│   └── 20_final_dashboard_analysis.ipynb
-│
-├── scripts/                    # Utilitários: exportação, diagnóstico, validação
-│   ├── create_sample_data.py   # Gera dados sintéticos para testes
-│   ├── data_integrity_report.py
-│   ├── export_dashboard_figures.py
-│   ├── export_tcc_figures.py   # Exportação headless das figuras da banca
-│   ├── generate_event_study_latency.py
-│   ├── generate_release_pack.py
-│   ├── pipeline_minimal.py     # Pipeline mínimo (clamp de datas)
-│   ├── port_http_probe.py
-│   ├── preflight_check.py
-│   ├── run_pipeline_complete.py # Executa ETL → features (notebooks 13–15)
-│   └── verify_project.py       # Verificação integral de artefatos e notebooks
-│
-├── src/                        # Módulos Python reutilizáveis
-│   ├── config/
-│   │   ├── constants.py        # Constantes globais (período, TF-IDF, eventos)
-│   │   └── loader.py           # Leitura de config_tcc.yaml
-│   ├── io/
-│   │   └── paths.py            # Resolução de caminhos (local/Colab)
-│   ├── utils/
-│   │   ├── gdelt_collector.py  # Coleta via GDELT 2.0
-│   │   ├── logger.py           # Logging estruturado para MLflow
-│   │   └── newsapi_collector.py # Coleta via NewsAPI
-│   └── validation/
-│       └── merges.py           # Validação de interseção de séries temporais
-│
-├── tests/                      # Testes automatizados (pytest)
-│   ├── conftest.py
-│   ├── test_dashboard.py
-│   └── test_data_period.py
-│
-├── reports/                    # Relatórios de auditoria e figuras finais
-│   ├── figures/                # PNGs e CSVs exportados para a banca
-│   ├── final_data_audit.md
-│   ├── final_sanity_checks.md
-│   ├── final_graph_validation.md
-│   ├── final_runtime_checks.md
-│   └── ...
-│
-├── data/                       # Metadados leves (rastreados no git)
-│   └── results_registry.json
-│
-├── .env.example                # Variáveis de ambiente necessárias (template)
-├── requirements.txt            # Dependências Python
-└── LICENSE
-```
+Os dados não são versionados no repositório (licenças das fontes de notícias). Para reproduzir
+os números do artigo, a pasta apontada por `TCC_USP_BASE` deve conter `data_processed/` com:
 
-> Os diretórios `data_raw/`, `data_processed/` e `data_interim/` **não são versionados** (`.gitignore`). Devem ser mantidos localmente ou recriados via pipeline conforme descrito abaixo.
-
----
-
-## Stack
-
-| Camada | Tecnologia |
+| Arquivo | Conteúdo |
 |---|---|
-| Linguagem | Python 3.x |
-| Dashboard | Dash + Plotly |
-| ETL / Séries temporais | Pandas, NumPy |
-| Modelos baseline | Scikit-learn (Regressão Logística, Random Forest) |
-| Embeddings / LSTM | Transformers, Sentence-Transformers, TensorFlow/PyTorch |
-| Dados de mercado | yfinance |
-| Coleta de notícias | GDELT 2.0 (público), NewsAPI (API paga) |
-| NLP PT-BR | NLTK, spaCy |
-| Estatísticas | Statsmodels |
-| Visualização | Matplotlib, Seaborn, Plotly |
-| Orquestração | Papermill (com fallback para nbconvert) |
-| Rastreamento de experimentos | MLflow |
+| `16_oof_predictions.csv` | p diário fora da amostra da Regressão Logística e do Random Forest (até 30/12/2024) |
+| `tfidf_daily_matrix.npz`, `tfidf_daily_index.csv` | Matriz TF-IDF diária (2.771 dias × 45.473 termos) |
+| `labels_y_daily.csv` | Alvo (alta em D+1) e retorno de D para D+1 |
+| `ibovespa_clean.csv` | Ibovespa diário de 2018 a 2024 |
+
+Configure a variável copiando `.env.example` para `.env`, ou com `export TCC_USP_BASE=...`.
 
 ---
 
-## Configuração do Ambiente
-
-### 1. Clonar o repositório
+## Reprodução
 
 ```bash
-git clone https://github.com/AndersonPM15/tcc-usp-ibovespa-sentimento.git
-cd tcc-usp-ibovespa-sentimento
+python3.11 -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements-dev.txt
+export TCC_USP_BASE=/caminho/para/TCC_USP                # pasta que contém data_processed/
+
+pytest                                                   # confere os números do artigo
+python scripts/export_tcc_figures.py --strategy long_only_60 --run_robustness   # regenera reports/figures
 ```
 
-### 2. Criar e ativar ambiente virtual
+O teste `tests/test_article_reproduction.py` confere as Tabelas 1 a 4, as Figuras 3, 4 e 8 e o
+estudo de eventos contra referências congeladas em `tests/fixtures/article/`. A Tabela 2 é
+recalculada a partir da matriz TF-IDF, executando o código do notebook 16. Sem os dados, os
+testes são pulados.
 
-```bat
-python -m venv venv
-.\venv\Scripts\activate
-```
+**Exceção documentada — Figura 7B:** no artigo, o bootstrap dos intervalos de confiança não
+tinha semente fixa. O código agora usa a semente 42, então os ICs podem diferir dos publicados a
+partir da 3ª casa decimal. O teste aceita até 0,0025 nas médias e 0,01 nos ICs. No grupo
+positivo em τ=4 (15 eventos), o limite superior do IC muda de sinal conforme o sorteio.
 
-### 3. Instalar dependências
+### Versões de reprodução (2026)
 
-```bat
-pip install -r requirements.txt
-```
+Testadas em ambiente limpo com **Python 3.11.15**:
 
-### 4. Configurar variáveis de ambiente
-
-Copie `.env.example` para `.env` e preencha os valores necessários:
-
-```bat
-copy .env.example .env
-```
-
-O caminho base dos dados pode ser sobrescrito com a variável:
-
-```
-TCC_USP_BASE=C:\seu\caminho\para\TCC_USP
-```
-
-Se não definida, o módulo `src/io/paths.py` usa `C:/TCC_USP` como padrão.
-
----
-
-## Obtenção dos Dados
-
-### Dados de mercado (Ibovespa)
-
-Baixados via `yfinance` pelo notebook `00_data_download.ipynb`. Não requerem credenciais.
-
-### Dados de notícias
-
-As notícias financeiras em português foram coletadas de múltiplas fontes durante o período de análise. Por restrições de licença das fontes, os dados brutos não são distribuídos neste repositório.
-
-**Para reproduzir a coleta:**
-
-1. **GDELT 2.0** (público, sem chave): execute `12_data_collection_multisource.ipynb`. O coletor está em `src/utils/gdelt_collector.py`.
-2. **NewsAPI** (plano pago para histórico > 30 dias): configure `NEWSAPI_KEY` no `.env` e execute `05_data_collection_real.ipynb`.
-3. **RSS e fontes adicionais**: configuradas no notebook `12`.
-
-O notebook `13_etl_dedup.ipynb` consolida e deduplica todas as fontes em `data_processed/news_clean_multisource.parquet`.
-
----
-
-## Reprodução do Pipeline
-
-Execute os notebooks na ordem numérica usando o orquestrador:
-
-```bat
-python pipeline_orchestration.py
-```
-
-Ou um subconjunto específico:
-
-```bat
-python pipeline_orchestration.py --only 13 14 15 16 17 18
-```
-
-### Ordem recomendada
-
-| Faixa | Notebooks | Descrição |
+| Arquivo | Uso | Principais versões |
 |---|---|---|
-| 00 | `00_data_download` | Download do Ibovespa via yfinance |
-| 01–04 | `01`–`04` | Preprocessamento e modelos com dados sintéticos (prova de conceito) |
-| 05–09 | `05`–`09` | Coleta e modelagem com dados reais (fonte única) |
-| 12–15 | `12`–`15` | Coleta multisource, ETL, deduplicação, features TF-IDF diárias |
-| 16–18 | `16`–`17`–`18` | Modelos baseline, validação do sentimento, backtest |
-| 19–20 | `19`–`20` | Extensões futuras e dashboard final |
+| `requirements.txt` | Reproduzir o artigo e as verificações | numpy 2.4.6, pandas 2.3.3, scipy 1.17.1, scikit-learn 1.9.1, statsmodels 0.15.0, matplotlib 3.11.2 |
+| `requirements-dev.txt` | Testes, lint e pré-commit | pytest 9.1.1, ruff 0.16.10, pre-commit 4.6.2 |
+| `requirements-optional.txt` | Recoleta, pré-processamento, dashboard e orquestração | nltk 3.10.3, spacy 3.8.16, dash 4.4.1, papermill 2.7.0 |
 
-### Execução do subpipeline ETL → features
+Os notebooks-protótipo de embeddings e LSTM (04, 08 e 09) usam TensorFlow e
+sentence-transformers. Eles não fazem parte do artigo e essas bibliotecas não estão fixadas.
 
-```bat
-python scripts/run_pipeline_complete.py
+---
+
+## Padrões do repositório
+
+- **Idioma:** nomes de funções, variáveis, módulos e testes em inglês, seguindo a convenção do
+  Python e das bibliotecas usadas. Comentários, docstrings, mensagens, documentação e
+  relatórios em português.
+- **Formatação e lint:** ruff, com linhas de 100 colunas (configuração em `pyproject.toml`).
+- **Antes de cada commit:** `pre-commit install` ativa lint, formatação e o teste de
+  reprodução do artigo (`.pre-commit-config.yaml`).
+- **Segredos:** chaves de API ficam no `.env`, que não é versionado (`src/config/secrets.py`).
+
+---
+
+## Estrutura
+
+```
+app_dashboard.py              Dashboard interativo (Dash/Plotly)
+pipeline_orchestration.py     Executa os notebooks em sequência (papermill/nbconvert)
+configs/config_tcc.yaml       Período do estudo e nomes de arquivos
+notebooks/
+  12_…ipynb a 18_…ipynb, 20_  Pipeline do artigo: coleta, ETL, pré-processamento, TF-IDF,
+                              modelos, validação e backtest
+  00_…ipynb a 11_…, 19_       Protótipos de desenvolvimento (dados sintéticos ou fonte única),
+                              fora do pipeline do artigo
+scripts/export_tcc_figures.py Figuras e tabelas do artigo (reports/figures)
+scripts/generate_event_study_latency.py  Eventos do estudo de eventos
+src/                          Módulos reutilizáveis (caminhos, configuração, coletores, validação)
+tests/                        Testes (pytest), incluindo a reprodução do artigo
+reports/figures/              Figuras e tabelas exportadas
 ```
 
 ---
 
-## Dashboard
+## Licença e citação
 
-Para iniciar o dashboard interativo:
+Código sob licença MIT (`LICENSE`). Os dados de notícias pertencem às respectivas fontes e não
+são redistribuídos.
 
-```bat
-.\venv\Scripts\python.exe app_dashboard.py --host 127.0.0.1 --port 8050 --open
-```
-
-O dashboard exibe 8 figuras: série do Ibovespa com eventos, sentimento diário, comparativo de modelos, dispersão sentimento–retorno, correlação móvel (60d/90d), distribuição de sentimento, latência (CAR/estudo de eventos) e backtest vs benchmark.
-
-### Exportação de figuras para a banca
-
-```bat
-python scripts/export_tcc_figures.py --strategy long_only_60
-```
-
-Gera 11 PNGs determinísticos em `reports/figures/`. Com `--run_robustness`, gera mais 3 figuras de robustez (total = 14).
-
----
-
-## Reprodutibilidade e Validação Temporal
-
-- **Walk-forward validation:** `TimeSeriesSplit` com 5 folds e embargo de 1 dia (sem vazamento temporal).
-- **Hard cap temporal:** nenhum dado posterior a 2024-12-31 entra no pipeline.
-- **Seed fixo:** `RANDOM_SEED = 42` para todos os modelos estocásticos.
-- **Relatórios de auditoria:** disponíveis em `reports/` — `final_data_audit.md`, `final_sanity_checks.md`, `final_graph_validation.md`, `final_runtime_checks.md`.
-
-Para verificação integral dos artefatos:
-
-```bat
-python scripts/verify_project.py
-```
-
----
-
-## Dados, Ética e Conformidade
-
-- Dados de notícias não são redistribuídos; respeitar os termos e licenças de cada fonte.
-- Metadados e trechos curtos são utilizados; o conteúdo completo das notícias não é armazenado no repositório.
-- O pipeline evita vazamento temporal via clamping e walk-forward estrito.
-
----
-
-## Como Citar (ABNT — sugestão)
-
-MACHADO, Anderson Pantoja. **Análise do sentimento de notícias em português e seu efeito no Ibovespa: evidência empírica com baselines transparentes e estudo de eventos**. Trabalho de Conclusão de Curso (MBA em Business Intelligence & Analytics) — Escola de Comunicações e Artes, Universidade de São Paulo, São Paulo, 2026.
-
----
-
-## Licença
-
-Distribuído sob a licença **MIT**. Veja o arquivo `LICENSE`.
+MACHADO, Anderson Pantoja. Análise do Sentimento de Notícias e seu Efeito no Ibovespa: Um
+Estudo Empírico com Baselines Transparentes. In: XXIX SemeAd — Seminários em Administração
+FEA-USP, 2026. Artigo 160.
