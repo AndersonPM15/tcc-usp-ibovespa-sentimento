@@ -55,7 +55,7 @@
       "bytes": 8503620,
       "sha256": null,
       "content_sha256": null,
-      "observacao": "arquivo não disponível nesta máquina; rode python -m tcc manifest --write onde ele estiver"
+      "observacao": "o arquivo (8,5 MB) está só no Google Drive do autor e não pôde ser baixado para o ambiente em nuvem (limite de tamanho do conector; tentativa em 06/10/2026); rode python -m tcc manifest --write na pasta onde ele estiver"
     }
   ]
 }

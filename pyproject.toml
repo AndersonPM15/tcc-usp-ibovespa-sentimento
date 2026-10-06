@@ -42,7 +42,7 @@ tcc = "tcc.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-tcc = ["reference/*.csv", "reference/*.json"]
+tcc = ["reference/*.csv", "reference/*.json", "presentation/fonts/*"]
 
 [tool.ruff]
 line-length = 100

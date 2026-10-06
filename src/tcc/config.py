@@ -56,6 +56,11 @@ class Settings:
         """Resultados das verificações pós-submissão."""
         return self.reports_dir / "verificacao"
 
+    @property
+    def presentation_dir(self) -> Path:
+        """Figuras dos slides da apresentação."""
+        return self.reports_dir / "apresentacao"
+
 
 def load_settings(base_dir: Path | None = None, reports_dir: Path | None = None) -> Settings:
     """Monta a configuração a partir dos argumentos, do ambiente ou do `.env`.

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 import pytest
 
 from tcc import stats
@@ -18,6 +19,16 @@ def test_moving_block_bootstrap_is_deterministic_and_covers_the_estimate() -> No
     assert first == second
     assert first != other_seed
     assert first[0] < stats.pearson(x, y) < first[1]
+
+
+def test_rolling_correlation_uses_only_the_window() -> None:
+    rng = np.random.default_rng(2)
+    x, y = pd.Series(rng.normal(size=40)), pd.Series(rng.normal(size=40))
+    rolling = stats.rolling_correlation(x, y, 10)
+    assert rolling.iloc[:9].isna().all()
+    assert rolling.iloc[25] == pytest.approx(
+        stats.pearson(x.iloc[16:26].to_numpy(), y.iloc[16:26].to_numpy())
+    )
 
 
 def test_block_size_and_newey_west_lag_rules() -> None:

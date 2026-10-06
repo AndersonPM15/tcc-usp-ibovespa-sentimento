@@ -1,0 +1,2789 @@
+dia,ibovespa,manchetes,pregoes_treino_inicial,faixa
+2018-01-02,77891,62,390,treino inicial
+2018-01-03,77995,97,390,treino inicial
+2018-01-04,78647,62,390,treino inicial
+2018-01-05,79071,72,390,treino inicial
+2018-01-06,,13,390,treino inicial
+2018-01-07,,1,390,treino inicial
+2018-01-08,79379,122,390,treino inicial
+2018-01-09,78864,81,390,treino inicial
+2018-01-10,78201,65,390,treino inicial
+2018-01-11,79365,52,390,treino inicial
+2018-01-12,79349,84,390,treino inicial
+2018-01-13,,16,390,treino inicial
+2018-01-14,,1,390,treino inicial
+2018-01-15,79752,71,390,treino inicial
+2018-01-16,79832,109,390,treino inicial
+2018-01-17,81189,91,390,treino inicial
+2018-01-18,80963,87,390,treino inicial
+2018-01-19,81220,115,390,treino inicial
+2018-01-20,,19,390,treino inicial
+2018-01-21,,4,390,treino inicial
+2018-01-22,81675,72,390,treino inicial
+2018-01-23,80678,74,390,treino inicial
+2018-01-24,83680,167,390,treino inicial
+2018-01-25,,40,390,treino inicial
+2018-01-26,85531,83,390,treino inicial
+2018-01-27,,32,390,treino inicial
+2018-01-28,,2,390,treino inicial
+2018-01-29,84698,61,390,treino inicial
+2018-01-30,84482,73,390,treino inicial
+2018-01-31,84913,73,390,treino inicial
+2018-02-01,85495,74,390,treino inicial
+2018-02-02,84041,101,390,treino inicial
+2018-02-03,,17,390,treino inicial
+2018-02-04,,5,390,treino inicial
+2018-02-05,81861,82,390,treino inicial
+2018-02-06,83894,151,390,treino inicial
+2018-02-07,82767,71,390,treino inicial
+2018-02-08,81533,60,390,treino inicial
+2018-02-09,80899,108,390,treino inicial
+2018-02-10,,13,390,treino inicial
+2018-02-11,,2,390,treino inicial
+2018-02-12,,3,390,treino inicial
+2018-02-13,,4,390,treino inicial
+2018-02-14,83543,61,390,treino inicial
+2018-02-15,84291,87,390,treino inicial
+2018-02-16,84525,62,390,treino inicial
+2018-02-17,,11,390,treino inicial
+2018-02-19,84793,54,390,treino inicial
+2018-02-20,85804,83,390,treino inicial
+2018-02-21,86052,67,390,treino inicial
+2018-02-22,86686,98,390,treino inicial
+2018-02-23,87293,109,390,treino inicial
+2018-02-24,,34,390,treino inicial
+2018-02-25,,4,390,treino inicial
+2018-02-26,87653,63,390,treino inicial
+2018-02-27,86935,44,390,treino inicial
+2018-02-28,85481,81,390,treino inicial
+2018-03-01,85378,77,390,treino inicial
+2018-03-02,85761,96,390,treino inicial
+2018-03-03,,20,390,treino inicial
+2018-03-04,,2,390,treino inicial
+2018-03-05,86023,79,390,treino inicial
+2018-03-06,85653,80,390,treino inicial
+2018-03-07,85484,70,390,treino inicial
+2018-03-08,84985,87,390,treino inicial
+2018-03-09,86371,102,390,treino inicial
+2018-03-10,,13,390,treino inicial
+2018-03-11,,9,390,treino inicial
+2018-03-12,86900,62,390,treino inicial
+2018-03-13,86384,80,390,treino inicial
+2018-03-14,86051,73,390,treino inicial
+2018-03-15,84928,90,390,treino inicial
+2018-03-16,84886,77,390,treino inicial
+2018-03-17,,8,390,treino inicial
+2018-03-18,,1,390,treino inicial
+2018-03-19,83913,52,390,treino inicial
+2018-03-20,84164,68,390,treino inicial
+2018-03-21,84977,79,390,treino inicial
+2018-03-22,84768,76,390,treino inicial
+2018-03-23,84377,72,390,treino inicial
+2018-03-24,,18,390,treino inicial
+2018-03-25,,2,390,treino inicial
+2018-03-26,85088,53,390,treino inicial
+2018-03-27,83808,74,390,treino inicial
+2018-03-28,83874,90,390,treino inicial
+2018-03-29,85366,60,390,treino inicial
+2018-03-30,,7,390,treino inicial
+2018-03-31,,3,390,treino inicial
+2018-04-01,,3,390,treino inicial
+2018-04-02,84666,89,390,treino inicial
+2018-04-03,84623,67,390,treino inicial
+2018-04-04,84360,72,390,treino inicial
+2018-04-05,85210,111,390,treino inicial
+2018-04-06,84820,90,390,treino inicial
+2018-04-07,,11,390,treino inicial
+2018-04-09,83307,78,390,treino inicial
+2018-04-10,84510,100,390,treino inicial
+2018-04-11,85246,77,390,treino inicial
+2018-04-12,85444,56,390,treino inicial
+2018-04-13,84334,77,390,treino inicial
+2018-04-14,,25,390,treino inicial
+2018-04-15,,5,390,treino inicial
+2018-04-16,82862,58,390,treino inicial
+2018-04-17,84086,72,390,treino inicial
+2018-04-18,85776,88,390,treino inicial
+2018-04-19,85824,79,390,treino inicial
+2018-04-20,85550,53,390,treino inicial
+2018-04-21,,7,390,treino inicial
+2018-04-23,85602,69,390,treino inicial
+2018-04-24,85469,80,390,treino inicial
+2018-04-25,85044,63,390,treino inicial
+2018-04-26,86383,80,390,treino inicial
+2018-04-27,86445,84,390,treino inicial
+2018-04-28,,8,390,treino inicial
+2018-04-29,,2,390,treino inicial
+2018-04-30,86115,66,390,treino inicial
+2018-05-01,,24,390,treino inicial
+2018-05-02,84547,71,390,treino inicial
+2018-05-03,83288,80,390,treino inicial
+2018-05-04,83118,85,390,treino inicial
+2018-05-05,,17,390,treino inicial
+2018-05-07,82714,68,390,treino inicial
+2018-05-08,82956,65,390,treino inicial
+2018-05-09,84265,106,390,treino inicial
+2018-05-10,85861,73,390,treino inicial
+2018-05-11,85220,99,390,treino inicial
+2018-05-12,,8,390,treino inicial
+2018-05-13,,2,390,treino inicial
+2018-05-14,85232,45,390,treino inicial
+2018-05-15,85130,98,390,treino inicial
+2018-05-16,86537,71,390,treino inicial
+2018-05-17,83622,87,390,treino inicial
+2018-05-18,83082,117,390,treino inicial
+2018-05-19,,15,390,treino inicial
+2018-05-20,,1,390,treino inicial
+2018-05-21,81815,48,390,treino inicial
+2018-05-22,82739,51,390,treino inicial
+2018-05-23,80867,68,390,treino inicial
+2018-05-24,80122,130,390,treino inicial
+2018-05-25,78898,101,390,treino inicial
+2018-05-26,,21,390,treino inicial
+2018-05-27,,4,390,treino inicial
+2018-05-28,75356,132,390,treino inicial
+2018-05-29,76072,88,390,treino inicial
+2018-05-30,76754,114,390,treino inicial
+2018-05-31,,19,390,treino inicial
+2018-06-01,77240,168,390,treino inicial
+2018-06-02,,73,390,treino inicial
+2018-06-03,,5,390,treino inicial
+2018-06-04,78596,93,390,treino inicial
+2018-06-05,76642,96,390,treino inicial
+2018-06-06,76117,87,390,treino inicial
+2018-06-07,73851,170,390,treino inicial
+2018-06-08,72942,161,390,treino inicial
+2018-06-09,,28,390,treino inicial
+2018-06-10,,18,390,treino inicial
+2018-06-11,72308,104,390,treino inicial
+2018-06-12,72754,112,390,treino inicial
+2018-06-13,72122,106,390,treino inicial
+2018-06-14,71421,126,390,treino inicial
+2018-06-15,70758,110,390,treino inicial
+2018-06-16,,22,390,treino inicial
+2018-06-17,,7,390,treino inicial
+2018-06-18,69815,95,390,treino inicial
+2018-06-19,71394,121,390,treino inicial
+2018-06-20,72123,109,390,treino inicial
+2018-06-21,70075,81,390,treino inicial
+2018-06-22,70641,77,390,treino inicial
+2018-06-23,,11,390,treino inicial
+2018-06-24,,19,390,treino inicial
+2018-06-25,70953,56,390,treino inicial
+2018-06-26,71405,92,390,treino inicial
+2018-06-27,70609,54,390,treino inicial
+2018-06-28,71767,65,390,treino inicial
+2018-06-29,72763,61,390,treino inicial
+2018-06-30,,39,390,treino inicial
+2018-07-01,,1,390,treino inicial
+2018-07-02,72840,104,390,treino inicial
+2018-07-03,73668,98,390,treino inicial
+2018-07-04,74743,110,390,treino inicial
+2018-07-05,74553,134,390,treino inicial
+2018-07-06,75010,86,390,treino inicial
+2018-07-07,,22,390,treino inicial
+2018-07-08,,2,390,treino inicial
+2018-07-09,,7,390,treino inicial
+2018-07-10,74862,60,390,treino inicial
+2018-07-11,74399,82,390,treino inicial
+2018-07-12,75856,86,390,treino inicial
+2018-07-13,76594,85,390,treino inicial
+2018-07-14,,10,390,treino inicial
+2018-07-15,,3,390,treino inicial
+2018-07-16,76653,70,390,treino inicial
+2018-07-17,78130,94,390,treino inicial
+2018-07-18,77363,83,390,treino inicial
+2018-07-19,77487,94,390,treino inicial
+2018-07-20,78571,95,390,treino inicial
+2018-07-21,,20,390,treino inicial
+2018-07-22,,3,390,treino inicial
+2018-07-23,77996,68,390,treino inicial
+2018-07-24,79155,97,390,treino inicial
+2018-07-25,80218,82,390,treino inicial
+2018-07-26,79405,99,390,treino inicial
+2018-07-27,79866,98,390,treino inicial
+2018-07-28,,12,390,treino inicial
+2018-07-30,80276,68,390,treino inicial
+2018-07-31,79220,123,390,treino inicial
+2018-08-01,79302,101,390,treino inicial
+2018-08-02,79637,63,390,treino inicial
+2018-08-03,81435,94,390,treino inicial
+2018-08-04,,24,390,treino inicial
+2018-08-05,,3,390,treino inicial
+2018-08-06,81051,76,390,treino inicial
+2018-08-07,80347,88,390,treino inicial
+2018-08-08,79152,81,390,treino inicial
+2018-08-09,78768,87,390,treino inicial
+2018-08-10,76514,114,390,treino inicial
+2018-08-11,,23,390,treino inicial
+2018-08-12,,13,390,treino inicial
+2018-08-13,77496,112,390,treino inicial
+2018-08-14,78602,85,390,treino inicial
+2018-08-15,77078,113,390,treino inicial
+2018-08-16,76819,96,390,treino inicial
+2018-08-17,76029,83,390,treino inicial
+2018-08-18,,26,390,treino inicial
+2018-08-19,,1,390,treino inicial
+2018-08-20,76328,73,390,treino inicial
+2018-08-21,75180,116,390,treino inicial
+2018-08-22,76902,108,390,treino inicial
+2018-08-23,75634,98,390,treino inicial
+2018-08-24,76262,88,390,treino inicial
+2018-08-25,,16,390,treino inicial
+2018-08-26,,8,390,treino inicial
+2018-08-27,77930,1,390,treino inicial
+2018-08-28,77473,107,390,treino inicial
+2018-08-29,78389,91,390,treino inicial
+2018-08-30,76404,104,390,treino inicial
+2018-08-31,76678,91,390,treino inicial
+2018-09-01,,13,390,treino inicial
+2018-09-02,,2,390,treino inicial
+2018-09-03,76193,63,390,treino inicial
+2018-09-04,74712,80,390,treino inicial
+2018-09-05,75092,87,390,treino inicial
+2018-09-06,76416,86,390,treino inicial
+2018-09-07,,23,390,treino inicial
+2018-09-08,,7,390,treino inicial
+2018-09-09,,3,390,treino inicial
+2018-09-10,76436,79,390,treino inicial
+2018-09-11,74657,80,390,treino inicial
+2018-09-12,75125,92,390,treino inicial
+2018-09-13,74687,78,390,treino inicial
+2018-09-14,75429,85,390,treino inicial
+2018-09-15,,11,390,treino inicial
+2018-09-16,,2,390,treino inicial
+2018-09-17,76789,56,390,treino inicial
+2018-09-18,78314,77,390,treino inicial
+2018-09-19,78169,84,390,treino inicial
+2018-09-20,78116,63,390,treino inicial
+2018-09-21,79444,79,390,treino inicial
+2018-09-22,,20,390,treino inicial
+2018-09-23,,2,390,treino inicial
+2018-09-24,77984,86,390,treino inicial
+2018-09-25,78630,75,390,treino inicial
+2018-09-26,78656,84,390,treino inicial
+2018-09-27,80000,90,390,treino inicial
+2018-09-28,79342,91,390,treino inicial
+2018-09-29,,18,390,treino inicial
+2018-09-30,,4,390,treino inicial
+2018-10-01,78624,0,390,treino inicial
+2018-10-02,81612,128,390,treino inicial
+2018-10-03,83273,162,390,treino inicial
+2018-10-04,82953,89,390,treino inicial
+2018-10-05,82322,84,390,treino inicial
+2018-10-06,,33,390,treino inicial
+2018-10-07,,18,390,treino inicial
+2018-10-08,86084,164,390,treino inicial
+2018-10-09,86088,128,390,treino inicial
+2018-10-10,83679,111,390,treino inicial
+2018-10-11,82921,81,390,treino inicial
+2018-10-12,,32,390,treino inicial
+2018-10-13,,10,390,treino inicial
+2018-10-14,,4,390,treino inicial
+2018-10-15,83360,97,390,treino inicial
+2018-10-16,85718,93,390,treino inicial
+2018-10-17,85764,81,390,treino inicial
+2018-10-18,83847,108,390,treino inicial
+2018-10-19,84220,103,390,treino inicial
+2018-10-20,,18,390,treino inicial
+2018-10-21,,3,390,treino inicial
+2018-10-22,85597,74,390,treino inicial
+2018-10-23,85300,72,390,treino inicial
+2018-10-24,83064,81,390,treino inicial
+2018-10-25,84084,101,390,treino inicial
+2018-10-26,85720,103,390,treino inicial
+2018-10-28,,2,390,treino inicial
+2018-10-29,83797,165,390,treino inicial
+2018-10-30,86886,91,390,treino inicial
+2018-10-31,87424,70,390,treino inicial
+2018-11-01,88419,126,390,treino inicial
+2018-11-02,,28,390,treino inicial
+2018-11-03,,4,390,treino inicial
+2018-11-04,,2,390,treino inicial
+2018-11-05,89598,78,390,treino inicial
+2018-11-06,88669,96,390,treino inicial
+2018-11-07,87714,67,390,treino inicial
+2018-11-08,85620,69,390,treino inicial
+2018-11-09,85641,112,390,treino inicial
+2018-11-10,,10,390,treino inicial
+2018-11-11,,3,390,treino inicial
+2018-11-12,85525,58,390,treino inicial
+2018-11-13,84914,74,390,treino inicial
+2018-11-14,85973,66,390,treino inicial
+2018-11-15,,7,390,treino inicial
+2018-11-16,88515,67,390,treino inicial
+2018-11-17,,28,390,treino inicial
+2018-11-19,87901,77,390,treino inicial
+2018-11-20,,15,390,treino inicial
+2018-11-21,87269,64,390,treino inicial
+2018-11-22,87477,61,390,treino inicial
+2018-11-23,86230,71,390,treino inicial
+2018-11-24,,12,390,treino inicial
+2018-11-25,,1,390,treino inicial
+2018-11-26,85547,50,390,treino inicial
+2018-11-27,87891,66,390,treino inicial
+2018-11-28,89251,75,390,treino inicial
+2018-11-29,89710,73,390,treino inicial
+2018-11-30,89504,93,390,treino inicial
+2018-12-01,,16,390,treino inicial
+2018-12-02,,2,390,treino inicial
+2018-12-03,89820,97,390,treino inicial
+2018-12-04,88624,76,390,treino inicial
+2018-12-05,89040,66,390,treino inicial
+2018-12-06,88846,99,390,treino inicial
+2018-12-07,88115,100,390,treino inicial
+2018-12-08,,12,390,treino inicial
+2018-12-10,85915,83,390,treino inicial
+2018-12-11,86420,87,390,treino inicial
+2018-12-12,86977,71,390,treino inicial
+2018-12-13,87838,61,390,treino inicial
+2018-12-14,87450,76,390,treino inicial
+2018-12-15,,17,390,treino inicial
+2018-12-16,,3,390,treino inicial
+2018-12-17,86400,92,390,treino inicial
+2018-12-18,86610,58,390,treino inicial
+2018-12-19,85674,59,390,treino inicial
+2018-12-20,85269,78,390,treino inicial
+2018-12-21,85697,56,390,treino inicial
+2018-12-22,,7,390,treino inicial
+2018-12-23,,2,390,treino inicial
+2018-12-24,,1,390,treino inicial
+2018-12-25,,2,390,treino inicial
+2018-12-26,85136,67,390,treino inicial
+2018-12-27,85460,114,390,treino inicial
+2018-12-28,87887,99,390,treino inicial
+2018-12-29,,36,390,treino inicial
+2018-12-30,,7,390,treino inicial
+2018-12-31,,7,390,treino inicial
+2019-01-01,,2,390,treino inicial
+2019-01-02,91012,100,390,treino inicial
+2019-01-03,91564,119,390,treino inicial
+2019-01-04,91841,109,390,treino inicial
+2019-01-05,,19,390,treino inicial
+2019-01-06,,2,390,treino inicial
+2019-01-07,91699,69,390,treino inicial
+2019-01-08,92032,94,390,treino inicial
+2019-01-09,93613,134,390,treino inicial
+2019-01-10,93806,99,390,treino inicial
+2019-01-11,93658,95,390,treino inicial
+2019-01-12,,22,390,treino inicial
+2019-01-13,,4,390,treino inicial
+2019-01-14,94474,89,390,treino inicial
+2019-01-15,94056,87,390,treino inicial
+2019-01-16,94393,76,390,treino inicial
+2019-01-17,95351,71,390,treino inicial
+2019-01-18,96097,98,390,treino inicial
+2019-01-19,,20,390,treino inicial
+2019-01-20,,4,390,treino inicial
+2019-01-21,96010,86,390,treino inicial
+2019-01-22,95103,89,390,treino inicial
+2019-01-23,96558,73,390,treino inicial
+2019-01-24,97677,104,390,treino inicial
+2019-01-25,,38,390,treino inicial
+2019-01-26,,14,390,treino inicial
+2019-01-27,,5,390,treino inicial
+2019-01-28,95444,154,390,treino inicial
+2019-01-29,95639,136,390,treino inicial
+2019-01-30,96996,76,390,treino inicial
+2019-01-31,97394,98,390,treino inicial
+2019-02-01,97861,78,390,treino inicial
+2019-02-02,,21,390,treino inicial
+2019-02-03,,21,390,treino inicial
+2019-02-04,98589,78,390,treino inicial
+2019-02-05,98311,100,390,treino inicial
+2019-02-06,94636,81,390,treino inicial
+2019-02-07,94406,82,390,treino inicial
+2019-02-08,95343,64,390,treino inicial
+2019-02-09,,30,390,treino inicial
+2019-02-11,94413,72,390,treino inicial
+2019-02-12,96168,83,390,treino inicial
+2019-02-13,95842,63,390,treino inicial
+2019-02-14,98015,83,390,treino inicial
+2019-02-15,97526,74,390,treino inicial
+2019-02-16,,23,390,treino inicial
+2019-02-17,,4,390,treino inicial
+2019-02-18,96510,81,390,treino inicial
+2019-02-19,97659,69,390,treino inicial
+2019-02-20,96545,60,390,treino inicial
+2019-02-21,96932,71,390,treino inicial
+2019-02-22,97886,75,390,treino inicial
+2019-02-23,,23,390,treino inicial
+2019-02-24,,6,390,treino inicial
+2019-02-25,97240,67,390,treino inicial
+2019-02-26,97603,69,390,treino inicial
+2019-02-27,97307,57,390,treino inicial
+2019-02-28,95584,76,390,treino inicial
+2019-03-01,94604,81,390,treino inicial
+2019-03-02,,11,390,treino inicial
+2019-03-03,,1,390,treino inicial
+2019-03-04,,4,390,treino inicial
+2019-03-05,,1,390,treino inicial
+2019-03-06,94217,62,390,treino inicial
+2019-03-07,94340,101,390,treino inicial
+2019-03-08,95365,92,390,treino inicial
+2019-03-09,,50,390,treino inicial
+2019-03-10,,3,390,treino inicial
+2019-03-11,98027,70,390,treino inicial
+2019-03-12,97828,68,390,treino inicial
+2019-03-13,98904,58,390,treino inicial
+2019-03-14,98605,41,390,treino inicial
+2019-03-15,99137,61,390,treino inicial
+2019-03-16,,29,390,treino inicial
+2019-03-17,,6,390,treino inicial
+2019-03-18,99994,111,390,treino inicial
+2019-03-19,99588,99,390,treino inicial
+2019-03-20,98041,58,390,treino inicial
+2019-03-21,96729,73,390,treino inicial
+2019-03-22,93735,109,390,treino inicial
+2019-03-23,,31,390,treino inicial
+2019-03-24,,8,390,treino inicial
+2019-03-25,93662,56,390,treino inicial
+2019-03-26,95307,78,390,treino inicial
+2019-03-27,91903,75,390,treino inicial
+2019-03-28,94389,97,390,treino inicial
+2019-03-29,95415,58,390,treino inicial
+2019-03-30,,5,390,treino inicial
+2019-03-31,,1,390,treino inicial
+2019-04-01,96054,68,390,treino inicial
+2019-04-02,95387,49,390,treino inicial
+2019-04-03,94491,50,390,treino inicial
+2019-04-04,96313,69,390,treino inicial
+2019-04-05,97108,50,390,treino inicial
+2019-04-06,,4,390,treino inicial
+2019-04-07,,1,390,treino inicial
+2019-04-08,97369,66,390,treino inicial
+2019-04-09,96292,54,390,treino inicial
+2019-04-10,95953,49,390,treino inicial
+2019-04-11,94755,46,390,treino inicial
+2019-04-12,92875,99,390,treino inicial
+2019-04-13,,31,390,treino inicial
+2019-04-14,,11,390,treino inicial
+2019-04-15,93083,70,390,treino inicial
+2019-04-16,94333,67,390,treino inicial
+2019-04-17,93285,69,390,treino inicial
+2019-04-18,94578,91,390,treino inicial
+2019-04-19,,17,390,treino inicial
+2019-04-20,,5,390,treino inicial
+2019-04-21,,2,390,treino inicial
+2019-04-22,94588,46,390,treino inicial
+2019-04-23,95923,61,390,treino inicial
+2019-04-24,95045,90,390,treino inicial
+2019-04-25,96552,79,390,treino inicial
+2019-04-26,96236,64,390,treino inicial
+2019-04-27,,9,390,treino inicial
+2019-04-28,,4,390,treino inicial
+2019-04-29,96188,58,390,treino inicial
+2019-04-30,96353,47,390,treino inicial
+2019-05-01,,15,390,treino inicial
+2019-05-02,95528,47,390,treino inicial
+2019-05-03,96008,62,390,treino inicial
+2019-05-04,,15,390,treino inicial
+2019-05-05,,2,390,treino inicial
+2019-05-06,95009,67,390,treino inicial
+2019-05-07,94389,79,390,treino inicial
+2019-05-08,95597,77,390,treino inicial
+2019-05-09,94808,64,390,treino inicial
+2019-05-10,94258,55,390,treino inicial
+2019-05-11,,15,390,treino inicial
+2019-05-12,,5,390,treino inicial
+2019-05-13,91727,66,390,treino inicial
+2019-05-14,92092,88,390,treino inicial
+2019-05-15,91623,64,390,treino inicial
+2019-05-16,90024,99,390,treino inicial
+2019-05-17,89993,97,390,treino inicial
+2019-05-18,,41,390,treino inicial
+2019-05-19,,7,390,treino inicial
+2019-05-20,91946,69,390,treino inicial
+2019-05-21,94485,84,390,treino inicial
+2019-05-22,94361,55,390,treino inicial
+2019-05-23,93910,65,390,treino inicial
+2019-05-24,93628,46,390,treino inicial
+2019-05-25,,22,390,treino inicial
+2019-05-26,,6,390,treino inicial
+2019-05-27,94864,55,390,treino inicial
+2019-05-28,96393,44,390,treino inicial
+2019-05-29,96567,50,390,treino inicial
+2019-05-30,97457,47,390,treino inicial
+2019-05-31,97030,69,390,treino inicial
+2019-06-01,,27,390,treino inicial
+2019-06-02,,5,390,treino inicial
+2019-06-03,97020,70,390,treino inicial
+2019-06-04,97380,71,390,treino inicial
+2019-06-05,95999,57,390,treino inicial
+2019-06-06,97205,50,390,treino inicial
+2019-06-07,97821,51,390,treino inicial
+2019-06-08,,6,390,treino inicial
+2019-06-09,,2,390,treino inicial
+2019-06-10,97467,41,390,treino inicial
+2019-06-11,98960,60,390,treino inicial
+2019-06-12,98321,61,390,treino inicial
+2019-06-13,98774,43,390,treino inicial
+2019-06-14,98040,66,390,treino inicial
+2019-06-15,,7,390,treino inicial
+2019-06-16,,1,390,treino inicial
+2019-06-17,97623,48,390,treino inicial
+2019-06-18,99404,50,390,treino inicial
+2019-06-19,100303,79,390,treino inicial
+2019-06-20,,34,390,treino inicial
+2019-06-21,102013,64,390,treino inicial
+2019-06-22,,27,390,treino inicial
+2019-06-23,,7,390,treino inicial
+2019-06-24,102062,52,390,treino inicial
+2019-06-25,100093,62,390,treino inicial
+2019-06-26,100689,63,390,treino inicial
+2019-06-27,100724,60,390,treino inicial
+2019-06-28,100967,55,390,treino inicial
+2019-06-29,,16,390,treino inicial
+2019-06-30,,15,390,treino inicial
+2019-07-01,101340,56,390,treino inicial
+2019-07-02,100605,63,390,treino inicial
+2019-07-03,102043,37,390,treino inicial
+2019-07-04,103636,80,390,treino inicial
+2019-07-05,104089,71,390,treino inicial
+2019-07-06,,16,390,treino inicial
+2019-07-07,,16,390,treino inicial
+2019-07-08,104530,58,390,treino inicial
+2019-07-09,,14,390,treino inicial
+2019-07-10,105817,70,390,treino inicial
+2019-07-11,105146,91,390,treino inicial
+2019-07-12,103906,73,390,treino inicial
+2019-07-13,,12,390,treino inicial
+2019-07-14,,4,390,treino inicial
+2019-07-15,103803,46,390,treino inicial
+2019-07-16,103775,62,390,treino inicial
+2019-07-17,103856,43,390,treino inicial
+2019-07-18,104717,54,390,treino inicial
+2019-07-19,103452,69,390,treino inicial
+2019-07-20,,7,390,treino inicial
+2019-07-21,,1,390,treino inicial
+2019-07-22,103949,49,390,treino inicial
+2019-07-23,103704,49,390,treino inicial
+2019-07-24,104120,63,390,treino inicial
+2019-07-25,102655,57,390,treino inicial
+2019-07-26,102819,48,390,treino inicial
+2019-07-27,,13,390,treino inicial
+2019-07-28,,5,390,treino inicial
+2019-07-29,103483,43,390,treino inicial
+2019-07-30,102933,50,390,treino inicial
+2019-07-31,101812,53,390,treino inicial
+2019-08-01,102126,70,390,treino inicial
+2019-08-02,102674,71,390,treino inicial
+2019-08-03,,9,390,
+2019-08-04,,2,390,
+2019-08-05,100098,76,390,"teste: H1, H2 e H3"
+2019-08-06,102164,64,390,"teste: H1, H2 e H3"
+2019-08-07,102782,74,390,"teste: H1, H2 e H3"
+2019-08-08,104115,56,390,"teste: H1, H2 e H3"
+2019-08-09,103996,74,390,"teste: H1, H2 e H3"
+2019-08-10,,15,390,"teste: H1, H2 e H3"
+2019-08-11,,2,390,"teste: H1, H2 e H3"
+2019-08-12,101915,72,390,"teste: H1, H2 e H3"
+2019-08-13,103299,114,390,"teste: H1, H2 e H3"
+2019-08-14,100258,119,390,"teste: H1, H2 e H3"
+2019-08-15,99057,94,390,"teste: H1, H2 e H3"
+2019-08-16,99806,52,390,"teste: H1, H2 e H3"
+2019-08-17,,17,390,"teste: H1, H2 e H3"
+2019-08-18,,6,390,"teste: H1, H2 e H3"
+2019-08-19,99469,78,390,"teste: H1, H2 e H3"
+2019-08-20,99222,75,390,"teste: H1, H2 e H3"
+2019-08-21,101202,77,390,"teste: H1, H2 e H3"
+2019-08-22,100011,60,390,"teste: H1, H2 e H3"
+2019-08-23,97667,74,390,"teste: H1, H2 e H3"
+2019-08-24,,32,390,"teste: H1, H2 e H3"
+2019-08-25,,2,390,"teste: H1, H2 e H3"
+2019-08-26,96430,79,390,"teste: H1, H2 e H3"
+2019-08-27,97276,71,390,"teste: H1, H2 e H3"
+2019-08-28,98194,67,390,"teste: H1, H2 e H3"
+2019-08-29,100524,67,390,"teste: H1, H2 e H3"
+2019-08-30,101135,67,390,"teste: H1, H2 e H3"
+2019-08-31,,21,390,"teste: H1, H2 e H3"
+2019-09-01,,1,390,"teste: H1, H2 e H3"
+2019-09-02,100626,73,390,"teste: H1, H2 e H3"
+2019-09-03,99681,60,390,"teste: H1, H2 e H3"
+2019-09-04,101201,54,390,"teste: H1, H2 e H3"
+2019-09-05,102243,47,390,"teste: H1, H2 e H3"
+2019-09-06,102935,55,390,"teste: H1, H2 e H3"
+2019-09-07,,11,390,"teste: H1, H2 e H3"
+2019-09-08,,4,390,"teste: H1, H2 e H3"
+2019-09-09,103181,52,390,"teste: H1, H2 e H3"
+2019-09-10,103032,68,390,"teste: H1, H2 e H3"
+2019-09-11,103446,54,390,"teste: H1, H2 e H3"
+2019-09-12,104371,49,390,"teste: H1, H2 e H3"
+2019-09-13,103501,40,390,"teste: H1, H2 e H3"
+2019-09-14,,14,390,"teste: H1, H2 e H3"
+2019-09-15,,3,390,"teste: H1, H2 e H3"
+2019-09-16,103680,85,390,"teste: H1, H2 e H3"
+2019-09-17,104617,53,390,"teste: H1, H2 e H3"
+2019-09-18,104532,56,390,"teste: H1, H2 e H3"
+2019-09-19,104339,57,390,"teste: H1, H2 e H3"
+2019-09-20,104817,54,390,"teste: H1, H2 e H3"
+2019-09-21,,12,390,"teste: H1, H2 e H3"
+2019-09-22,,2,390,"teste: H1, H2 e H3"
+2019-09-23,104638,32,390,"teste: H1, H2 e H3"
+2019-09-24,103876,56,390,"teste: H1, H2 e H3"
+2019-09-25,104481,49,390,"teste: H1, H2 e H3"
+2019-09-26,105319,29,390,"teste: H1, H2 e H3"
+2019-09-27,105078,54,390,"teste: H1, H2 e H3"
+2019-09-28,,13,390,"teste: H1, H2 e H3"
+2019-09-29,,1,390,"teste: H1, H2 e H3"
+2019-09-30,104745,53,390,"teste: H1, H2 e H3"
+2019-10-01,104053,57,390,"teste: H1, H2 e H3"
+2019-10-02,101031,75,390,"teste: H1, H2 e H3"
+2019-10-03,101516,62,390,"teste: H1, H2 e H3"
+2019-10-04,102551,43,390,"teste: H1, H2 e H3"
+2019-10-05,,15,390,"teste: H1, H2 e H3"
+2019-10-06,,2,390,"teste: H1, H2 e H3"
+2019-10-07,100573,60,390,"teste: H1, H2 e H3"
+2019-10-08,99981,59,390,"teste: H1, H2 e H3"
+2019-10-09,101249,39,390,"teste: H1, H2 e H3"
+2019-10-10,101817,38,390,"teste: H1, H2 e H3"
+2019-10-11,103832,43,390,"teste: H1, H2 e H3"
+2019-10-12,,9,390,"teste: H1, H2 e H3"
+2019-10-14,104302,41,390,"teste: H1, H2 e H3"
+2019-10-15,104490,46,390,"teste: H1, H2 e H3"
+2019-10-16,105423,76,390,"teste: H1, H2 e H3"
+2019-10-17,105016,32,390,"teste: H1, H2 e H3"
+2019-10-18,104729,44,390,"teste: H1, H2 e H3"
+2019-10-19,,5,390,"teste: H1, H2 e H3"
+2019-10-21,106022,49,390,"teste: H1, H2 e H3"
+2019-10-22,107381,69,390,"teste: H1, H2 e H3"
+2019-10-23,107544,103,390,"teste: H1, H2 e H3"
+2019-10-24,106986,48,390,"teste: H1, H2 e H3"
+2019-10-25,107364,61,390,"teste: H1, H2 e H3"
+2019-10-26,,16,390,"teste: H1, H2 e H3"
+2019-10-27,,1,390,"teste: H1, H2 e H3"
+2019-10-28,108187,55,390,"teste: H1, H2 e H3"
+2019-10-29,107556,73,390,"teste: H1, H2 e H3"
+2019-10-30,108408,64,390,"teste: H1, H2 e H3"
+2019-10-31,107220,52,390,"teste: H1, H2 e H3"
+2019-11-01,108196,42,390,"teste: H1, H2 e H3"
+2019-11-02,,14,390,"teste: H1, H2 e H3"
+2019-11-03,,3,390,"teste: H1, H2 e H3"
+2019-11-04,108601,43,390,"teste: H1, H2 e H3"
+2019-11-05,108451,44,390,"teste: H1, H2 e H3"
+2019-11-06,108336,58,390,"teste: H1, H2 e H3"
+2019-11-07,109581,56,390,"teste: H1, H2 e H3"
+2019-11-08,107629,64,390,"teste: H1, H2 e H3"
+2019-11-09,,35,390,"teste: H1, H2 e H3"
+2019-11-10,,23,390,"teste: H1, H2 e H3"
+2019-11-11,108215,36,390,"teste: H1, H2 e H3"
+2019-11-12,106785,40,390,"teste: H1, H2 e H3"
+2019-11-13,105914,55,390,"teste: H1, H2 e H3"
+2019-11-14,106557,48,390,"teste: H1, H2 e H3"
+2019-11-15,,12,390,"teste: H1, H2 e H3"
+2019-11-16,,1,390,"teste: H1, H2 e H3"
+2019-11-17,,1,390,"teste: H1, H2 e H3"
+2019-11-18,106347,65,390,"teste: H1, H2 e H3"
+2019-11-19,105618,58,390,"teste: H1, H2 e H3"
+2019-11-20,,13,390,"teste: H1, H2 e H3"
+2019-11-21,107497,53,390,"teste: H1, H2 e H3"
+2019-11-22,108692,53,390,"teste: H1, H2 e H3"
+2019-11-23,,15,390,"teste: H1, H2 e H3"
+2019-11-24,,1,390,"teste: H1, H2 e H3"
+2019-11-25,108424,40,390,"teste: H1, H2 e H3"
+2019-11-26,107059,96,390,"teste: H1, H2 e H3"
+2019-11-27,107708,49,390,"teste: H1, H2 e H3"
+2019-11-28,108290,54,390,"teste: H1, H2 e H3"
+2019-11-29,108233,59,390,"teste: H1, H2 e H3"
+2019-11-30,,20,390,"teste: H1, H2 e H3"
+2019-12-01,,4,390,"teste: H1, H2 e H3"
+2019-12-02,109061,43,390,"teste: H1, H2 e H3"
+2019-12-03,108956,60,390,"teste: H1, H2 e H3"
+2019-12-04,110301,63,390,"teste: H1, H2 e H3"
+2019-12-05,110622,63,390,"teste: H1, H2 e H3"
+2019-12-06,111126,76,390,"teste: H1, H2 e H3"
+2019-12-07,,15,390,"teste: H1, H2 e H3"
+2019-12-08,,4,390,"teste: H1, H2 e H3"
+2019-12-09,110977,43,390,"teste: H1, H2 e H3"
+2019-12-10,110672,52,390,"teste: H1, H2 e H3"
+2019-12-11,110964,45,390,"teste: H1, H2 e H3"
+2019-12-12,112200,62,390,"teste: H1, H2 e H3"
+2019-12-13,112565,69,390,"teste: H1, H2 e H3"
+2019-12-14,,23,390,"teste: H1, H2 e H3"
+2019-12-15,,20,390,"teste: H1, H2 e H3"
+2019-12-16,111896,57,390,"teste: H1, H2 e H3"
+2019-12-17,112616,61,390,"teste: H1, H2 e H3"
+2019-12-18,114315,52,390,"teste: H1, H2 e H3"
+2019-12-19,115131,54,390,"teste: H1, H2 e H3"
+2019-12-20,115121,52,390,"teste: H1, H2 e H3"
+2019-12-21,,8,390,"teste: H1, H2 e H3"
+2019-12-22,,2,390,"teste: H1, H2 e H3"
+2019-12-23,115863,52,390,"teste: H1, H2 e H3"
+2019-12-24,,12,390,"teste: H1, H2 e H3"
+2019-12-25,,2,390,"teste: H1, H2 e H3"
+2019-12-26,117203,38,390,"teste: H1, H2 e H3"
+2019-12-27,116534,76,390,"teste: H1, H2 e H3"
+2019-12-28,,17,390,"teste: H1, H2 e H3"
+2019-12-29,,11,390,"teste: H1, H2 e H3"
+2019-12-30,115964,45,390,"teste: H1, H2 e H3"
+2019-12-31,,59,390,"teste: H1, H2 e H3"
+2020-01-01,,5,390,"teste: H1, H2 e H3"
+2020-01-02,118573,49,390,"teste: H1, H2 e H3"
+2020-01-03,117707,82,390,"teste: H1, H2 e H3"
+2020-01-04,,23,390,"teste: H1, H2 e H3"
+2020-01-05,,7,390,"teste: H1, H2 e H3"
+2020-01-06,116878,47,390,"teste: H1, H2 e H3"
+2020-01-07,116662,60,390,"teste: H1, H2 e H3"
+2020-01-08,116247,59,390,"teste: H1, H2 e H3"
+2020-01-09,115947,55,390,"teste: H1, H2 e H3"
+2020-01-10,115503,55,390,"teste: H1, H2 e H3"
+2020-01-11,,5,390,"teste: H1, H2 e H3"
+2020-01-12,,12,390,"teste: H1, H2 e H3"
+2020-01-13,117325,48,390,"teste: H1, H2 e H3"
+2020-01-14,117632,41,390,"teste: H1, H2 e H3"
+2020-01-15,116414,52,390,"teste: H1, H2 e H3"
+2020-01-16,116704,59,390,"teste: H1, H2 e H3"
+2020-01-17,118478,54,390,"teste: H1, H2 e H3"
+2020-01-18,,14,390,"teste: H1, H2 e H3"
+2020-01-19,,1,390,"teste: H1, H2 e H3"
+2020-01-20,118862,39,390,"teste: H1, H2 e H3"
+2020-01-21,117026,68,390,"teste: H1, H2 e H3"
+2020-01-22,118391,44,390,"teste: H1, H2 e H3"
+2020-01-23,119528,53,390,"teste: H1, H2 e H3"
+2020-01-24,118376,40,390,"teste: H1, H2 e H3"
+2020-01-25,,5,390,"teste: H1, H2 e H3"
+2020-01-27,114482,59,390,"teste: H1, H2 e H3"
+2020-01-28,116479,103,390,"teste: H1, H2 e H3"
+2020-01-29,115385,61,390,"teste: H1, H2 e H3"
+2020-01-30,115528,61,390,"teste: H1, H2 e H3"
+2020-01-31,113761,80,390,"teste: H1, H2 e H3"
+2020-02-01,,27,390,"teste: H1, H2 e H3"
+2020-02-02,,1,390,"teste: H1, H2 e H3"
+2020-02-03,114629,45,390,"teste: H1, H2 e H3"
+2020-02-04,115557,73,390,"teste: H1, H2 e H3"
+2020-02-05,116028,52,390,"teste: H1, H2 e H3"
+2020-02-06,115190,48,390,"teste: H1, H2 e H3"
+2020-02-07,113770,77,390,"teste: H1, H2 e H3"
+2020-02-08,,24,390,"teste: H1, H2 e H3"
+2020-02-10,112570,50,390,"teste: H1, H2 e H3"
+2020-02-11,115371,72,390,"teste: H1, H2 e H3"
+2020-02-12,116674,54,390,"teste: H1, H2 e H3"
+2020-02-13,115662,84,390,"teste: H1, H2 e H3"
+2020-02-14,114381,63,390,"teste: H1, H2 e H3"
+2020-02-15,,23,390,"teste: H1, H2 e H3"
+2020-02-16,,6,390,"teste: H1, H2 e H3"
+2020-02-17,115309,46,390,"teste: H1, H2 e H3"
+2020-02-18,114977,49,390,"teste: H1, H2 e H3"
+2020-02-19,116518,68,390,"teste: H1, H2 e H3"
+2020-02-20,114586,85,390,"teste: H1, H2 e H3"
+2020-02-21,113681,54,390,"teste: H1, H2 e H3"
+2020-02-22,,23,390,"teste: H1, H2 e H3"
+2020-02-23,,1,390,"teste: H1, H2 e H3"
+2020-02-24,,3,390,"teste: H1, H2 e H3"
+2020-02-25,,5,390,"teste: H1, H2 e H3"
+2020-02-26,105718,104,390,"teste: H1, H2 e H3"
+2020-02-27,102984,131,390,"teste: H1, H2 e H3"
+2020-02-28,104172,128,390,"teste: H1, H2 e H3"
+2020-02-29,,51,390,"teste: H1, H2 e H3"
+2020-03-01,,3,390,"teste: H1, H2 e H3"
+2020-03-02,106625,73,390,"teste: H1, H2 e H3"
+2020-03-03,105537,96,390,"teste: H1, H2 e H3"
+2020-03-04,107224,89,390,"teste: H1, H2 e H3"
+2020-03-05,102233,109,390,"teste: H1, H2 e H3"
+2020-03-06,97997,107,390,"teste: H1, H2 e H3"
+2020-03-07,,42,390,"teste: H1, H2 e H3"
+2020-03-08,,2,390,"teste: H1, H2 e H3"
+2020-03-09,86067,244,390,"teste: H1, H2 e H3"
+2020-03-10,92214,246,390,"teste: H1, H2 e H3"
+2020-03-11,85171,171,390,"teste: H1, H2 e H3"
+2020-03-12,72583,201,390,"teste: H1, H2 e H3"
+2020-03-13,82678,139,390,"teste: H1, H2 e H3"
+2020-03-14,,37,390,"teste: H1, H2 e H3"
+2020-03-15,,6,390,"teste: H1, H2 e H3"
+2020-03-16,71168,115,390,"teste: H1, H2 e H3"
+2020-03-17,74617,99,390,"teste: H1, H2 e H3"
+2020-03-18,66895,132,390,"teste: H1, H2 e H3"
+2020-03-19,68332,78,390,"teste: H1, H2 e H3"
+2020-03-20,67069,77,390,"teste: H1, H2 e H3"
+2020-03-21,,23,390,"teste: H1, H2 e H3"
+2020-03-22,,24,390,"teste: H1, H2 e H3"
+2020-03-23,63570,59,390,"teste: H1, H2 e H3"
+2020-03-24,69729,88,390,"teste: H1, H2 e H3"
+2020-03-25,74956,82,390,"teste: H1, H2 e H3"
+2020-03-26,77710,91,390,"teste: H1, H2 e H3"
+2020-03-27,73429,63,390,"teste: H1, H2 e H3"
+2020-03-28,,17,390,"teste: H1, H2 e H3"
+2020-03-29,,1,390,"teste: H1, H2 e H3"
+2020-03-30,74640,57,390,"teste: H1, H2 e H3"
+2020-03-31,73020,84,390,"teste: H1, H2 e H3"
+2020-04-01,70967,99,390,"teste: H1, H2 e H3"
+2020-04-02,72253,57,390,"teste: H1, H2 e H3"
+2020-04-03,69538,58,390,"teste: H1, H2 e H3"
+2020-04-04,,27,390,"teste: H1, H2 e H3"
+2020-04-05,,1,390,"teste: H1, H2 e H3"
+2020-04-06,74073,58,390,"teste: H1, H2 e H3"
+2020-04-07,76358,66,390,"teste: H1, H2 e H3"
+2020-04-08,78625,46,390,"teste: H1, H2 e H3"
+2020-04-09,77682,65,390,"teste: H1, H2 e H3"
+2020-04-10,,17,390,"teste: H1, H2 e H3"
+2020-04-12,,3,390,"teste: H1, H2 e H3"
+2020-04-13,78836,54,390,"teste: H1, H2 e H3"
+2020-04-14,79918,79,390,"teste: H1, H2 e H3"
+2020-04-15,78831,60,390,"teste: H1, H2 e H3"
+2020-04-16,77812,71,390,"teste: H1, H2 e H3"
+2020-04-17,78990,57,390,"teste: H1, H2 e H3"
+2020-04-18,,24,390,"teste: H1, H2 e H3"
+2020-04-19,,2,390,"teste: H1, H2 e H3"
+2020-04-20,78973,55,390,"teste: H1, H2 e H3"
+2020-04-21,,22,390,"teste: H1, H2 e H3"
+2020-04-22,80687,49,390,"teste: H1, H2 e H3"
+2020-04-23,79673,68,390,"teste: H1, H2 e H3"
+2020-04-24,75331,105,390,"teste: H1, H2 e H3"
+2020-04-25,,28,390,"teste: H1, H2 e H3"
+2020-04-26,,2,390,"teste: H1, H2 e H3"
+2020-04-27,78239,56,390,"teste: H1, H2 e H3"
+2020-04-28,81312,63,390,"teste: H1, H2 e H3"
+2020-04-29,83171,66,390,"teste: H1, H2 e H3"
+2020-04-30,80506,46,390,"teste: H1, H2 e H3"
+2020-05-01,,13,390,"teste: H1, H2 e H3"
+2020-05-04,78876,68,390,"teste: H1, H2 e H3"
+2020-05-05,79471,54,390,"teste: H1, H2 e H3"
+2020-05-06,79064,61,390,"teste: H1, H2 e H3"
+2020-05-07,78119,74,390,"teste: H1, H2 e H3"
+2020-05-08,80263,55,390,"teste: H1, H2 e H3"
+2020-05-09,,15,390,"teste: H1, H2 e H3"
+2020-05-10,,1,390,"teste: H1, H2 e H3"
+2020-05-11,79065,43,390,"teste: H1, H2 e H3"
+2020-05-12,77872,64,390,"teste: H1, H2 e H3"
+2020-05-13,77772,65,390,"teste: H1, H2 e H3"
+2020-05-14,79011,74,390,"teste: H1, H2 e H3"
+2020-05-15,77557,79,390,"teste: H1, H2 e H3"
+2020-05-16,,15,390,"teste: H1, H2 e H3"
+2020-05-18,81194,48,390,"teste: H1, H2 e H3"
+2020-05-19,80742,53,390,"teste: H1, H2 e H3"
+2020-05-20,81319,52,390,"teste: H1, H2 e H3"
+2020-05-21,83027,71,390,"teste: H1, H2 e H3"
+2020-05-22,82173,59,390,"teste: H1, H2 e H3"
+2020-05-23,,18,390,"teste: H1, H2 e H3"
+2020-05-24,,1,390,"teste: H1, H2 e H3"
+2020-05-25,85663,52,390,"teste: H1, H2 e H3"
+2020-05-26,85469,71,390,"teste: H1, H2 e H3"
+2020-05-27,87946,68,390,"teste: H1, H2 e H3"
+2020-05-28,86949,75,390,"teste: H1, H2 e H3"
+2020-05-29,87403,64,390,"teste: H1, H2 e H3"
+2020-05-30,,16,390,"teste: H1, H2 e H3"
+2020-05-31,,1,390,"teste: H1, H2 e H3"
+2020-06-01,88620,64,390,"teste: H1, H2 e H3"
+2020-06-02,91046,77,390,"teste: H1, H2 e H3"
+2020-06-03,93002,84,390,"teste: H1, H2 e H3"
+2020-06-04,93829,62,390,"teste: H1, H2 e H3"
+2020-06-05,94637,82,390,"teste: H1, H2 e H3"
+2020-06-06,,25,390,"teste: H1, H2 e H3"
+2020-06-07,,5,390,"teste: H1, H2 e H3"
+2020-06-08,97645,50,390,"teste: H1, H2 e H3"
+2020-06-09,96747,68,390,"teste: H1, H2 e H3"
+2020-06-10,94686,48,390,"teste: H1, H2 e H3"
+2020-06-11,,8,390,"teste: H1, H2 e H3"
+2020-06-12,92795,48,390,"teste: H1, H2 e H3"
+2020-06-13,,20,390,"teste: H1, H2 e H3"
+2020-06-14,,1,390,"teste: H1, H2 e H3"
+2020-06-15,92376,57,390,"teste: H1, H2 e H3"
+2020-06-16,93531,51,390,"teste: H1, H2 e H3"
+2020-06-17,95547,45,390,"teste: H1, H2 e H3"
+2020-06-18,96125,40,390,"teste: H1, H2 e H3"
+2020-06-19,96572,35,390,"teste: H1, H2 e H3"
+2020-06-20,,9,390,"teste: H1, H2 e H3"
+2020-06-21,,1,390,"teste: H1, H2 e H3"
+2020-06-22,95336,47,390,"teste: H1, H2 e H3"
+2020-06-23,95975,63,390,"teste: H1, H2 e H3"
+2020-06-24,94377,57,390,"teste: H1, H2 e H3"
+2020-06-25,95983,58,390,"teste: H1, H2 e H3"
+2020-06-26,93834,56,390,"teste: H1, H2 e H3"
+2020-06-27,,12,390,"teste: H1, H2 e H3"
+2020-06-28,,9,390,"teste: H1, H2 e H3"
+2020-06-29,95735,42,390,"teste: H1, H2 e H3"
+2020-06-30,95056,68,390,"teste: H1, H2 e H3"
+2020-07-01,96203,70,390,"teste: H1, H2 e H3"
+2020-07-02,96235,50,390,"teste: H1, H2 e H3"
+2020-07-03,96765,53,390,"teste: H1, H2 e H3"
+2020-07-04,,19,390,"teste: H1, H2 e H3"
+2020-07-05,,2,390,"teste: H1, H2 e H3"
+2020-07-06,98937,44,390,"teste: H1, H2 e H3"
+2020-07-07,97761,69,390,"teste: H1, H2 e H3"
+2020-07-08,99770,73,390,"teste: H1, H2 e H3"
+2020-07-09,99160,85,390,"teste: H1, H2 e H3"
+2020-07-10,100032,73,390,"teste: H1, H2 e H3"
+2020-07-11,,20,390,"teste: H1, H2 e H3"
+2020-07-12,,4,390,"teste: H1, H2 e H3"
+2020-07-13,98697,48,390,"teste: H1, H2 e H3"
+2020-07-14,100440,81,390,"teste: H1, H2 e H3"
+2020-07-15,101791,65,390,"teste: H1, H2 e H3"
+2020-07-16,100553,64,390,"teste: H1, H2 e H3"
+2020-07-17,102888,67,390,"teste: H1, H2 e H3"
+2020-07-18,,15,390,"teste: H1, H2 e H3"
+2020-07-20,104426,64,390,"teste: H1, H2 e H3"
+2020-07-21,104310,78,390,"teste: H1, H2 e H3"
+2020-07-22,104290,62,390,"teste: H1, H2 e H3"
+2020-07-23,102293,44,390,"teste: H1, H2 e H3"
+2020-07-24,102382,36,390,"teste: H1, H2 e H3"
+2020-07-25,,7,390,"teste: H1, H2 e H3"
+2020-07-26,,2,390,"teste: H1, H2 e H3"
+2020-07-27,104477,41,390,"teste: H1, H2 e H3"
+2020-07-28,104109,43,390,"teste: H1, H2 e H3"
+2020-07-29,105605,52,390,"teste: H1, H2 e H3"
+2020-07-30,105009,76,390,"teste: H1, H2 e H3"
+2020-07-31,102912,51,390,"teste: H1, H2 e H3"
+2020-08-01,,11,390,"teste: H1, H2 e H3"
+2020-08-02,,3,390,"teste: H1, H2 e H3"
+2020-08-03,102830,34,390,"teste: H1, H2 e H3"
+2020-08-04,101216,61,390,"teste: H1, H2 e H3"
+2020-08-05,102802,51,390,"teste: H1, H2 e H3"
+2020-08-06,104126,48,390,"teste: H1, H2 e H3"
+2020-08-07,102776,43,390,"teste: H1, H2 e H3"
+2020-08-08,,8,390,"teste: H1, H2 e H3"
+2020-08-09,,3,390,"teste: H1, H2 e H3"
+2020-08-10,103444,36,390,"teste: H1, H2 e H3"
+2020-08-11,102174,51,390,"teste: H1, H2 e H3"
+2020-08-12,102118,36,390,"teste: H1, H2 e H3"
+2020-08-13,100461,49,390,"teste: H1, H2 e H3"
+2020-08-14,101353,50,390,"teste: H1, H2 e H3"
+2020-08-15,,11,390,"teste: H1, H2 e H3"
+2020-08-16,,7,390,"teste: H1, H2 e H3"
+2020-08-17,99595,39,390,"teste: H1, H2 e H3"
+2020-08-18,102065,57,390,"teste: H1, H2 e H3"
+2020-08-19,100854,44,390,"teste: H1, H2 e H3"
+2020-08-20,101468,54,390,"teste: H1, H2 e H3"
+2020-08-21,101521,46,390,"teste: H1, H2 e H3"
+2020-08-22,,13,390,"teste: H1, H2 e H3"
+2020-08-23,,6,390,"teste: H1, H2 e H3"
+2020-08-24,102298,35,390,"teste: H1, H2 e H3"
+2020-08-25,102118,38,390,"teste: H1, H2 e H3"
+2020-08-26,100627,64,390,"teste: H1, H2 e H3"
+2020-08-27,100624,59,390,"teste: H1, H2 e H3"
+2020-08-28,102143,34,390,"teste: H1, H2 e H3"
+2020-08-29,,12,390,"teste: H1, H2 e H3"
+2020-08-30,,1,390,"teste: H1, H2 e H3"
+2020-08-31,99369,40,390,"teste: H1, H2 e H3"
+2020-09-01,102168,49,390,"teste: H1, H2 e H3"
+2020-09-02,101911,48,390,"teste: H1, H2 e H3"
+2020-09-03,100721,55,390,"teste: H1, H2 e H3"
+2020-09-04,101242,58,390,"teste: H1, H2 e H3"
+2020-09-05,,12,390,"teste: H1, H2 e H3"
+2020-09-07,,6,390,"teste: H1, H2 e H3"
+2020-09-08,100050,32,390,"teste: H1, H2 e H3"
+2020-09-09,101292,33,390,"teste: H1, H2 e H3"
+2020-09-10,98835,35,390,"teste: H1, H2 e H3"
+2020-09-11,98363,51,390,"teste: H1, H2 e H3"
+2020-09-12,,4,390,"teste: H1, H2 e H3"
+2020-09-14,100275,31,390,"teste: H1, H2 e H3"
+2020-09-15,100298,34,390,"teste: H1, H2 e H3"
+2020-09-16,99676,43,390,"teste: H1, H2 e H3"
+2020-09-17,100098,40,390,"teste: H1, H2 e H3"
+2020-09-18,98290,30,390,"teste: H1, H2 e H3"
+2020-09-19,,7,390,"teste: H1, H2 e H3"
+2020-09-20,,2,390,"teste: H1, H2 e H3"
+2020-09-21,96991,32,390,"teste: H1, H2 e H3"
+2020-09-22,97294,32,390,"teste: H1, H2 e H3"
+2020-09-23,95735,35,390,"teste: H1, H2 e H3"
+2020-09-24,97012,44,390,"teste: H1, H2 e H3"
+2020-09-25,96999,34,390,"teste: H1, H2 e H3"
+2020-09-26,,4,390,"teste: H1, H2 e H3"
+2020-09-28,94666,42,390,"teste: H1, H2 e H3"
+2020-09-29,93580,36,390,"teste: H1, H2 e H3"
+2020-09-30,94603,42,390,"teste: H1, H2 e H3"
+2020-10-01,95479,44,390,"teste: H1, H2 e H3"
+2020-10-02,94016,36,390,"teste: H1, H2 e H3"
+2020-10-03,,11,390,"teste: H1, H2 e H3"
+2020-10-04,,5,390,"teste: H1, H2 e H3"
+2020-10-05,96089,25,390,"teste: H1, H2 e H3"
+2020-10-06,95615,26,390,"teste: H1, H2 e H3"
+2020-10-07,95526,18,390,"teste: H1, H2 e H3"
+2020-10-08,97920,29,390,"teste: H1, H2 e H3"
+2020-10-09,97483,31,390,"teste: H1, H2 e H3"
+2020-10-10,,11,390,"teste: H1, H2 e H3"
+2020-10-11,,5,390,"teste: H1, H2 e H3"
+2020-10-12,,4,390,"teste: H1, H2 e H3"
+2020-10-13,98503,20,390,"teste: H1, H2 e H3"
+2020-10-14,99334,17,390,"teste: H1, H2 e H3"
+2020-10-15,99054,18,390,"teste: H1, H2 e H3"
+2020-10-16,98309,0,390,"teste: H1, H2 e H3"
+2020-10-18,,2,390,"teste: H1, H2 e H3"
+2020-10-19,98658,3,390,"teste: H1, H2 e H3"
+2020-10-20,100540,0,390,"teste: H1, H2 e H3"
+2020-10-21,100552,10,390,"teste: H1, H2 e H3"
+2020-10-22,101918,10,390,"teste: H1, H2 e H3"
+2020-10-23,101260,2,390,"teste: H1, H2 e H3"
+2020-10-24,,1,390,"teste: H1, H2 e H3"
+2020-10-25,,2,390,"teste: H1, H2 e H3"
+2020-10-26,101017,9,390,"teste: H1, H2 e H3"
+2020-10-27,99606,5,390,"teste: H1, H2 e H3"
+2020-10-28,95369,27,390,"teste: H1, H2 e H3"
+2020-10-29,96582,14,390,"teste: H1, H2 e H3"
+2020-10-30,93952,5,390,"teste: H1, H2 e H3"
+2020-10-31,,2,390,"teste: H1, H2 e H3"
+2020-11-02,,2,390,"teste: H1, H2 e H3"
+2020-11-03,95587,8,390,"teste: H1, H2 e H3"
+2020-11-04,97811,16,390,"teste: H1, H2 e H3"
+2020-11-05,100774,6,390,"teste: H1, H2 e H3"
+2020-11-06,100799,1,390,"teste: H1, H2 e H3"
+2020-11-09,103913,15,390,"teste: H1, H2 e H3"
+2020-11-10,105351,1,390,"teste: H1, H2 e H3"
+2020-11-11,104532,8,390,"teste: H1, H2 e H3"
+2020-11-12,102175,0,390,"teste: H1, H2 e H3"
+2020-11-13,104512,2,390,"teste: H1, H2 e H3"
+2020-11-16,106430,8,390,"teste: H1, H2 e H3"
+2020-11-17,107229,4,390,"teste: H1, H2 e H3"
+2020-11-18,106483,46,390,"teste: H1, H2 e H3"
+2020-11-19,106517,37,390,"teste: H1, H2 e H3"
+2020-11-20,,43,390,"teste: H1, H2 e H3"
+2020-11-21,,12,390,"teste: H1, H2 e H3"
+2020-11-22,,2,390,"teste: H1, H2 e H3"
+2020-11-23,107379,39,390,"teste: H1, H2 e H3"
+2020-11-24,109786,52,390,"teste: H1, H2 e H3"
+2020-11-25,110133,40,390,"teste: H1, H2 e H3"
+2020-11-26,110227,31,390,"teste: H1, H2 e H3"
+2020-11-27,110575,37,390,"teste: H1, H2 e H3"
+2020-11-28,,21,390,"teste: H1, H2 e H3"
+2020-11-29,,2,390,"teste: H1, H2 e H3"
+2020-11-30,108888,27,390,"teste: H1, H2 e H3"
+2020-12-01,111335,38,390,"teste: H1, H2 e H3"
+2020-12-02,111814,46,390,"teste: H1, H2 e H3"
+2020-12-03,112919,42,390,"teste: H1, H2 e H3"
+2020-12-04,113682,49,390,"teste: H1, H2 e H3"
+2020-12-05,,12,390,"teste: H1, H2 e H3"
+2020-12-06,,2,390,"teste: H1, H2 e H3"
+2020-12-07,113625,24,390,"teste: H1, H2 e H3"
+2020-12-08,113571,64,390,"teste: H1, H2 e H3"
+2020-12-09,112722,35,390,"teste: H1, H2 e H3"
+2020-12-10,114992,34,390,"teste: H1, H2 e H3"
+2020-12-11,115323,50,390,"teste: H1, H2 e H3"
+2020-12-12,,8,390,"teste: H1, H2 e H3"
+2020-12-14,114975,27,390,"teste: H1, H2 e H3"
+2020-12-15,116146,43,390,"teste: H1, H2 e H3"
+2020-12-16,117947,49,390,"teste: H1, H2 e H3"
+2020-12-17,118157,43,390,"teste: H1, H2 e H3"
+2020-12-18,117679,32,390,"teste: H1, H2 e H3"
+2020-12-19,,13,390,"teste: H1, H2 e H3"
+2020-12-20,,1,390,"teste: H1, H2 e H3"
+2020-12-21,116016,39,390,"teste: H1, H2 e H3"
+2020-12-22,116348,39,390,"teste: H1, H2 e H3"
+2020-12-23,117857,39,390,"teste: H1, H2 e H3"
+2020-12-24,,14,390,"teste: H1, H2 e H3"
+2020-12-25,,2,390,"teste: H1, H2 e H3"
+2020-12-26,,4,390,"teste: H1, H2 e H3"
+2020-12-28,119051,35,390,"teste: H1, H2 e H3"
+2020-12-29,119475,49,390,"teste: H1, H2 e H3"
+2020-12-30,119306,53,390,"teste: H1, H2 e H3"
+2020-12-31,,36,390,"teste: H1, H2 e H3"
+2021-01-01,,5,390,"teste: H1, H2 e H3"
+2021-01-02,,7,390,"teste: H1, H2 e H3"
+2021-01-03,,3,390,"teste: H1, H2 e H3"
+2021-01-04,118558,41,390,"teste: H1, H2 e H3"
+2021-01-05,119223,54,390,"teste: H1, H2 e H3"
+2021-01-06,119851,37,390,"teste: H1, H2 e H3"
+2021-01-07,121956,36,390,"teste: H1, H2 e H3"
+2021-01-08,125077,59,390,"teste: H1, H2 e H3"
+2021-01-09,,17,390,"teste: H1, H2 e H3"
+2021-01-10,,2,390,"teste: H1, H2 e H3"
+2021-01-11,122807,39,390,"teste: H1, H2 e H3"
+2021-01-12,123998,37,390,"teste: H1, H2 e H3"
+2021-01-13,122040,39,390,"teste: H1, H2 e H3"
+2021-01-14,123481,34,390,"teste: H1, H2 e H3"
+2021-01-15,120502,45,390,"teste: H1, H2 e H3"
+2021-01-16,,16,390,"teste: H1, H2 e H3"
+2021-01-17,,1,390,"teste: H1, H2 e H3"
+2021-01-18,121242,31,390,"teste: H1, H2 e H3"
+2021-01-19,120673,36,390,"teste: H1, H2 e H3"
+2021-01-20,119708,39,390,"teste: H1, H2 e H3"
+2021-01-21,118443,35,390,"teste: H1, H2 e H3"
+2021-01-22,117172,34,390,"teste: H1, H2 e H3"
+2021-01-23,,16,390,"teste: H1, H2 e H3"
+2021-01-24,,1,390,"teste: H1, H2 e H3"
+2021-01-25,,10,390,"teste: H1, H2 e H3"
+2021-01-26,116464,25,390,"teste: H1, H2 e H3"
+2021-01-27,115882,23,390,"teste: H1, H2 e H3"
+2021-01-28,119314,30,390,"teste: H1, H2 e H3"
+2021-01-29,116007,40,390,"teste: H1, H2 e H3"
+2021-01-30,,18,390,"teste: H1, H2 e H3"
+2021-01-31,,1,390,"teste: H1, H2 e H3"
+2021-02-01,117365,18,390,"teste: H1, H2 e H3"
+2021-02-02,118234,26,390,"teste: H1, H2 e H3"
+2021-02-03,119725,25,390,"teste: H1, H2 e H3"
+2021-02-04,119261,29,390,"teste: H1, H2 e H3"
+2021-02-05,119925,30,390,"teste: H1, H2 e H3"
+2021-02-06,,9,390,"teste: H1, H2 e H3"
+2021-02-08,119516,14,390,"teste: H1, H2 e H3"
+2021-02-09,119429,24,390,"teste: H1, H2 e H3"
+2021-02-10,118430,36,390,"teste: H1, H2 e H3"
+2021-02-11,119235,30,390,"teste: H1, H2 e H3"
+2021-02-12,119116,18,390,"teste: H1, H2 e H3"
+2021-02-13,,8,390,"teste: H1, H2 e H3"
+2021-02-15,,5,390,"teste: H1, H2 e H3"
+2021-02-16,,2,390,"teste: H1, H2 e H3"
+2021-02-17,120391,15,390,"teste: H1, H2 e H3"
+2021-02-18,119140,23,390,"teste: H1, H2 e H3"
+2021-02-19,118748,32,390,"teste: H1, H2 e H3"
+2021-02-20,,21,390,"teste: H1, H2 e H3"
+2021-02-21,,2,390,"teste: H1, H2 e H3"
+2021-02-22,112668,64,390,"teste: H1, H2 e H3"
+2021-02-23,115227,89,390,"teste: H1, H2 e H3"
+2021-02-24,115668,24,390,"teste: H1, H2 e H3"
+2021-02-25,112256,28,390,"teste: H1, H2 e H3"
+2021-02-26,110035,28,390,"teste: H1, H2 e H3"
+2021-02-27,,9,390,"teste: H1, H2 e H3"
+2021-02-28,,3,390,"teste: H1, H2 e H3"
+2021-03-01,110335,13,390,"teste: H1, H2 e H3"
+2021-03-02,111540,39,390,"teste: H1, H2 e H3"
+2021-03-03,111184,26,390,"teste: H1, H2 e H3"
+2021-03-04,112690,29,390,"teste: H1, H2 e H3"
+2021-03-05,115202,29,390,"teste: H1, H2 e H3"
+2021-03-06,,13,390,"teste: H1, H2 e H3"
+2021-03-07,,2,390,"teste: H1, H2 e H3"
+2021-03-08,110612,42,390,"teste: H1, H2 e H3"
+2021-03-09,111331,51,390,"teste: H1, H2 e H3"
+2021-03-10,112776,42,390,"teste: H1, H2 e H3"
+2021-03-11,114984,30,390,"teste: H1, H2 e H3"
+2021-03-12,114160,31,390,"teste: H1, H2 e H3"
+2021-03-13,,23,390,"teste: H1, H2 e H3"
+2021-03-14,,8,390,"teste: H1, H2 e H3"
+2021-03-15,114851,23,390,"teste: H1, H2 e H3"
+2021-03-16,114019,24,390,"teste: H1, H2 e H3"
+2021-03-17,116549,31,390,"teste: H1, H2 e H3"
+2021-03-18,114835,34,390,"teste: H1, H2 e H3"
+2021-03-19,116222,29,390,"teste: H1, H2 e H3"
+2021-03-20,,17,390,"teste: H1, H2 e H3"
+2021-03-21,,3,390,"teste: H1, H2 e H3"
+2021-03-22,114979,22,390,"teste: H1, H2 e H3"
+2021-03-23,113262,32,390,"teste: H1, H2 e H3"
+2021-03-24,112064,36,390,"teste: H1, H2 e H3"
+2021-03-25,113750,22,390,"teste: H1, H2 e H3"
+2021-03-26,114781,22,390,"teste: H1, H2 e H3"
+2021-03-27,,18,390,"teste: H1, H2 e H3"
+2021-03-28,,7,390,"teste: H1, H2 e H3"
+2021-03-29,115419,27,390,"teste: H1, H2 e H3"
+2021-03-30,116850,37,390,"teste: H1, H2 e H3"
+2021-03-31,116634,21,390,"teste: H1, H2 e H3"
+2021-04-01,115253,33,390,"teste: H1, H2 e H3"
+2021-04-02,,9,390,"teste: H1, H2 e H3"
+2021-04-04,,1,390,"teste: H1, H2 e H3"
+2021-04-05,117518,21,390,"teste: H1, H2 e H3"
+2021-04-06,117499,21,390,"teste: H1, H2 e H3"
+2021-04-07,117624,29,390,"teste: H1, H2 e H3"
+2021-04-08,118313,21,390,"teste: H1, H2 e H3"
+2021-04-09,117670,20,390,"teste: H1, H2 e H3"
+2021-04-10,,5,390,"teste: H1, H2 e H3"
+2021-04-11,,2,390,"teste: H1, H2 e H3"
+2021-04-12,118812,13,390,"teste: H1, H2 e H3"
+2021-04-13,119297,27,390,"teste: H1, H2 e H3"
+2021-04-14,120295,34,390,"teste: H1, H2 e H3"
+2021-04-15,120701,27,390,"teste: H1, H2 e H3"
+2021-04-16,121114,27,390,"teste: H1, H2 e H3"
+2021-04-17,,11,390,"teste: H1, H2 e H3"
+2021-04-18,,2,390,"teste: H1, H2 e H3"
+2021-04-19,120934,27,390,"teste: H1, H2 e H3"
+2021-04-20,120062,21,390,"teste: H1, H2 e H3"
+2021-04-21,,7,390,"teste: H1, H2 e H3"
+2021-04-22,119371,23,390,"teste: H1, H2 e H3"
+2021-04-23,120530,32,390,"teste: H1, H2 e H3"
+2021-04-24,,6,390,"teste: H1, H2 e H3"
+2021-04-25,,3,390,"teste: H1, H2 e H3"
+2021-04-26,120595,22,390,"teste: H1, H2 e H3"
+2021-04-27,119388,24,390,"teste: H1, H2 e H3"
+2021-04-28,121053,23,390,"teste: H1, H2 e H3"
+2021-04-29,120066,27,390,"teste: H1, H2 e H3"
+2021-04-30,118894,28,390,"teste: H1, H2 e H3"
+2021-05-01,,6,390,"teste: H1, H2 e H3"
+2021-05-02,,2,390,"teste: H1, H2 e H3"
+2021-05-03,119209,25,390,"teste: H1, H2 e H3"
+2021-05-04,117712,86,390,"teste: H1, H2 e H3"
+2021-05-05,119564,48,390,"teste: H1, H2 e H3"
+2021-05-06,119921,38,390,"teste: H1, H2 e H3"
+2021-05-07,122038,58,390,"teste: H1, H2 e H3"
+2021-05-08,,6,390,"teste: H1, H2 e H3"
+2021-05-10,121909,42,390,"teste: H1, H2 e H3"
+2021-05-11,122964,45,390,"teste: H1, H2 e H3"
+2021-05-12,119710,42,390,"teste: H1, H2 e H3"
+2021-05-13,120706,48,390,"teste: H1, H2 e H3"
+2021-05-14,121881,49,390,"teste: H1, H2 e H3"
+2021-05-15,,7,390,"teste: H1, H2 e H3"
+2021-05-17,122938,40,390,"teste: H1, H2 e H3"
+2021-05-18,122980,47,390,"teste: H1, H2 e H3"
+2021-05-19,122636,36,390,"teste: H1, H2 e H3"
+2021-05-20,122701,49,390,"teste: H1, H2 e H3"
+2021-05-21,122592,43,390,"teste: H1, H2 e H3"
+2021-05-22,,8,390,"teste: H1, H2 e H3"
+2021-05-23,,2,390,"teste: H1, H2 e H3"
+2021-05-24,124032,32,390,"teste: H1, H2 e H3"
+2021-05-25,122988,63,390,"teste: H1, H2 e H3"
+2021-05-26,123989,39,390,"teste: H1, H2 e H3"
+2021-05-27,124367,39,390,"teste: H1, H2 e H3"
+2021-05-28,125561,37,390,"teste: H1, H2 e H3"
+2021-05-29,,15,390,"teste: H1, H2 e H3"
+2021-05-30,,4,390,"teste: H1, H2 e H3"
+2021-05-31,126216,44,390,"teste: H1, H2 e H3"
+2021-06-01,128267,34,390,"teste: H1, H2 e H3"
+2021-06-02,129601,61,390,"teste: H1, H2 e H3"
+2021-06-03,,15,390,"teste: H1, H2 e H3"
+2021-06-04,130126,34,390,"teste: H1, H2 e H3"
+2021-06-05,,10,390,"teste: H1, H2 e H3"
+2021-06-06,,2,390,"teste: H1, H2 e H3"
+2021-06-07,130776,44,390,"teste: H1, H2 e H3"
+2021-06-08,129787,39,390,"teste: H1, H2 e H3"
+2021-06-09,129907,42,390,"teste: H1, H2 e H3"
+2021-06-10,130076,50,390,"teste: H1, H2 e H3"
+2021-06-11,129441,43,390,"teste: H1, H2 e H3"
+2021-06-12,,1,390,"teste: H1, H2 e H3"
+2021-06-14,130208,39,390,"teste: H1, H2 e H3"
+2021-06-15,130091,38,390,"teste: H1, H2 e H3"
+2021-06-16,129259,49,390,"teste: H1, H2 e H3"
+2021-06-17,128057,40,390,"teste: H1, H2 e H3"
+2021-06-18,128405,48,390,"teste: H1, H2 e H3"
+2021-06-19,,8,390,"teste: H1, H2 e H3"
+2021-06-20,,1,390,"teste: H1, H2 e H3"
+2021-06-21,129265,43,390,"teste: H1, H2 e H3"
+2021-06-22,128767,45,390,"teste: H1, H2 e H3"
+2021-06-23,128428,48,390,"teste: H1, H2 e H3"
+2021-06-24,129514,48,390,"teste: H1, H2 e H3"
+2021-06-25,127256,58,390,"teste: H1, H2 e H3"
+2021-06-26,,17,390,"teste: H1, H2 e H3"
+2021-06-27,,3,390,"teste: H1, H2 e H3"
+2021-06-28,127429,41,390,"teste: H1, H2 e H3"
+2021-06-29,127327,49,390,"teste: H1, H2 e H3"
+2021-06-30,126802,49,390,"teste: H1, H2 e H3"
+2021-07-01,125666,51,390,"teste: H1, H2 e H3"
+2021-07-02,127622,40,390,"teste: H1, H2 e H3"
+2021-07-03,,16,390,"teste: H1, H2 e H3"
+2021-07-04,,1,390,"teste: H1, H2 e H3"
+2021-07-05,126920,43,390,"teste: H1, H2 e H3"
+2021-07-06,125095,49,390,"teste: H1, H2 e H3"
+2021-07-07,127019,44,390,"teste: H1, H2 e H3"
+2021-07-08,125428,31,390,"teste: H1, H2 e H3"
+2021-07-09,,6,390,"teste: H1, H2 e H3"
+2021-07-10,,1,390,"teste: H1, H2 e H3"
+2021-07-11,,1,390,"teste: H1, H2 e H3"
+2021-07-12,127594,32,390,"teste: H1, H2 e H3"
+2021-07-13,128168,54,390,"teste: H1, H2 e H3"
+2021-07-14,128407,56,390,"teste: H1, H2 e H3"
+2021-07-15,127468,70,390,"teste: H1, H2 e H3"
+2021-07-16,125960,48,390,"teste: H1, H2 e H3"
+2021-07-17,,13,390,"teste: H1, H2 e H3"
+2021-07-18,,1,390,"teste: H1, H2 e H3"
+2021-07-19,124395,52,390,"teste: H1, H2 e H3"
+2021-07-20,125401,57,390,"teste: H1, H2 e H3"
+2021-07-21,125929,47,390,"teste: H1, H2 e H3"
+2021-07-22,126147,57,390,"teste: H1, H2 e H3"
+2021-07-23,125053,58,390,"teste: H1, H2 e H3"
+2021-07-24,,11,390,"teste: H1, H2 e H3"
+2021-07-25,,2,390,"teste: H1, H2 e H3"
+2021-07-26,126004,47,390,"teste: H1, H2 e H3"
+2021-07-27,124612,51,390,"teste: H1, H2 e H3"
+2021-07-28,126286,60,390,"teste: H1, H2 e H3"
+2021-07-29,125675,55,390,"teste: H1, H2 e H3"
+2021-07-30,121801,64,390,"teste: H1, H2 e H3"
+2021-07-31,,5,390,"teste: H1, H2 e H3"
+2021-08-01,,1,390,"teste: H1, H2 e H3"
+2021-08-02,122516,44,390,"teste: H1, H2 e H3"
+2021-08-03,123577,65,390,"teste: H1, H2 e H3"
+2021-08-04,121801,58,390,"teste: H1, H2 e H3"
+2021-08-05,121633,65,390,"teste: H1, H2 e H3"
+2021-08-06,122810,51,390,"teste: H1, H2 e H3"
+2021-08-07,,2,390,"teste: H1, H2 e H3"
+2021-08-09,123019,36,390,"teste: H1, H2 e H3"
+2021-08-10,122202,49,390,"teste: H1, H2 e H3"
+2021-08-11,122056,52,390,"teste: H1, H2 e H3"
+2021-08-12,120701,61,390,"teste: H1, H2 e H3"
+2021-08-13,121194,34,390,"teste: H1, H2 e H3"
+2021-08-14,,5,390,"teste: H1, H2 e H3"
+2021-08-16,119180,10,390,"teste: H1, H2 e H3"
+2021-08-17,117904,23,390,"teste: H1, H2 e H3"
+2021-08-18,116643,22,390,"teste: H1, H2 e H3"
+2021-08-19,117165,64,390,"teste: H1, H2 e H3"
+2021-08-20,118053,82,390,"teste: H1, H2 e H3"
+2021-08-21,,6,390,"teste: H1, H2 e H3"
+2021-08-22,,9,390,"teste: H1, H2 e H3"
+2021-08-23,117472,48,390,"teste: H1, H2 e H3"
+2021-08-24,120211,65,390,"teste: H1, H2 e H3"
+2021-08-25,120818,57,390,"teste: H1, H2 e H3"
+2021-08-26,118724,49,390,"teste: H1, H2 e H3"
+2021-08-27,120678,52,390,"teste: H1, H2 e H3"
+2021-08-28,,7,390,"teste: H1, H2 e H3"
+2021-08-29,,2,390,"teste: H1, H2 e H3"
+2021-08-30,119740,57,390,"teste: H1, H2 e H3"
+2021-08-31,118781,69,390,"teste: H1, H2 e H3"
+2021-09-01,119396,53,390,"teste: H1, H2 e H3"
+2021-09-02,116677,58,390,"teste: H1, H2 e H3"
+2021-09-03,116933,100,390,"teste: H1, H2 e H3"
+2021-09-04,,7,390,"teste: H1, H2 e H3"
+2021-09-06,117869,49,390,"teste: H1, H2 e H3"
+2021-09-07,,7,390,"teste: H1, H2 e H3"
+2021-09-08,113413,93,390,"teste: H1, H2 e H3"
+2021-09-09,115361,70,390,"teste: H1, H2 e H3"
+2021-09-10,114286,78,390,"teste: H1, H2 e H3"
+2021-09-11,,15,390,"teste: H1, H2 e H3"
+2021-09-12,,2,390,"teste: H1, H2 e H3"
+2021-09-13,116404,69,390,"teste: H1, H2 e H3"
+2021-09-14,116181,61,390,"teste: H1, H2 e H3"
+2021-09-15,115063,50,390,"teste: H1, H2 e H3"
+2021-09-16,113794,63,390,"teste: H1, H2 e H3"
+2021-09-17,111439,73,390,"teste: H1, H2 e H3"
+2021-09-18,,12,390,"teste: H1, H2 e H3"
+2021-09-19,,2,390,"teste: H1, H2 e H3"
+2021-09-20,108844,62,390,"teste: H1, H2 e H3"
+2021-09-21,110250,83,390,"teste: H1, H2 e H3"
+2021-09-22,112282,75,390,"teste: H1, H2 e H3"
+2021-09-23,114064,66,390,"teste: H1, H2 e H3"
+2021-09-24,113283,61,390,"teste: H1, H2 e H3"
+2021-09-25,,4,390,"teste: H1, H2 e H3"
+2021-09-26,,4,390,"teste: H1, H2 e H3"
+2021-09-27,113583,49,390,"teste: H1, H2 e H3"
+2021-09-28,110124,71,390,"teste: H1, H2 e H3"
+2021-09-29,111107,62,390,"teste: H1, H2 e H3"
+2021-09-30,110979,60,390,"teste: H1, H2 e H3"
+2021-10-01,112900,54,390,"teste: H1, H2 e H3"
+2021-10-02,,9,390,"teste: H1, H2 e H3"
+2021-10-03,,3,390,"teste: H1, H2 e H3"
+2021-10-04,110393,53,390,"teste: H1, H2 e H3"
+2021-10-05,110458,74,390,"teste: H1, H2 e H3"
+2021-10-06,110560,44,390,"teste: H1, H2 e H3"
+2021-10-07,110585,42,390,"teste: H1, H2 e H3"
+2021-10-08,112833,66,390,"teste: H1, H2 e H3"
+2021-10-09,,9,390,"teste: H1, H2 e H3"
+2021-10-10,,5,390,"teste: H1, H2 e H3"
+2021-10-11,112180,43,390,"teste: H1, H2 e H3"
+2021-10-12,,16,390,"teste: H1, H2 e H3"
+2021-10-13,113456,34,390,"teste: H1, H2 e H3"
+2021-10-14,113185,52,390,"teste: H1, H2 e H3"
+2021-10-15,114648,56,390,"teste: H1, H2 e H3"
+2021-10-16,,9,390,"teste: H1, H2 e H3"
+2021-10-17,,1,390,"teste: H1, H2 e H3"
+2021-10-18,114428,48,390,"teste: H1, H2 e H3"
+2021-10-19,110673,79,390,"teste: H1, H2 e H3"
+2021-10-20,110786,67,390,"teste: H1, H2 e H3"
+2021-10-21,107735,112,390,"teste: H1, H2 e H3"
+2021-10-22,106296,140,390,"teste: H1, H2 e H3"
+2021-10-23,,34,390,"teste: H1, H2 e H3"
+2021-10-24,,8,390,"teste: H1, H2 e H3"
+2021-10-25,108715,59,390,"teste: H1, H2 e H3"
+2021-10-26,106420,69,390,"teste: H1, H2 e H3"
+2021-10-27,106363,52,390,"teste: H1, H2 e H3"
+2021-10-28,105705,60,390,"teste: H1, H2 e H3"
+2021-10-29,103501,80,390,"teste: H1, H2 e H3"
+2021-10-30,,15,390,"teste: H1, H2 e H3"
+2021-10-31,,4,390,"teste: H1, H2 e H3"
+2021-11-01,105551,40,390,"teste: H1, H2 e H3"
+2021-11-02,,19,390,"teste: H1, H2 e H3"
+2021-11-03,105617,49,390,"teste: H1, H2 e H3"
+2021-11-04,103412,53,390,"teste: H1, H2 e H3"
+2021-11-05,104824,56,390,"teste: H1, H2 e H3"
+2021-11-06,,8,390,"teste: H1, H2 e H3"
+2021-11-08,104781,37,390,"teste: H1, H2 e H3"
+2021-11-09,105535,54,390,"teste: H1, H2 e H3"
+2021-11-10,105968,51,390,"teste: H1, H2 e H3"
+2021-11-11,107725,35,390,"teste: H1, H2 e H3"
+2021-11-12,106312,69,390,"teste: H1, H2 e H3"
+2021-11-13,,14,390,"teste: H1, H2 e H3"
+2021-11-14,,1,390,"teste: H1, H2 e H3"
+2021-11-15,,4,390,"teste: H1, H2 e H3"
+2021-11-16,104508,41,390,"teste: H1, H2 e H3"
+2021-11-17,102945,75,390,"teste: H1, H2 e H3"
+2021-11-18,102524,60,390,"teste: H1, H2 e H3"
+2021-11-19,103035,64,390,"teste: H1, H2 e H3"
+2021-11-20,,7,390,"teste: H1, H2 e H3"
+2021-11-21,,1,390,"teste: H1, H2 e H3"
+2021-11-22,102122,57,390,"teste: H1, H2 e H3"
+2021-11-23,103663,52,390,"teste: H1, H2 e H3"
+2021-11-24,104514,51,390,"teste: H1, H2 e H3"
+2021-11-25,105811,44,390,"teste: H1, H2 e H3"
+2021-11-26,102224,95,390,"teste: H1, H2 e H3"
+2021-11-27,,11,390,"teste: H1, H2 e H3"
+2021-11-28,,10,390,"teste: H1, H2 e H3"
+2021-11-29,102814,56,390,"teste: H1, H2 e H3"
+2021-11-30,101915,49,390,"teste: H1, H2 e H3"
+2021-12-01,100775,60,390,"teste: H1, H2 e H3"
+2021-12-02,104466,53,390,"teste: H1, H2 e H3"
+2021-12-03,105070,54,390,"teste: H1, H2 e H3"
+2021-12-04,,10,390,"teste: H1, H2 e H3"
+2021-12-05,,15,390,"teste: H1, H2 e H3"
+2021-12-06,106859,52,390,"teste: H1, H2 e H3"
+2021-12-07,107558,46,390,"teste: H1, H2 e H3"
+2021-12-08,108096,50,390,"teste: H1, H2 e H3"
+2021-12-09,106291,66,390,"teste: H1, H2 e H3"
+2021-12-10,107758,48,390,"teste: H1, H2 e H3"
+2021-12-11,,16,390,"teste: H1, H2 e H3"
+2021-12-12,,10,390,"teste: H1, H2 e H3"
+2021-12-13,107383,56,390,"teste: H1, H2 e H3"
+2021-12-14,106760,60,390,"teste: H1, H2 e H3"
+2021-12-15,107370,57,390,"teste: H1, H2 e H3"
+2021-12-16,108212,65,390,"teste: H1, H2 e H3"
+2021-12-17,107201,52,390,"teste: H1, H2 e H3"
+2021-12-18,,7,390,"teste: H1, H2 e H3"
+2021-12-19,,2,390,"teste: H1, H2 e H3"
+2021-12-20,105020,47,390,"teste: H1, H2 e H3"
+2021-12-21,105500,72,390,"teste: H1, H2 e H3"
+2021-12-22,105244,44,390,"teste: H1, H2 e H3"
+2021-12-23,104891,50,390,"teste: H1, H2 e H3"
+2021-12-24,,9,390,"teste: H1, H2 e H3"
+2021-12-25,,1,390,"teste: H1, H2 e H3"
+2021-12-26,,2,390,"teste: H1, H2 e H3"
+2021-12-27,105531,55,390,"teste: H1, H2 e H3"
+2021-12-28,104864,49,390,"teste: H1, H2 e H3"
+2021-12-29,104107,40,390,"teste: H1, H2 e H3"
+2021-12-30,104822,45,390,"teste: H1, H2 e H3"
+2021-12-31,,36,390,"teste: H1, H2 e H3"
+2022-01-01,,1,390,"teste: H1, H2 e H3"
+2022-01-02,,2,390,"teste: H1, H2 e H3"
+2022-01-03,103922,43,390,"teste: H1, H2 e H3"
+2022-01-04,103514,56,390,"teste: H1, H2 e H3"
+2022-01-05,101006,69,390,"teste: H1, H2 e H3"
+2022-01-06,101561,62,390,"teste: H1, H2 e H3"
+2022-01-07,102719,63,390,"teste: H1, H2 e H3"
+2022-01-08,,13,390,"teste: H1, H2 e H3"
+2022-01-09,,8,390,"teste: H1, H2 e H3"
+2022-01-10,101945,56,390,"teste: H1, H2 e H3"
+2022-01-11,103779,61,390,"teste: H1, H2 e H3"
+2022-01-12,105686,56,390,"teste: H1, H2 e H3"
+2022-01-13,105530,58,390,"teste: H1, H2 e H3"
+2022-01-14,106928,52,390,"teste: H1, H2 e H3"
+2022-01-15,,11,390,"teste: H1, H2 e H3"
+2022-01-16,,1,390,"teste: H1, H2 e H3"
+2022-01-17,106692,43,390,"teste: H1, H2 e H3"
+2022-01-18,106522,50,390,"teste: H1, H2 e H3"
+2022-01-19,108013,68,390,"teste: H1, H2 e H3"
+2022-01-20,109102,65,390,"teste: H1, H2 e H3"
+2022-01-21,108942,76,390,"teste: H1, H2 e H3"
+2022-01-22,,10,390,"teste: H1, H2 e H3"
+2022-01-23,,2,390,"teste: H1, H2 e H3"
+2022-01-24,107752,33,390,"teste: H1, H2 e H3"
+2022-01-25,109845,39,390,"teste: H1, H2 e H3"
+2022-01-26,111573,58,390,"teste: H1, H2 e H3"
+2022-01-27,112315,49,390,"teste: H1, H2 e H3"
+2022-01-28,111478,75,390,"teste: H1, H2 e H3"
+2022-01-29,,13,390,"teste: H1, H2 e H3"
+2022-01-30,,3,390,"teste: H1, H2 e H3"
+2022-01-31,112388,57,390,"teste: H1, H2 e H3"
+2022-02-01,113147,64,390,"teste: H1, H2 e H3"
+2022-02-02,112161,62,390,"teste: H1, H2 e H3"
+2022-02-03,111696,44,390,"teste: H1, H2 e H3"
+2022-02-04,112245,65,390,"teste: H1, H2 e H3"
+2022-02-05,,6,390,"teste: H1, H2 e H3"
+2022-02-06,,9,390,"teste: H1, H2 e H3"
+2022-02-07,111996,60,390,"teste: H1, H2 e H3"
+2022-02-08,112234,44,390,"teste: H1, H2 e H3"
+2022-02-09,112461,44,390,"teste: H1, H2 e H3"
+2022-02-10,113359,63,390,"teste: H1, H2 e H3"
+2022-02-11,113572,66,390,"teste: H1, H2 e H3"
+2022-02-12,,11,390,"teste: H1, H2 e H3"
+2022-02-13,,4,390,"teste: H1, H2 e H3"
+2022-02-14,113807,46,390,"teste: H1, H2 e H3"
+2022-02-15,114660,59,390,"teste: H1, H2 e H3"
+2022-02-16,115181,65,390,"teste: H1, H2 e H3"
+2022-02-17,113528,43,390,"teste: H1, H2 e H3"
+2022-02-18,112768,51,390,"teste: H1, H2 e H3"
+2022-02-19,,7,390,"teste: H1, H2 e H3"
+2022-02-20,,1,390,"teste: H1, H2 e H3"
+2022-02-21,111725,50,390,"teste: H1, H2 e H3"
+2022-02-22,112892,56,390,"teste: H1, H2 e H3"
+2022-02-23,112008,78,390,"teste: H1, H2 e H3"
+2022-02-24,111592,73,390,"teste: H1, H2 e H3"
+2022-02-25,113142,59,390,"teste: H1, H2 e H3"
+2022-02-26,,10,390,"teste: H1, H2 e H3"
+2022-02-27,,2,390,"teste: H1, H2 e H3"
+2022-02-28,,2,390,"teste: H1, H2 e H3"
+2022-03-02,115174,68,390,"teste: H1, H2 e H3"
+2022-03-03,115166,64,390,"teste: H1, H2 e H3"
+2022-03-04,114474,51,390,"teste: H1, H2 e H3"
+2022-03-05,,9,390,"teste: H1, H2 e H3"
+2022-03-06,,2,390,"teste: H1, H2 e H3"
+2022-03-07,111593,47,390,"teste: H1, H2 e H3"
+2022-03-08,111203,84,390,"teste: H1, H2 e H3"
+2022-03-09,113900,76,390,"teste: H1, H2 e H3"
+2022-03-10,113663,53,390,"teste: H1, H2 e H3"
+2022-03-11,111713,52,390,"teste: H1, H2 e H3"
+2022-03-12,,17,390,"teste: H1, H2 e H3"
+2022-03-13,,16,390,"teste: H1, H2 e H3"
+2022-03-14,109928,60,390,"teste: H1, H2 e H3"
+2022-03-15,108959,54,390,"teste: H1, H2 e H3"
+2022-03-16,111112,37,390,"teste: H1, H2 e H3"
+2022-03-17,113076,55,390,"teste: H1, H2 e H3"
+2022-03-18,115311,58,390,"teste: H1, H2 e H3"
+2022-03-19,,10,390,"teste: H1, H2 e H3"
+2022-03-21,116155,57,390,"teste: H1, H2 e H3"
+2022-03-22,117272,60,390,"teste: H1, H2 e H3"
+2022-03-23,117457,58,390,"teste: H1, H2 e H3"
+2022-03-24,119053,56,390,"teste: H1, H2 e H3"
+2022-03-25,119081,63,390,"teste: H1, H2 e H3"
+2022-03-26,,12,390,"teste: H1, H2 e H3"
+2022-03-27,,1,390,"teste: H1, H2 e H3"
+2022-03-28,118738,61,390,"teste: H1, H2 e H3"
+2022-03-29,120014,84,390,"teste: H1, H2 e H3"
+2022-03-30,120260,47,390,"teste: H1, H2 e H3"
+2022-03-31,119999,62,390,"teste: H1, H2 e H3"
+2022-04-01,121570,80,390,"teste: H1, H2 e H3"
+2022-04-02,,16,390,"teste: H1, H2 e H3"
+2022-04-03,,2,390,"teste: H1, H2 e H3"
+2022-04-04,121280,34,390,"teste: H1, H2 e H3"
+2022-04-05,118885,64,390,"teste: H1, H2 e H3"
+2022-04-06,118228,35,390,"teste: H1, H2 e H3"
+2022-04-07,118862,79,390,"teste: H1, H2 e H3"
+2022-04-08,118322,52,390,"teste: H1, H2 e H3"
+2022-04-09,,1,390,"teste: H1, H2 e H3"
+2022-04-10,,1,390,"teste: H1, H2 e H3"
+2022-04-11,116953,49,390,"teste: H1, H2 e H3"
+2022-04-12,116147,54,390,"teste: H1, H2 e H3"
+2022-04-13,116782,59,390,"teste: H1, H2 e H3"
+2022-04-14,116182,49,390,"teste: H1, H2 e H3"
+2022-04-15,,8,390,"teste: H1, H2 e H3"
+2022-04-17,,12,390,"teste: H1, H2 e H3"
+2022-04-18,115687,47,390,"teste: H1, H2 e H3"
+2022-04-19,115057,47,390,"teste: H1, H2 e H3"
+2022-04-20,114344,45,390,"teste: H1, H2 e H3"
+2022-04-21,,9,390,"teste: H1, H2 e H3"
+2022-04-22,111078,52,390,"teste: H1, H2 e H3"
+2022-04-23,,11,390,"teste: H1, H2 e H3"
+2022-04-24,,1,390,"teste: H1, H2 e H3"
+2022-04-25,110685,48,390,"teste: H1, H2 e H3"
+2022-04-26,108213,69,390,"teste: H1, H2 e H3"
+2022-04-27,109349,54,390,"teste: H1, H2 e H3"
+2022-04-28,109919,63,390,"teste: H1, H2 e H3"
+2022-04-29,107876,73,390,"teste: H1, H2 e H3"
+2022-04-30,,14,390,"teste: H1, H2 e H3"
+2022-05-01,,3,390,"teste: H1, H2 e H3"
+2022-05-02,106639,49,390,"teste: H1, H2 e H3"
+2022-05-03,106528,66,390,"teste: H1, H2 e H3"
+2022-05-04,108344,62,390,"teste: H1, H2 e H3"
+2022-05-05,105304,56,390,"teste: H1, H2 e H3"
+2022-05-06,105135,58,390,"teste: H1, H2 e H3"
+2022-05-07,,10,390,"teste: H1, H2 e H3"
+2022-05-08,,1,390,"teste: H1, H2 e H3"
+2022-05-09,103250,60,390,"teste: H1, H2 e H3"
+2022-05-10,103110,62,390,"teste: H1, H2 e H3"
+2022-05-11,104397,54,390,"teste: H1, H2 e H3"
+2022-05-12,105688,53,390,"teste: H1, H2 e H3"
+2022-05-13,106924,33,390,"teste: H1, H2 e H3"
+2022-05-14,,9,390,"teste: H1, H2 e H3"
+2022-05-15,,2,390,"teste: H1, H2 e H3"
+2022-05-16,108233,41,390,"teste: H1, H2 e H3"
+2022-05-17,108789,43,390,"teste: H1, H2 e H3"
+2022-05-18,106247,32,390,"teste: H1, H2 e H3"
+2022-05-19,107005,50,390,"teste: H1, H2 e H3"
+2022-05-20,108488,50,390,"teste: H1, H2 e H3"
+2022-05-21,,3,390,"teste: H1, H2 e H3"
+2022-05-22,,1,390,"teste: H1, H2 e H3"
+2022-05-23,110346,46,390,"teste: H1, H2 e H3"
+2022-05-24,110581,52,390,"teste: H1, H2 e H3"
+2022-05-25,110580,30,390,"teste: H1, H2 e H3"
+2022-05-26,111890,54,390,"teste: H1, H2 e H3"
+2022-05-27,111942,19,390,"teste: H1, H2 e H3"
+2022-05-28,,1,390,"teste: H1, H2 e H3"
+2022-05-30,111032,43,390,"teste: H1, H2 e H3"
+2022-05-31,111351,54,390,"teste: H1, H2 e H3"
+2022-06-01,111360,51,390,"teste: H1, H2 e H3"
+2022-06-02,112393,66,390,"teste: H1, H2 e H3"
+2022-06-03,111102,38,390,"teste: H1, H2 e H3"
+2022-06-04,,20,390,"teste: H1, H2 e H3"
+2022-06-05,,3,390,"teste: H1, H2 e H3"
+2022-06-06,110186,49,390,"teste: H1, H2 e H3"
+2022-06-07,110070,56,390,"teste: H1, H2 e H3"
+2022-06-08,108368,57,390,"teste: H1, H2 e H3"
+2022-06-09,107094,73,390,"teste: H1, H2 e H3"
+2022-06-10,105481,42,390,"teste: H1, H2 e H3"
+2022-06-11,,5,390,"teste: H1, H2 e H3"
+2022-06-12,,2,390,"teste: H1, H2 e H3"
+2022-06-13,102598,65,390,"teste: H1, H2 e H3"
+2022-06-14,102063,63,390,"teste: H1, H2 e H3"
+2022-06-15,102807,81,390,"teste: H1, H2 e H3"
+2022-06-16,,13,390,"teste: H1, H2 e H3"
+2022-06-17,99825,43,390,"teste: H1, H2 e H3"
+2022-06-18,,23,390,"teste: H1, H2 e H3"
+2022-06-19,,3,390,"teste: H1, H2 e H3"
+2022-06-20,99853,56,390,"teste: H1, H2 e H3"
+2022-06-21,99685,49,390,"teste: H1, H2 e H3"
+2022-06-22,99522,41,390,"teste: H1, H2 e H3"
+2022-06-23,98080,51,390,"teste: H1, H2 e H3"
+2022-06-24,98672,54,390,"teste: H1, H2 e H3"
+2022-06-25,,5,390,"teste: H1, H2 e H3"
+2022-06-26,,13,390,"teste: H1, H2 e H3"
+2022-06-27,100764,41,390,"teste: H1, H2 e H3"
+2022-06-28,100591,46,390,"teste: H1, H2 e H3"
+2022-06-29,99622,42,390,"teste: H1, H2 e H3"
+2022-06-30,98542,61,390,"teste: H1, H2 e H3"
+2022-07-01,98954,61,390,"teste: H1, H2 e H3"
+2022-07-02,,8,390,"teste: H1, H2 e H3"
+2022-07-03,,1,390,"teste: H1, H2 e H3"
+2022-07-04,98609,30,390,"teste: H1, H2 e H3"
+2022-07-05,98295,51,390,"teste: H1, H2 e H3"
+2022-07-06,98719,52,390,"teste: H1, H2 e H3"
+2022-07-07,100730,47,390,"teste: H1, H2 e H3"
+2022-07-08,100289,23,390,"teste: H1, H2 e H3"
+2022-07-09,,2,390,"teste: H1, H2 e H3"
+2022-07-10,,2,390,"teste: H1, H2 e H3"
+2022-07-11,98212,50,390,"teste: H1, H2 e H3"
+2022-07-12,98271,30,390,"teste: H1, H2 e H3"
+2022-07-13,97881,60,390,"teste: H1, H2 e H3"
+2022-07-14,96121,41,390,"teste: H1, H2 e H3"
+2022-07-15,96551,72,390,"teste: H1, H2 e H3"
+2022-07-16,,3,390,"teste: H1, H2 e H3"
+2022-07-17,,4,390,"teste: H1, H2 e H3"
+2022-07-18,96916,43,390,"teste: H1, H2 e H3"
+2022-07-19,98245,64,390,"teste: H1, H2 e H3"
+2022-07-20,98287,37,390,"teste: H1, H2 e H3"
+2022-07-21,99033,59,390,"teste: H1, H2 e H3"
+2022-07-22,98925,37,390,"teste: H1, H2 e H3"
+2022-07-23,,10,390,"teste: H1, H2 e H3"
+2022-07-24,,2,390,"teste: H1, H2 e H3"
+2022-07-25,100270,55,390,"teste: H1, H2 e H3"
+2022-07-26,99772,47,390,"teste: H1, H2 e H3"
+2022-07-27,101438,34,390,"teste: H1, H2 e H3"
+2022-07-28,102597,40,390,"teste: H1, H2 e H3"
+2022-07-29,103165,42,390,"teste: H1, H2 e H3"
+2022-07-30,,16,390,"teste: H1, H2 e H3"
+2022-07-31,,3,390,"teste: H1, H2 e H3"
+2022-08-01,102225,64,390,"teste: H1, H2 e H3"
+2022-08-02,103362,36,390,"teste: H1, H2 e H3"
+2022-08-03,103775,45,390,"teste: H1, H2 e H3"
+2022-08-04,105892,53,390,"teste: H1, H2 e H3"
+2022-08-05,106472,75,390,"teste: H1, H2 e H3"
+2022-08-06,,7,390,"teste: H1, H2 e H3"
+2022-08-08,108402,52,390,"teste: H1, H2 e H3"
+2022-08-09,108651,61,390,"teste: H1, H2 e H3"
+2022-08-10,110236,47,390,"teste: H1, H2 e H3"
+2022-08-11,109718,68,390,"teste: H1, H2 e H3"
+2022-08-12,112764,74,390,"teste: H1, H2 e H3"
+2022-08-13,,11,390,"teste: H1, H2 e H3"
+2022-08-14,,2,390,"teste: H1, H2 e H3"
+2022-08-15,113032,57,390,"teste: H1, H2 e H3"
+2022-08-16,113512,49,390,"teste: H1, H2 e H3"
+2022-08-17,113708,54,390,"teste: H1, H2 e H3"
+2022-08-18,113813,27,390,"teste: H1, H2 e H3"
+2022-08-19,111496,45,390,"teste: H1, H2 e H3"
+2022-08-20,,6,390,"teste: H1, H2 e H3"
+2022-08-21,,9,390,"teste: H1, H2 e H3"
+2022-08-22,110501,30,390,"teste: H1, H2 e H3"
+2022-08-23,112857,60,390,"teste: H1, H2 e H3"
+2022-08-24,112898,51,390,"teste: H1, H2 e H3"
+2022-08-25,113532,55,390,"teste: H1, H2 e H3"
+2022-08-26,112299,60,390,"teste: H1, H2 e H3"
+2022-08-27,,1,390,"teste: H1, H2 e H3"
+2022-08-28,,1,390,"teste: H1, H2 e H3"
+2022-08-29,112323,43,390,"teste: H1, H2 e H3"
+2022-08-30,110431,33,390,"teste: H1, H2 e H3"
+2022-08-31,109523,38,390,"teste: H1, H2 e H3"
+2022-09-01,110405,48,390,"teste: H1, H2 e H3"
+2022-09-02,110864,49,390,"teste: H1, H2 e H3"
+2022-09-03,,9,390,"teste: H1, H2 e H3"
+2022-09-04,,9,390,"teste: H1, H2 e H3"
+2022-09-05,112203,44,390,"teste: H1, H2 e H3"
+2022-09-06,109764,55,390,"teste: H1, H2 e H3"
+2022-09-07,,11,390,"teste: H1, H2 e H3"
+2022-09-08,109916,37,390,"teste: H1, H2 e H3"
+2022-09-09,112300,33,390,"teste: H1, H2 e H3"
+2022-09-10,,4,390,"teste: H1, H2 e H3"
+2022-09-11,,1,390,"teste: H1, H2 e H3"
+2022-09-12,113407,29,390,"teste: H1, H2 e H3"
+2022-09-13,110794,38,390,"teste: H1, H2 e H3"
+2022-09-14,110547,55,390,"teste: H1, H2 e H3"
+2022-09-15,109954,48,390,"teste: H1, H2 e H3"
+2022-09-16,109280,54,390,"teste: H1, H2 e H3"
+2022-09-17,,14,390,"teste: H1, H2 e H3"
+2022-09-18,,4,390,"teste: H1, H2 e H3"
+2022-09-19,111824,58,390,"teste: H1, H2 e H3"
+2022-09-20,112517,63,390,"teste: H1, H2 e H3"
+2022-09-21,111936,46,390,"teste: H1, H2 e H3"
+2022-09-22,114070,53,390,"teste: H1, H2 e H3"
+2022-09-23,111716,53,390,"teste: H1, H2 e H3"
+2022-09-24,,11,390,"teste: H1, H2 e H3"
+2022-09-25,,2,390,"teste: H1, H2 e H3"
+2022-09-26,109114,45,390,"teste: H1, H2 e H3"
+2022-09-27,108376,55,390,"teste: H1, H2 e H3"
+2022-09-28,108451,52,390,"teste: H1, H2 e H3"
+2022-09-29,107664,38,390,"teste: H1, H2 e H3"
+2022-09-30,110037,38,390,"teste: H1, H2 e H3"
+2022-10-01,,8,390,"teste: H1, H2 e H3"
+2022-10-02,,2,390,"teste: H1, H2 e H3"
+2022-10-03,116134,56,390,"teste: H1, H2 e H3"
+2022-10-04,116230,51,390,"teste: H1, H2 e H3"
+2022-10-05,117198,53,390,"teste: H1, H2 e H3"
+2022-10-06,117561,37,390,"teste: H1, H2 e H3"
+2022-10-07,116375,43,390,"teste: H1, H2 e H3"
+2022-10-08,,7,390,"teste: H1, H2 e H3"
+2022-10-09,,4,390,"teste: H1, H2 e H3"
+2022-10-10,115941,42,390,"teste: H1, H2 e H3"
+2022-10-11,114827,56,390,"teste: H1, H2 e H3"
+2022-10-12,,8,390,"teste: H1, H2 e H3"
+2022-10-13,114300,43,390,"teste: H1, H2 e H3"
+2022-10-14,112072,56,390,"teste: H1, H2 e H3"
+2022-10-15,,9,390,"teste: H1, H2 e H3"
+2022-10-16,,2,390,"teste: H1, H2 e H3"
+2022-10-17,113624,43,390,"teste: H1, H2 e H3"
+2022-10-18,115743,44,390,"teste: H1, H2 e H3"
+2022-10-19,116274,41,390,"teste: H1, H2 e H3"
+2022-10-20,117171,30,390,"teste: H1, H2 e H3"
+2022-10-21,119929,47,390,"teste: H1, H2 e H3"
+2022-10-22,,6,390,"teste: H1, H2 e H3"
+2022-10-23,,2,390,"teste: H1, H2 e H3"
+2022-10-24,116013,35,390,"teste: H1, H2 e H3"
+2022-10-25,114626,50,390,"teste: H1, H2 e H3"
+2022-10-26,112764,47,390,"teste: H1, H2 e H3"
+2022-10-27,114641,27,390,"teste: H1, H2 e H3"
+2022-10-28,114539,54,390,"teste: H1, H2 e H3"
+2022-10-29,,9,390,"teste: H1, H2 e H3"
+2022-10-30,,5,390,"teste: H1, H2 e H3"
+2022-10-31,116037,62,390,"teste: H1, H2 e H3"
+2022-11-01,116929,78,390,"teste: H1, H2 e H3"
+2022-11-02,,21,390,"teste: H1, H2 e H3"
+2022-11-03,116896,41,390,"teste: H1, H2 e H3"
+2022-11-04,118155,37,390,"teste: H1, H2 e H3"
+2022-11-05,,13,390,"teste: H1, H2 e H3"
+2022-11-06,,5,390,"teste: H1, H2 e H3"
+2022-11-07,115342,53,390,"teste: H1, H2 e H3"
+2022-11-08,116160,40,390,"teste: H1, H2 e H3"
+2022-11-09,113580,64,390,"teste: H1, H2 e H3"
+2022-11-10,109775,47,390,"teste: H1, H2 e H3"
+2022-11-11,112253,20,390,"teste: H1, H2 e H3"
+2022-11-12,,24,390,"teste: H1, H2 e H3"
+2022-11-13,,5,390,"teste: H1, H2 e H3"
+2022-11-14,113161,12,390,"teste: H1, H2 e H3"
+2022-11-15,,9,390,"teste: H1, H2 e H3"
+2022-11-16,110243,53,390,"teste: H1, H2 e H3"
+2022-11-17,109703,88,390,"teste: H1, H2 e H3"
+2022-11-18,108880,69,390,"teste: H1, H2 e H3"
+2022-11-19,,8,390,"teste: H1, H2 e H3"
+2022-11-20,,3,390,"teste: H1, H2 e H3"
+2022-11-21,109748,45,390,"teste: H1, H2 e H3"
+2022-11-22,109037,29,390,"teste: H1, H2 e H3"
+2022-11-23,108683,29,390,"teste: H1, H2 e H3"
+2022-11-24,111831,46,390,"teste: H1, H2 e H3"
+2022-11-25,108977,51,390,"teste: H1, H2 e H3"
+2022-11-26,,21,390,"teste: H1, H2 e H3"
+2022-11-27,,2,390,"teste: H1, H2 e H3"
+2022-11-28,108782,24,390,"teste: H1, H2 e H3"
+2022-11-29,110910,22,390,"teste: H1, H2 e H3"
+2022-11-30,112486,36,390,"teste: H1, H2 e H3"
+2022-12-01,110926,47,390,"teste: H1, H2 e H3"
+2022-12-02,111924,22,390,"teste: H1, H2 e H3"
+2022-12-03,,1,390,"teste: H1, H2 e H3"
+2022-12-05,109401,33,390,"teste: H1, H2 e H3"
+2022-12-06,109533,35,390,"teste: H1, H2 e H3"
+2022-12-07,109361,33,390,"teste: H1, H2 e H3"
+2022-12-08,107245,36,390,"teste: H1, H2 e H3"
+2022-12-09,107689,52,390,"teste: H1, H2 e H3"
+2022-12-10,,14,390,"teste: H1, H2 e H3"
+2022-12-11,,3,390,"teste: H1, H2 e H3"
+2022-12-12,105264,56,390,"teste: H1, H2 e H3"
+2022-12-13,103892,58,390,"teste: H1, H2 e H3"
+2022-12-14,103803,47,390,"teste: H1, H2 e H3"
+2022-12-15,103738,32,390,"teste: H1, H2 e H3"
+2022-12-16,102825,53,390,"teste: H1, H2 e H3"
+2022-12-17,,6,390,"teste: H1, H2 e H3"
+2022-12-18,,3,390,"teste: H1, H2 e H3"
+2022-12-19,104530,37,390,"teste: H1, H2 e H3"
+2022-12-20,106979,54,390,"teste: H1, H2 e H3"
+2022-12-21,107313,56,390,"teste: H1, H2 e H3"
+2022-12-22,107317,19,390,"teste: H1, H2 e H3"
+2022-12-23,109698,37,390,"teste: H1, H2 e H3"
+2022-12-24,,13,390,"teste: H1, H2 e H3"
+2022-12-25,,1,390,"teste: H1, H2 e H3"
+2022-12-26,108738,33,390,"teste: H1, H2 e H3"
+2022-12-27,108347,30,390,"teste: H1, H2 e H3"
+2022-12-28,110237,38,390,"teste: H1, H2 e H3"
+2022-12-29,110031,26,390,"teste: H1, H2 e H3"
+2022-12-30,,25,390,"teste: H1, H2 e H3"
+2022-12-31,,5,390,"teste: H1, H2 e H3"
+2023-01-01,,2,390,"teste: H1, H2 e H3"
+2023-01-02,106376,33,390,"teste: H1, H2 e H3"
+2023-01-03,104166,53,390,"teste: H1, H2 e H3"
+2023-01-04,105334,52,390,"teste: H1, H2 e H3"
+2023-01-05,107518,46,390,"teste: H1, H2 e H3"
+2023-01-06,108836,36,390,"teste: H1, H2 e H3"
+2023-01-07,,14,390,"teste: H1, H2 e H3"
+2023-01-08,,1,390,"teste: H1, H2 e H3"
+2023-01-09,109227,33,390,"teste: H1, H2 e H3"
+2023-01-10,110912,43,390,"teste: H1, H2 e H3"
+2023-01-11,111763,38,390,"teste: H1, H2 e H3"
+2023-01-12,111877,42,390,"teste: H1, H2 e H3"
+2023-01-13,110916,41,390,"teste: H1, H2 e H3"
+2023-01-14,,5,390,"teste: H1, H2 e H3"
+2023-01-15,,5,390,"teste: H1, H2 e H3"
+2023-01-16,109213,35,390,"teste: H1, H2 e H3"
+2023-01-17,111439,32,390,"teste: H1, H2 e H3"
+2023-01-18,112452,30,390,"teste: H1, H2 e H3"
+2023-01-19,113006,48,390,"teste: H1, H2 e H3"
+2023-01-20,112301,24,390,"teste: H1, H2 e H3"
+2023-01-21,,21,390,"teste: H1, H2 e H3"
+2023-01-22,,3,390,"teste: H1, H2 e H3"
+2023-01-23,111709,20,390,"teste: H1, H2 e H3"
+2023-01-24,113028,26,390,"teste: H1, H2 e H3"
+2023-01-25,114195,27,390,"teste: H1, H2 e H3"
+2023-01-26,114109,32,390,"teste: H1, H2 e H3"
+2023-01-27,112502,23,390,"teste: H1, H2 e H3"
+2023-01-28,,14,390,"teste: H1, H2 e H3"
+2023-01-30,111888,16,390,"teste: H1, H2 e H3"
+2023-01-31,113532,21,390,"teste: H1, H2 e H3"
+2023-02-01,112303,26,390,"teste: H1, H2 e H3"
+2023-02-02,109935,34,390,"teste: H1, H2 e H3"
+2023-02-03,108490,31,390,"teste: H1, H2 e H3"
+2023-02-04,,15,390,"teste: H1, H2 e H3"
+2023-02-05,,3,390,"teste: H1, H2 e H3"
+2023-02-06,108456,16,390,"teste: H1, H2 e H3"
+2023-02-07,107920,25,390,"teste: H1, H2 e H3"
+2023-02-08,109882,28,390,"teste: H1, H2 e H3"
+2023-02-09,107783,30,390,"teste: H1, H2 e H3"
+2023-02-10,108150,34,390,"teste: H1, H2 e H3"
+2023-02-11,,20,390,"teste: H1, H2 e H3"
+2023-02-12,,1,390,"teste: H1, H2 e H3"
+2023-02-13,108846,16,390,"teste: H1, H2 e H3"
+2023-02-14,107659,38,390,"teste: H1, H2 e H3"
+2023-02-15,109442,35,390,"teste: H1, H2 e H3"
+2023-02-16,109905,31,390,"teste: H1, H2 e H3"
+2023-02-17,109303,32,390,"teste: H1, H2 e H3"
+2023-02-18,,13,390,"teste: H1, H2 e H3"
+2023-02-20,,1,390,"teste: H1, H2 e H3"
+2023-02-22,107152,14,390,"teste: H1, H2 e H3"
+2023-02-23,107720,36,390,"teste: H1, H2 e H3"
+2023-02-24,105873,27,390,"teste: H1, H2 e H3"
+2023-02-25,,9,390,"teste: H1, H2 e H3"
+2023-02-26,,1,390,"teste: H1, H2 e H3"
+2023-02-27,105711,22,390,"teste: H1, H2 e H3"
+2023-02-28,104932,23,390,"teste: H1, H2 e H3"
+2023-03-01,104385,25,390,"teste: H1, H2 e H3"
+2023-03-02,103326,35,390,"teste: H1, H2 e H3"
+2023-03-03,103866,18,390,"teste: H1, H2 e H3"
+2023-03-04,,3,390,"teste: H1, H2 e H3"
+2023-03-06,104700,14,390,"teste: H1, H2 e H3"
+2023-03-07,104228,22,390,"teste: H1, H2 e H3"
+2023-03-08,106540,20,390,"teste: H1, H2 e H3"
+2023-03-09,105071,26,390,"teste: H1, H2 e H3"
+2023-03-10,103618,22,390,"teste: H1, H2 e H3"
+2023-03-11,,5,390,"teste: H1, H2 e H3"
+2023-03-12,,1,390,"teste: H1, H2 e H3"
+2023-03-13,103121,15,390,"teste: H1, H2 e H3"
+2023-03-14,102932,22,390,"teste: H1, H2 e H3"
+2023-03-15,102675,25,390,"teste: H1, H2 e H3"
+2023-03-16,103435,32,390,"teste: H1, H2 e H3"
+2023-03-17,101982,23,390,"teste: H1, H2 e H3"
+2023-03-18,,9,390,"teste: H1, H2 e H3"
+2023-03-20,100923,26,390,"teste: H1, H2 e H3"
+2023-03-21,100998,14,390,"teste: H1, H2 e H3"
+2023-03-22,100221,0,390,"teste: H1, H2 e H3"
+2023-03-23,97926,0,390,"teste: H1, H2 e H3"
+2023-03-24,98829,17,390,"teste: H1, H2 e H3"
+2023-03-25,,16,390,"teste: H1, H2 e H3"
+2023-03-26,,3,390,"teste: H1, H2 e H3"
+2023-03-27,99670,19,390,"teste: H1, H2 e H3"
+2023-03-28,101185,12,390,"teste: H1, H2 e H3"
+2023-03-29,101793,19,390,"teste: H1, H2 e H3"
+2023-03-30,103713,20,390,"teste: H1, H2 e H3"
+2023-03-31,101882,19,390,"teste: H1, H2 e H3"
+2023-04-01,,9,390,"teste: H1, H2 e H3"
+2023-04-02,,1,390,"teste: H1, H2 e H3"
+2023-04-03,101506,13,390,"teste: H1, H2 e H3"
+2023-04-04,101869,10,390,"teste: H1, H2 e H3"
+2023-04-05,100978,8,390,"teste: H1, H2 e H3"
+2023-04-06,100822,9,390,"teste: H1, H2 e H3"
+2023-04-07,,3,390,"teste: H1, H2 e H3"
+2023-04-08,,2,390,"teste: H1, H2 e H3"
+2023-04-09,,1,390,"teste: H1, H2 e H3"
+2023-04-10,101847,22,390,"teste: H1, H2 e H3"
+2023-04-11,106214,28,390,"teste: H1, H2 e H3"
+2023-04-12,106890,33,390,"teste: H1, H2 e H3"
+2023-04-13,106458,24,390,"teste: H1, H2 e H3"
+2023-04-14,106279,19,390,"teste: H1, H2 e H3"
+2023-04-15,,5,390,"teste: H1, H2 e H3"
+2023-04-17,106016,15,390,"teste: H1, H2 e H3"
+2023-04-18,106163,13,390,"teste: H1, H2 e H3"
+2023-04-19,103913,9,390,"teste: H1, H2 e H3"
+2023-04-20,104367,20,390,"teste: H1, H2 e H3"
+2023-04-22,,3,390,"teste: H1, H2 e H3"
+2023-04-23,,2,390,"teste: H1, H2 e H3"
+2023-04-24,103947,10,390,"teste: H1, H2 e H3"
+2023-04-25,103220,18,390,"teste: H1, H2 e H3"
+2023-04-26,102312,11,390,"teste: H1, H2 e H3"
+2023-04-27,102923,13,390,"teste: H1, H2 e H3"
+2023-04-28,104432,15,390,"teste: H1, H2 e H3"
+2023-04-29,,5,390,"teste: H1, H2 e H3"
+2023-04-30,,2,390,"teste: H1, H2 e H3"
+2023-05-01,,1,390,"teste: H1, H2 e H3"
+2023-05-02,101927,11,390,"teste: H1, H2 e H3"
+2023-05-03,101797,14,390,"teste: H1, H2 e H3"
+2023-05-04,102174,16,390,"teste: H1, H2 e H3"
+2023-05-05,105148,39,390,"teste: H1, H2 e H3"
+2023-05-06,,1,390,"teste: H1, H2 e H3"
+2023-05-07,,1,390,"teste: H1, H2 e H3"
+2023-05-08,106042,7,390,"teste: H1, H2 e H3"
+2023-05-09,107114,15,390,"teste: H1, H2 e H3"
+2023-05-10,107448,10,390,"teste: H1, H2 e H3"
+2023-05-11,108256,13,390,"teste: H1, H2 e H3"
+2023-05-12,108464,14,390,"teste: H1, H2 e H3"
+2023-05-13,,7,390,"teste: H1, H2 e H3"
+2023-05-15,109029,7,390,"teste: H1, H2 e H3"
+2023-05-16,108194,21,390,"teste: H1, H2 e H3"
+2023-05-17,109460,14,390,"teste: H1, H2 e H3"
+2023-05-18,110108,8,390,"teste: H1, H2 e H3"
+2023-05-19,110745,10,390,"teste: H1, H2 e H3"
+2023-05-20,,2,390,"teste: H1, H2 e H3"
+2023-05-22,110213,5,390,"teste: H1, H2 e H3"
+2023-05-23,109929,4,390,"teste: H1, H2 e H3"
+2023-05-24,108800,10,390,"teste: H1, H2 e H3"
+2023-05-25,110054,7,390,"teste: H1, H2 e H3"
+2023-05-26,110906,8,390,"teste: H1, H2 e H3"
+2023-05-27,,3,390,"teste: H1, H2 e H3"
+2023-05-28,,1,390,"teste: H1, H2 e H3"
+2023-05-29,110333,9,390,"teste: H1, H2 e H3"
+2023-05-30,108967,16,390,"teste: H1, H2 e H3"
+2023-05-31,108335,8,390,"teste: H1, H2 e H3"
+2023-06-01,110565,10,390,"teste: H1, H2 e H3"
+2023-06-02,112558,17,390,"teste: H1, H2 e H3"
+2023-06-03,,8,390,"teste: H1, H2 e H3"
+2023-06-04,,1,390,"teste: H1, H2 e H3"
+2023-06-05,112696,17,390,"teste: H1, H2 e H3"
+2023-06-06,114610,16,390,"teste: H1, H2 e H3"
+2023-06-07,115488,21,390,"teste: H1, H2 e H3"
+2023-06-08,,4,390,"teste: H1, H2 e H3"
+2023-06-09,117019,8,390,"teste: H1, H2 e H3"
+2023-06-10,,6,390,"teste: H1, H2 e H3"
+2023-06-12,117336,12,390,"teste: H1, H2 e H3"
+2023-06-13,116743,24,390,"teste: H1, H2 e H3"
+2023-06-14,119069,10,390,"teste: H1, H2 e H3"
+2023-06-15,119221,26,390,"teste: H1, H2 e H3"
+2023-06-16,118758,8,390,"teste: H1, H2 e H3"
+2023-06-17,,5,390,"teste: H1, H2 e H3"
+2023-06-18,,1,390,"teste: H1, H2 e H3"
+2023-06-19,119858,17,390,"teste: H1, H2 e H3"
+2023-06-20,119622,15,390,"teste: H1, H2 e H3"
+2023-06-21,120420,9,390,"teste: H1, H2 e H3"
+2023-06-22,118934,17,390,"teste: H1, H2 e H3"
+2023-06-23,118977,14,390,"teste: H1, H2 e H3"
+2023-06-24,,9,390,"teste: H1, H2 e H3"
+2023-06-25,,2,390,"teste: H1, H2 e H3"
+2023-06-26,118243,12,390,"teste: H1, H2 e H3"
+2023-06-27,117523,18,390,"teste: H1, H2 e H3"
+2023-06-28,116681,11,390,"teste: H1, H2 e H3"
+2023-06-29,118383,12,390,"teste: H1, H2 e H3"
+2023-06-30,118087,10,390,"teste: H1, H2 e H3"
+2023-07-01,,6,390,"teste: H1, H2 e H3"
+2023-07-02,,1,390,"teste: H1, H2 e H3"
+2023-07-03,119673,17,390,"teste: H1, H2 e H3"
+2023-07-04,119076,12,390,"teste: H1, H2 e H3"
+2023-07-05,119549,14,390,"teste: H1, H2 e H3"
+2023-07-06,117426,7,390,"teste: H1, H2 e H3"
+2023-07-07,118898,33,390,"teste: H1, H2 e H3"
+2023-07-08,,17,390,"teste: H1, H2 e H3"
+2023-07-09,,4,390,"teste: H1, H2 e H3"
+2023-07-10,117942,10,390,"teste: H1, H2 e H3"
+2023-07-11,117220,13,390,"teste: H1, H2 e H3"
+2023-07-12,117666,11,390,"teste: H1, H2 e H3"
+2023-07-13,119264,13,390,"teste: H1, H2 e H3"
+2023-07-14,117711,22,390,"teste: H1, H2 e H3"
+2023-07-15,,6,390,"teste: H1, H2 e H3"
+2023-07-17,118219,4,390,"teste: H1, H2 e H3"
+2023-07-18,117841,10,390,"teste: H1, H2 e H3"
+2023-07-19,117552,7,390,"teste: H1, H2 e H3"
+2023-07-20,118083,10,390,"teste: H1, H2 e H3"
+2023-07-21,120217,8,390,"teste: H1, H2 e H3"
+2023-07-22,,3,390,"teste: H1, H2 e H3"
+2023-07-23,,1,390,"teste: H1, H2 e H3"
+2023-07-24,121342,11,390,"teste: H1, H2 e H3"
+2023-07-25,122008,18,390,"teste: H1, H2 e H3"
+2023-07-26,122560,13,390,"teste: H1, H2 e H3"
+2023-07-27,119990,15,390,"teste: H1, H2 e H3"
+2023-07-28,120187,7,390,"teste: H1, H2 e H3"
+2023-07-29,,3,390,"teste: H1, H2 e H3"
+2023-07-30,,1,390,"teste: H1, H2 e H3"
+2023-07-31,121943,14,390,"teste: H1, H2 e H3"
+2023-08-01,121248,9,390,"teste: H1, H2 e H3"
+2023-08-02,120859,15,390,"teste: H1, H2 e H3"
+2023-08-03,120586,10,390,"teste: H1, H2 e H3"
+2023-08-04,119508,25,390,"teste: H1, H2 e H3"
+2023-08-05,,6,390,"teste: H1, H2 e H3"
+2023-08-06,,1,390,"teste: H1, H2 e H3"
+2023-08-07,119380,11,390,"teste: H1, H2 e H3"
+2023-08-08,119090,9,390,"teste: H1, H2 e H3"
+2023-08-09,118409,9,390,"teste: H1, H2 e H3"
+2023-08-10,118350,9,390,"teste: H1, H2 e H3"
+2023-08-11,118065,6,390,"teste: H1, H2 e H3"
+2023-08-12,,5,390,"teste: H1, H2 e H3"
+2023-08-13,,2,390,"teste: H1, H2 e H3"
+2023-08-14,116810,13,390,"teste: H1, H2 e H3"
+2023-08-15,116171,20,390,"teste: H1, H2 e H3"
+2023-08-16,115592,20,390,"teste: H1, H2 e H3"
+2023-08-17,114982,26,390,"teste: H1, H2 e H3"
+2023-08-18,115409,10,390,"teste: H1, H2 e H3"
+2023-08-19,,7,390,"teste: H1, H2 e H3"
+2023-08-21,114429,6,390,"teste: H1, H2 e H3"
+2023-08-22,116156,8,390,"teste: H1, H2 e H3"
+2023-08-23,118135,19,390,"teste: H1, H2 e H3"
+2023-08-24,117026,15,390,"teste: H1, H2 e H3"
+2023-08-25,115837,15,390,"teste: H1, H2 e H3"
+2023-08-26,,5,390,"teste: H1, H2 e H3"
+2023-08-27,,3,390,"teste: H1, H2 e H3"
+2023-08-28,117121,18,390,"teste: H1, H2 e H3"
+2023-08-29,118404,16,390,"teste: H1, H2 e H3"
+2023-08-30,117535,8,390,"teste: H1, H2 e H3"
+2023-08-31,115742,14,390,"teste: H1, H2 e H3"
+2023-09-01,117893,11,390,"teste: H1, H2 e H3"
+2023-09-02,,3,390,"teste: H1, H2 e H3"
+2023-09-03,,1,390,"teste: H1, H2 e H3"
+2023-09-04,117777,11,390,"teste: H1, H2 e H3"
+2023-09-05,117331,7,390,"teste: H1, H2 e H3"
+2023-09-06,115985,13,390,"teste: H1, H2 e H3"
+2023-09-07,,3,390,"teste: H1, H2 e H3"
+2023-09-08,115313,9,390,"teste: H1, H2 e H3"
+2023-09-09,,4,390,"teste: H1, H2 e H3"
+2023-09-10,,1,390,"teste: H1, H2 e H3"
+2023-09-11,116883,15,390,"teste: H1, H2 e H3"
+2023-09-12,117968,13,390,"teste: H1, H2 e H3"
+2023-09-13,118176,10,390,"teste: H1, H2 e H3"
+2023-09-14,119392,8,390,"teste: H1, H2 e H3"
+2023-09-15,118758,19,390,"teste: H1, H2 e H3"
+2023-09-16,,4,390,"teste: H1, H2 e H3"
+2023-09-17,,4,390,"teste: H1, H2 e H3"
+2023-09-18,118288,8,390,"teste: H1, H2 e H3"
+2023-09-19,117846,4,390,"teste: H1, H2 e H3"
+2023-09-20,118695,7,390,"teste: H1, H2 e H3"
+2023-09-21,116145,17,390,"teste: H1, H2 e H3"
+2023-09-22,116009,10,390,"teste: H1, H2 e H3"
+2023-09-23,,2,390,"teste: H1, H2 e H3"
+2023-09-24,,2,390,"teste: H1, H2 e H3"
+2023-09-25,115925,4,390,"teste: H1, H2 e H3"
+2023-09-26,114193,7,390,"teste: H1, H2 e H3"
+2023-09-27,114327,5,390,"teste: H1, H2 e H3"
+2023-09-28,115731,13,390,"teste: H1, H2 e H3"
+2023-09-29,116565,18,390,"teste: H1, H2 e H3"
+2023-09-30,,2,390,"teste: H1, H2 e H3"
+2023-10-02,115057,10,390,"teste: H1, H2 e H3"
+2023-10-03,113419,18,390,"teste: H1, H2 e H3"
+2023-10-04,113607,19,390,"teste: H1, H2 e H3"
+2023-10-05,113284,13,390,"teste: H1, H2 e H3"
+2023-10-06,114170,20,390,"teste: H1, H2 e H3"
+2023-10-07,,3,390,"teste: H1, H2 e H3"
+2023-10-09,115156,4,390,"teste: H1, H2 e H3"
+2023-10-10,116737,9,390,"teste: H1, H2 e H3"
+2023-10-11,117051,9,390,"teste: H1, H2 e H3"
+2023-10-12,,2,390,"teste: H1, H2 e H3"
+2023-10-13,115754,4,390,"teste: H1, H2 e H3"
+2023-10-14,,2,390,"teste: H1, H2 e H3"
+2023-10-15,,1,390,"teste: H1, H2 e H3"
+2023-10-16,116534,9,390,"teste: H1, H2 e H3"
+2023-10-17,115908,14,390,"teste: H1, H2 e H3"
+2023-10-18,114060,8,390,"teste: H1, H2 e H3"
+2023-10-19,114004,6,390,"teste: H1, H2 e H3"
+2023-10-20,113155,6,390,"teste: H1, H2 e H3"
+2023-10-21,,5,390,"teste: H1, H2 e H3"
+2023-10-22,,1,390,"teste: H1, H2 e H3"
+2023-10-23,112785,9,390,"teste: H1, H2 e H3"
+2023-10-24,113762,18,390,"teste: H1, H2 e H3"
+2023-10-25,112830,14,390,"teste: H1, H2 e H3"
+2023-10-26,114777,11,390,"teste: H1, H2 e H3"
+2023-10-27,113301,14,390,"teste: H1, H2 e H3"
+2023-10-28,,8,390,"teste: H1, H2 e H3"
+2023-10-29,,3,390,"teste: H1, H2 e H3"
+2023-10-30,112532,6,390,"teste: H1, H2 e H3"
+2023-10-31,113144,13,390,"teste: H1, H2 e H3"
+2023-11-01,115053,18,390,"teste: H1, H2 e H3"
+2023-11-02,,10,390,"teste: H1, H2 e H3"
+2023-11-03,118160,8,390,"teste: H1, H2 e H3"
+2023-11-04,,11,390,"teste: H1, H2 e H3"
+2023-11-05,,1,390,"teste: H1, H2 e H3"
+2023-11-06,118487,5,390,"teste: H1, H2 e H3"
+2023-11-07,119268,11,390,"teste: H1, H2 e H3"
+2023-11-08,119099,14,390,"teste: H1, H2 e H3"
+2023-11-09,119012,10,390,"teste: H1, H2 e H3"
+2023-11-10,120636,16,390,"teste: H1, H2 e H3"
+2023-11-11,,7,390,"teste: H1, H2 e H3"
+2023-11-12,,1,390,"teste: H1, H2 e H3"
+2023-11-13,120376,7,390,"teste: H1, H2 e H3"
+2023-11-14,123328,16,390,"teste: H1, H2 e H3"
+2023-11-15,,10,390,"teste: H1, H2 e H3"
+2023-11-16,124576,7,390,"teste: H1, H2 e H3"
+2023-11-17,125062,18,390,"teste: H1, H2 e H3"
+2023-11-18,,5,390,"teste: H1, H2 e H3"
+2023-11-19,,2,390,"teste: H1, H2 e H3"
+2023-11-20,126095,7,390,"teste: H1, H2 e H3"
+2023-11-21,125607,19,390,"teste: H1, H2 e H3"
+2023-11-22,126035,15,390,"teste: H1, H2 e H3"
+2023-11-23,126576,13,390,"teste: H1, H2 e H3"
+2023-11-24,125542,12,390,"teste: H1, H2 e H3"
+2023-11-25,,8,390,"teste: H1, H2 e H3"
+2023-11-26,,1,390,"teste: H1, H2 e H3"
+2023-11-27,125683,10,390,"teste: H1, H2 e H3"
+2023-11-28,126538,15,390,"teste: H1, H2 e H3"
+2023-11-29,126101,14,390,"teste: H1, H2 e H3"
+2023-11-30,127331,13,390,"teste: H1, H2 e H3"
+2023-12-01,128103,17,390,"teste: H1, H2 e H3"
+2023-12-02,,2,390,"teste: H1, H2 e H3"
+2023-12-03,,3,390,"teste: H1, H2 e H3"
+2023-12-04,126803,17,390,"teste: H1, H2 e H3"
+2023-12-05,126903,16,390,"teste: H1, H2 e H3"
+2023-12-06,125623,12,390,"teste: H1, H2 e H3"
+2023-12-07,126010,14,390,"teste: H1, H2 e H3"
+2023-12-08,127094,7,390,"teste: H1, H2 e H3"
+2023-12-09,,6,390,"teste: H1, H2 e H3"
+2023-12-10,,2,390,"teste: H1, H2 e H3"
+2023-12-11,126916,8,390,"teste: H1, H2 e H3"
+2023-12-12,126403,9,390,"teste: H1, H2 e H3"
+2023-12-13,129465,21,390,"teste: H1, H2 e H3"
+2023-12-14,130842,19,390,"teste: H1, H2 e H3"
+2023-12-15,130197,21,390,"teste: H1, H2 e H3"
+2023-12-16,,4,390,"teste: H1, H2 e H3"
+2023-12-17,,2,390,"teste: H1, H2 e H3"
+2023-12-18,131084,11,390,"teste: H1, H2 e H3"
+2023-12-19,131851,37,390,"teste: H1, H2 e H3"
+2023-12-20,130804,24,390,"teste: H1, H2 e H3"
+2023-12-21,132182,13,390,"teste: H1, H2 e H3"
+2023-12-22,132753,16,390,"teste: H1, H2 e H3"
+2023-12-23,,5,390,"teste: H1, H2 e H3"
+2023-12-24,,3,390,"teste: H1, H2 e H3"
+2023-12-25,,3,390,"teste: H1, H2 e H3"
+2023-12-26,133533,11,390,"teste: H1, H2 e H3"
+2023-12-27,134194,24,390,"teste: H1, H2 e H3"
+2023-12-28,134185,18,390,"teste: H1, H2 e H3"
+2023-12-29,,29,390,"teste: H1, H2 e H3"
+2023-12-30,,4,390,"teste: H1, H2 e H3"
+2023-12-31,,5,390,"teste: H1, H2 e H3"
+2024-01-01,,1,390,"teste: H1, H2 e H3"
+2024-01-02,132697,8,390,"teste: H1, H2 e H3"
+2024-01-03,132834,12,390,"teste: H1, H2 e H3"
+2024-01-04,131226,10,390,"teste: H1, H2 e H3"
+2024-01-05,132023,15,390,"teste: H1, H2 e H3"
+2024-01-06,,6,390,"teste: H1, H2 e H3"
+2024-01-07,,2,390,"teste: H1, H2 e H3"
+2024-01-08,132427,6,390,"teste: H1, H2 e H3"
+2024-01-09,131447,13,390,"teste: H1, H2 e H3"
+2024-01-10,130841,8,390,"teste: H1, H2 e H3"
+2024-01-11,130649,4,390,"teste: H1, H2 e H3"
+2024-01-12,130988,17,390,"teste: H1, H2 e H3"
+2024-01-13,,9,390,"teste: H1, H2 e H3"
+2024-01-14,,1,390,"teste: H1, H2 e H3"
+2024-01-15,131521,10,390,"teste: H1, H2 e H3"
+2024-01-16,129294,12,390,"teste: H1, H2 e H3"
+2024-01-17,128524,9,390,"teste: H1, H2 e H3"
+2024-01-18,127316,15,390,"teste: H1, H2 e H3"
+2024-01-19,127636,7,390,"teste: H1, H2 e H3"
+2024-01-20,,4,390,"teste: H1, H2 e H3"
+2024-01-21,,1,390,"teste: H1, H2 e H3"
+2024-01-22,126602,7,390,"teste: H1, H2 e H3"
+2024-01-23,128263,16,390,"teste: H1, H2 e H3"
+2024-01-24,127816,18,390,"teste: H1, H2 e H3"
+2024-01-25,128169,15,390,"teste: H1, H2 e H3"
+2024-01-26,128967,19,390,"teste: H1, H2 e H3"
+2024-01-27,,18,390,"teste: H1, H2 e H3"
+2024-01-28,,4,390,"teste: H1, H2 e H3"
+2024-01-29,128503,11,390,"teste: H1, H2 e H3"
+2024-01-30,127402,27,390,"teste: H1, H2 e H3"
+2024-01-31,127752,22,390,"teste: H1, H2 e H3"
+2024-02-01,128481,6,390,"teste: H1, H2 e H3"
+2024-02-02,127182,7,390,"teste: H1, H2 e H3"
+2024-02-03,,10,390,"teste: H1, H2 e H3"
+2024-02-05,127593,4,390,"teste: H1, H2 e H3"
+2024-02-06,130416,10,390,"teste: H1, H2 e H3"
+2024-02-07,129608,12,390,"teste: H1, H2 e H3"
+2024-02-08,128217,9,390,"teste: H1, H2 e H3"
+2024-02-09,128026,14,390,"teste: H1, H2 e H3"
+2024-02-10,,4,390,"teste: H1, H2 e H3"
+2024-02-12,,1,390,"teste: H1, H2 e H3"
+2024-02-13,,2,390,"teste: H1, H2 e H3"
+2024-02-14,127018,8,390,"teste: H1, H2 e H3"
+2024-02-15,127804,14,390,"teste: H1, H2 e H3"
+2024-02-16,128726,19,390,"teste: H1, H2 e H3"
+2024-02-17,,3,390,"teste: H1, H2 e H3"
+2024-02-19,129036,13,390,"teste: H1, H2 e H3"
+2024-02-20,129916,8,390,"teste: H1, H2 e H3"
+2024-02-21,130032,11,390,"teste: H1, H2 e H3"
+2024-02-22,130241,6,390,"teste: H1, H2 e H3"
+2024-02-23,129419,7,390,"teste: H1, H2 e H3"
+2024-02-24,,12,390,"teste: H1, H2 e H3"
+2024-02-25,,2,390,"teste: H1, H2 e H3"
+2024-02-26,129609,12,390,"teste: H1, H2 e H3"
+2024-02-27,131689,17,390,"teste: H1, H2 e H3"
+2024-02-28,130155,12,390,"teste: H1, H2 e H3"
+2024-02-29,129020,6,390,"teste: H1, H2 e H3"
+2024-03-01,129180,11,390,"teste: H1, H2 e H3"
+2024-03-02,,7,390,"teste: H1, H2 e H3"
+2024-03-03,,1,390,"teste: H1, H2 e H3"
+2024-03-04,128341,7,390,"teste: H1, H2 e H3"
+2024-03-05,128098,9,390,"teste: H1, H2 e H3"
+2024-03-06,128890,10,390,"teste: H1, H2 e H3"
+2024-03-07,128340,6,390,"teste: H1, H2 e H3"
+2024-03-08,127071,20,390,"teste: H1, H2 e H3"
+2024-03-09,,22,390,"teste: H1, H2 e H3"
+2024-03-10,,1,390,"teste: H1, H2 e H3"
+2024-03-11,126124,27,390,"teste: H1, H2 e H3"
+2024-03-12,127668,10,390,"teste: H1, H2 e H3"
+2024-03-13,128006,16,390,"teste: H1, H2 e H3"
+2024-03-14,127690,3,390,"teste: H1, H2 e H3"
+2024-03-15,126742,9,390,"teste: H1, H2 e H3"
+2024-03-16,,1,390,"teste: H1, H2 e H3"
+2024-03-17,,2,390,"teste: H1, H2 e H3"
+2024-03-18,126954,7,390,"teste: H1, H2 e H3"
+2024-03-19,127529,11,390,"teste: H1, H2 e H3"
+2024-03-20,129125,13,390,"teste: H1, H2 e H3"
+2024-03-21,128159,15,390,"teste: H1, H2 e H3"
+2024-03-22,127027,10,390,"teste: H1, H2 e H3"
+2024-03-23,,4,390,"teste: H1, H2 e H3"
+2024-03-24,,5,390,"teste: H1, H2 e H3"
+2024-03-25,126931,6,390,"teste: H1, H2 e H3"
+2024-03-26,126863,6,390,"teste: H1, H2 e H3"
+2024-03-27,127691,10,390,"teste: H1, H2 e H3"
+2024-03-28,128106,12,390,"teste: H1, H2 e H3"
+2024-03-29,,14,390,"teste: H1, H2 e H3"
+2024-03-30,,7,390,"teste: H1, H2 e H3"
+2024-03-31,,1,390,"teste: H1, H2 e H3"
+2024-04-01,126990,16,390,"teste: H1, H2 e H3"
+2024-04-02,127549,19,390,"teste: H1, H2 e H3"
+2024-04-03,127318,8,390,"teste: H1, H2 e H3"
+2024-04-04,127428,8,390,"teste: H1, H2 e H3"
+2024-04-05,126795,14,390,"teste: H1, H2 e H3"
+2024-04-06,,10,390,"teste: H1, H2 e H3"
+2024-04-07,,2,390,"teste: H1, H2 e H3"
+2024-04-08,128857,11,390,"teste: H1, H2 e H3"
+2024-04-09,129890,10,390,"teste: H1, H2 e H3"
+2024-04-10,128054,5,390,"teste: H1, H2 e H3"
+2024-04-11,127396,20,390,"teste: H1, H2 e H3"
+2024-04-12,125946,15,390,"teste: H1, H2 e H3"
+2024-04-13,,7,390,"teste: H1, H2 e H3"
+2024-04-14,,3,390,"teste: H1, H2 e H3"
+2024-04-15,125334,11,390,"teste: H1, H2 e H3"
+2024-04-16,124389,16,390,"teste: H1, H2 e H3"
+2024-04-17,124171,15,390,"teste: H1, H2 e H3"
+2024-04-18,124196,11,390,"teste: H1, H2 e H3"
+2024-04-19,125124,20,390,"teste: H1, H2 e H3"
+2024-04-20,,5,390,"teste: H1, H2 e H3"
+2024-04-22,125573,12,390,"teste: H1, H2 e H3"
+2024-04-23,125148,12,390,"teste: H1, H2 e H3"
+2024-04-24,124741,14,390,"teste: H1, H2 e H3"
+2024-04-25,124646,9,390,"teste: H1, H2 e H3"
+2024-04-26,126526,4,390,"teste: H1, H2 e H3"
+2024-04-27,,7,390,"teste: H1, H2 e H3"
+2024-04-28,,2,390,"teste: H1, H2 e H3"
+2024-04-29,127352,12,390,"teste: H1, H2 e H3"
+2024-04-30,125924,9,390,"teste: H1, H2 e H3"
+2024-05-01,,5,390,"teste: H1, H2 e H3"
+2024-05-02,127122,8,390,"teste: H1, H2 e H3"
+2024-05-03,128509,13,390,"teste: H1, H2 e H3"
+2024-05-04,,9,390,"teste: H1, H2 e H3"
+2024-05-06,128466,1,390,"teste: H1, H2 e H3"
+2024-05-07,129210,9,390,"teste: H1, H2 e H3"
+2024-05-08,129481,5,390,"teste: H1, H2 e H3"
+2024-05-09,128188,13,390,"teste: H1, H2 e H3"
+2024-05-10,127600,6,390,"teste: H1, H2 e H3"
+2024-05-11,,3,390,"teste: H1, H2 e H3"
+2024-05-13,128155,5,390,"teste: H1, H2 e H3"
+2024-05-14,128515,11,390,"teste: H1, H2 e H3"
+2024-05-15,128028,18,390,"teste: H1, H2 e H3"
+2024-05-16,128284,15,390,"teste: H1, H2 e H3"
+2024-05-17,128151,8,390,"teste: H1, H2 e H3"
+2024-05-18,,4,390,"teste: H1, H2 e H3"
+2024-05-20,127751,5,390,"teste: H1, H2 e H3"
+2024-05-21,127412,7,390,"teste: H1, H2 e H3"
+2024-05-22,125650,12,390,"teste: H1, H2 e H3"
+2024-05-23,124729,17,390,"teste: H1, H2 e H3"
+2024-05-24,124306,8,390,"teste: H1, H2 e H3"
+2024-05-25,,2,390,"teste: H1, H2 e H3"
+2024-05-26,,3,390,"teste: H1, H2 e H3"
+2024-05-27,124496,6,390,"teste: H1, H2 e H3"
+2024-05-28,123780,14,390,"teste: H1, H2 e H3"
+2024-05-29,122707,3,390,"teste: H1, H2 e H3"
+2024-05-30,,5,390,"teste: H1, H2 e H3"
+2024-05-31,122098,16,390,"teste: H1, H2 e H3"
+2024-06-01,,8,390,"teste: H1, H2 e H3"
+2024-06-02,,2,390,"teste: H1, H2 e H3"
+2024-06-03,122032,14,390,"teste: H1, H2 e H3"
+2024-06-04,121802,13,390,"teste: H1, H2 e H3"
+2024-06-05,121407,12,390,"teste: H1, H2 e H3"
+2024-06-06,122899,11,390,"teste: H1, H2 e H3"
+2024-06-07,120767,15,390,"teste: H1, H2 e H3"
+2024-06-08,,6,390,"teste: H1, H2 e H3"
+2024-06-09,,1,390,"teste: H1, H2 e H3"
+2024-06-10,120760,8,390,"teste: H1, H2 e H3"
+2024-06-11,121635,19,390,"teste: H1, H2 e H3"
+2024-06-12,119936,8,390,"teste: H1, H2 e H3"
+2024-06-13,119568,27,390,"teste: H1, H2 e H3"
+2024-06-14,119662,16,390,"teste: H1, H2 e H3"
+2024-06-15,,8,390,"teste: H1, H2 e H3"
+2024-06-16,,6,390,"teste: H1, H2 e H3"
+2024-06-17,119138,11,390,"teste: H1, H2 e H3"
+2024-06-18,119630,25,390,"teste: H1, H2 e H3"
+2024-06-19,120261,31,390,"teste: H1, H2 e H3"
+2024-06-20,120446,22,390,"teste: H1, H2 e H3"
+2024-06-21,121341,20,390,"teste: H1, H2 e H3"
+2024-06-22,,12,390,"teste: H1, H2 e H3"
+2024-06-23,,1,390,"teste: H1, H2 e H3"
+2024-06-24,122637,12,390,"teste: H1, H2 e H3"
+2024-06-25,122331,15,390,"teste: H1, H2 e H3"
+2024-06-26,122641,19,390,"teste: H1, H2 e H3"
+2024-06-27,124308,19,390,"teste: H1, H2 e H3"
+2024-06-28,123907,18,390,"teste: H1, H2 e H3"
+2024-06-29,,15,390,"teste: H1, H2 e H3"
+2024-06-30,,2,390,"teste: H1, H2 e H3"
+2024-07-01,124718,13,390,"teste: H1, H2 e H3"
+2024-07-02,124787,22,390,"teste: H1, H2 e H3"
+2024-07-03,125662,26,390,"teste: H1, H2 e H3"
+2024-07-04,126164,25,390,"teste: H1, H2 e H3"
+2024-07-05,126267,24,390,"teste: H1, H2 e H3"
+2024-07-06,,15,390,"teste: H1, H2 e H3"
+2024-07-07,,2,390,"teste: H1, H2 e H3"
+2024-07-08,126548,9,390,"teste: H1, H2 e H3"
+2024-07-09,127108,6,390,"teste: H1, H2 e H3"
+2024-07-10,127218,20,390,"teste: H1, H2 e H3"
+2024-07-11,128294,14,390,"teste: H1, H2 e H3"
+2024-07-12,128897,22,390,"teste: H1, H2 e H3"
+2024-07-13,,2,390,"teste: H1, H2 e H3"
+2024-07-15,129321,21,390,"teste: H1, H2 e H3"
+2024-07-16,129110,19,390,"teste: H1, H2 e H3"
+2024-07-17,129450,11,390,"teste: H1, H2 e H3"
+2024-07-18,127652,25,390,"teste: H1, H2 e H3"
+2024-07-19,127616,21,390,"teste: H1, H2 e H3"
+2024-07-20,,8,390,"teste: H1, H2 e H3"
+2024-07-21,,3,390,"teste: H1, H2 e H3"
+2024-07-22,127860,10,390,"teste: H1, H2 e H3"
+2024-07-23,126590,10,390,"teste: H1, H2 e H3"
+2024-07-24,126423,9,390,"teste: H1, H2 e H3"
+2024-07-25,125954,11,390,"teste: H1, H2 e H3"
+2024-07-26,127492,8,390,"teste: H1, H2 e H3"
+2024-07-27,,2,390,"teste: H1, H2 e H3"
+2024-07-28,,1,390,"teste: H1, H2 e H3"
+2024-07-29,126954,7,390,"teste: H1, H2 e H3"
+2024-07-30,126139,8,390,"teste: H1, H2 e H3"
+2024-07-31,127652,16,390,"teste: H1, H2 e H3"
+2024-08-01,127395,20,390,"teste: H1, H2 e H3"
+2024-08-02,125854,11,390,"teste: H1, H2 e H3"
+2024-08-03,,7,390,"teste: H1, H2 e H3"
+2024-08-04,,1,390,"teste: H1, H2 e H3"
+2024-08-05,125270,7,390,"teste: H1, H2 e H3"
+2024-08-06,126267,17,390,"teste: H1, H2 e H3"
+2024-08-07,127514,9,390,"teste: H1, H2 e H3"
+2024-08-08,128661,9,390,"teste: H1, H2 e H3"
+2024-08-09,130615,6,390,"teste: H1, H2 e H3"
+2024-08-10,,6,390,"teste: H1, H2 e H3"
+2024-08-12,131116,5,390,"teste: H1, H2 e H3"
+2024-08-13,132398,14,390,"teste: H1, H2 e H3"
+2024-08-14,133318,8,390,"teste: H1, H2 e H3"
+2024-08-15,134153,15,390,"teste: H1, H2 e H3"
+2024-08-16,133953,12,390,"teste: H1, H2 e H3"
+2024-08-17,,5,390,"teste: H1, H2 e H3"
+2024-08-18,,5,390,"teste: H1, H2 e H3"
+2024-08-19,135778,12,390,"teste: H1, H2 e H3"
+2024-08-20,136087,20,390,"teste: H1, H2 e H3"
+2024-08-21,136464,20,390,"teste: H1, H2 e H3"
+2024-08-22,135173,24,390,"teste: H1, H2 e H3"
+2024-08-23,135608,21,390,"teste: H1, H2 e H3"
+2024-08-24,,7,390,"teste: H1, H2 e H3"
+2024-08-25,,3,390,"teste: H1, H2 e H3"
+2024-08-26,136889,19,390,"teste: H1, H2 e H3"
+2024-08-27,136776,15,390,"teste: H1, H2 e H3"
+2024-08-28,137344,17,390,"teste: H1, H2 e H3"
+2024-08-29,136041,16,390,"teste: H1, H2 e H3"
+2024-08-30,136004,33,390,"teste: H1, H2 e H3"
+2024-08-31,,6,390,"teste: H1, H2 e H3"
+2024-09-01,,1,390,"teste: H1, H2 e H3"
+2024-09-02,134981,23,390,"teste: H1, H2 e H3"
+2024-09-03,134353,13,390,"teste: H1, H2 e H3"
+2024-09-04,136111,13,390,"teste: H1, H2 e H3"
+2024-09-05,136502,9,390,"teste: H1, H2 e H3"
+2024-09-06,134572,11,390,"teste: H1, H2 e H3"
+2024-09-07,,4,390,"teste: H1, H2 e H3"
+2024-09-08,,1,390,"teste: H1, H2 e H3"
+2024-09-09,134737,6,390,"teste: H1, H2 e H3"
+2024-09-10,134320,13,390,"teste: H1, H2 e H3"
+2024-09-11,134677,17,390,"teste: H1, H2 e H3"
+2024-09-12,134029,17,390,"teste: H1, H2 e H3"
+2024-09-13,134882,16,390,"teste: H1, H2 e H3"
+2024-09-14,,3,390,"teste: H1, H2 e H3"
+2024-09-15,,3,390,"teste: H1, H2 e H3"
+2024-09-16,135118,11,390,"teste: H1, H2 e H3"
+2024-09-17,134960,25,390,"teste: H1, H2 e H3"
+2024-09-18,133748,31,390,"teste: H1, H2 e H3"
+2024-09-19,133123,15,390,"teste: H1, H2 e H3"
+2024-09-20,131065,27,390,"teste: H1, H2 e H3"
+2024-09-21,,16,390,"teste: H1, H2 e H3"
+2024-09-22,,5,390,"teste: H1, H2 e H3"
+2024-09-23,130568,28,390,"teste: H1, H2 e H3"
+2024-09-24,132156,32,390,"teste: H1, H2 e H3"
+2024-09-25,131586,25,390,"teste: H1, H2 e H3"
+2024-09-26,133010,17,390,"teste: H1, H2 e H3"
+2024-09-27,132730,8,390,"teste: H1, H2 e H3"
+2024-09-28,,9,390,"teste: H1, H2 e H3"
+2024-09-29,,6,390,"teste: H1, H2 e H3"
+2024-09-30,131816,28,390,"teste: H1, H2 e H3"
+2024-10-01,132495,15,390,"teste: H1, H2 e H3"
+2024-10-02,133515,22,390,"teste: H1, H2 e H3"
+2024-10-03,131672,17,390,"teste: H1, H2 e H3"
+2024-10-04,131792,18,390,"teste: H1, H2 e H3"
+2024-10-05,,15,390,"teste: H1, H2 e H3"
+2024-10-06,,1,390,"teste: H1, H2 e H3"
+2024-10-07,132018,7,390,"teste: H1, H2 e H3"
+2024-10-08,131512,13,390,"teste: H1, H2 e H3"
+2024-10-09,129962,7,390,"teste: H1, H2 e H3"
+2024-10-10,130353,11,390,"teste: H1, H2 e H3"
+2024-10-11,129992,23,390,"teste: H1, H2 e H3"
+2024-10-12,,12,390,"teste: H1, H2 e H3"
+2024-10-13,,3,390,"teste: H1, H2 e H3"
+2024-10-14,131005,7,390,"teste: H1, H2 e H3"
+2024-10-15,131043,9,390,"teste: H1, H2 e H3"
+2024-10-16,131750,15,390,"teste: H1, H2 e H3"
+2024-10-17,130793,6,390,"teste: H1, H2 e H3"
+2024-10-18,130499,15,390,"teste: H1, H2 e H3"
+2024-10-19,,4,390,"teste: H1, H2 e H3"
+2024-10-21,130362,6,390,"teste: H1, H2 e H3"
+2024-10-22,129721,5,390,"teste: H1, H2 e H3"
+2024-10-23,129233,9,390,"teste: H1, H2 e H3"
+2024-10-24,130067,6,390,"teste: H1, H2 e H3"
+2024-10-25,129893,15,390,"teste: H1, H2 e H3"
+2024-10-26,,7,390,"teste: H1, H2 e H3"
+2024-10-28,131213,10,390,"teste: H1, H2 e H3"
+2024-10-29,130730,14,390,"teste: H1, H2 e H3"
+2024-10-30,130639,11,390,"teste: H1, H2 e H3"
+2024-10-31,129713,27,390,"teste: H1, H2 e H3"
+2024-11-01,128121,14,390,"teste: H1, H2 e H3"
+2024-11-02,,9,390,"teste: H1, H2 e H3"
+2024-11-03,,6,390,"teste: H1, H2 e H3"
+2024-11-04,130515,15,390,"teste: H1, H2 e H3"
+2024-11-05,130661,20,390,"teste: H1, H2 e H3"
+2024-11-06,130341,9,390,"teste: H1, H2 e H3"
+2024-11-07,129682,14,390,"teste: H1, H2 e H3"
+2024-11-08,127830,8,390,"teste: H1, H2 e H3"
+2024-11-09,,6,390,"teste: H1, H2 e H3"
+2024-11-10,,1,390,"teste: H1, H2 e H3"
+2024-11-11,127874,16,390,"teste: H1, H2 e H3"
+2024-11-12,127698,20,390,"teste: H1, H2 e H3"
+2024-11-13,127734,10,390,"teste: H1, H2 e H3"
+2024-11-14,127792,12,390,"teste: H1, H2 e H3"
+2024-11-15,,3,390,"teste: H1, H2 e H3"
+2024-11-18,127768,10,390,"teste: H1, H2 e H3"
+2024-11-19,128197,10,390,"teste: H1, H2 e H3"
+2024-11-20,,6,390,"teste: H1, H2 e H3"
+2024-11-21,126922,6,390,"teste: H1, H2 e H3"
+2024-11-22,129126,17,390,"teste: H1, H2 e H3"
+2024-11-23,,3,390,"teste: H1, H2 e H3"
+2024-11-24,,3,390,"teste: H1, H2 e H3"
+2024-11-25,129036,8,390,"teste: H1, H2 e H3"
+2024-11-26,129922,6,390,"teste: H1, H2 e H3"
+2024-11-27,127669,15,390,"teste: H1, H2 e H3"
+2024-11-28,124610,29,390,"teste: H1, H2 e H3"
+2024-11-29,125668,19,390,"teste: H1, H2 e H3"
+2024-11-30,,13,390,"teste: H1, H2 e H3"
+2024-12-01,,4,390,"teste: H1, H2 e H3"
+2024-12-02,125236,10,390,"teste: H1, H2 e H3"
+2024-12-03,126139,18,390,"teste: H1, H2 e H3"
+2024-12-04,126087,14,390,"teste: H1, H2 e H3"
+2024-12-05,127858,16,390,"teste: H1, H2 e H3"
+2024-12-06,125946,7,390,"teste: H1, H2 e H3"
+2024-12-07,,9,390,"teste: H1, H2 e H3"
+2024-12-08,,4,390,"teste: H1, H2 e H3"
+2024-12-09,127210,9,390,"teste: H1, H2 e H3"
+2024-12-10,128228,12,390,"teste: H1, H2 e H3"
+2024-12-11,129593,6,390,"teste: H1, H2 e H3"
+2024-12-12,126042,15,390,"teste: H1, H2 e H3"
+2024-12-13,124612,18,390,"teste: H1, H2 e H3"
+2024-12-14,,4,390,"teste: H1, H2 e H3"
+2024-12-15,,4,390,"teste: H1, H2 e H3"
+2024-12-16,123560,8,390,"teste: H1, H2 e H3"
+2024-12-17,124698,28,390,"teste: H1, H2 e H3"
+2024-12-18,120772,30,390,"teste: H1, H2 e H3"
+2024-12-19,121188,18,390,"teste: H1, H2 e H3"
+2024-12-20,122102,22,390,"teste: H1, H2 e H3"
+2024-12-21,,5,390,"teste: H1, H2 e H3"
+2024-12-22,,4,390,"teste: H1, H2 e H3"
+2024-12-23,120767,12,390,"teste: H1, H2 e H3"
+2024-12-24,,13,390,"teste: H1, H2 e H3"
+2024-12-25,,1,390,"teste: H1, H2 e H3"
+2024-12-26,121078,11,390,"teste: H1, H2 e H3"
+2024-12-27,120269,14,390,"teste: H1, H2 e H3"
+2024-12-28,,6,390,"teste: H1, H2 e H3"
+2024-12-29,,1,390,"teste: H1, H2 e H3"
+2024-12-30,120283,8,390,"teste: H1, H2 e H3"
+2024-12-31,,27,390,
+2025-01-01,,3,390,
+2025-01-02,120125,16,390,teste: só H2
+2025-01-03,118533,12,390,teste: só H2
+2025-01-04,,7,390,teste: só H2
+2025-01-05,,2,390,teste: só H2
+2025-01-06,120022,11,390,teste: só H2
+2025-01-07,121163,19,390,teste: só H2
+2025-01-08,119625,11,390,teste: só H2
+2025-01-09,119781,11,390,teste: só H2
+2025-01-10,118856,9,390,teste: só H2
+2025-01-11,,4,390,teste: só H2
+2025-01-12,,2,390,teste: só H2
+2025-01-13,119007,9,390,teste: só H2
+2025-01-14,119299,11,390,teste: só H2
+2025-01-15,122650,11,390,teste: só H2
+2025-01-16,121234,13,390,teste: só H2
+2025-01-17,122350,9,390,teste: só H2
+2025-01-18,,4,390,teste: só H2
+2025-01-20,122543,8,390,teste: só H2
+2025-01-21,123338,21,390,teste: só H2
+2025-01-22,122972,10,390,teste: só H2
+2025-01-23,122483,33,390,teste: só H2
+2025-01-24,122447,9,390,teste: só H2
+2025-01-25,,4,390,teste: só H2
+2025-01-26,,2,390,teste: só H2
+2025-01-27,124862,5,390,teste: só H2
+2025-01-28,124056,13,390,teste: só H2
+2025-01-29,123432,18,390,teste: só H2
+2025-01-30,126913,14,390,teste: só H2
+2025-01-31,126135,22,390,teste: só H2
+2025-02-01,,9,390,teste: só H2
+2025-02-02,,2,390,teste: só H2
+2025-02-03,125970,13,390,teste: só H2
+2025-02-04,125147,13,390,teste: só H2
+2025-02-05,125534,18,390,teste: só H2
+2025-02-06,126225,9,390,teste: só H2
+2025-02-07,124619,13,390,teste: só H2
+2025-02-08,,12,390,teste: só H2
+2025-02-09,,1,390,teste: só H2
+2025-02-10,125572,7,390,teste: só H2
+2025-02-11,126522,12,390,teste: só H2
+2025-02-12,124380,10,390,teste: só H2
+2025-02-13,124850,9,390,teste: só H2
+2025-02-14,128219,5,390,teste: só H2
+2025-02-15,,6,390,teste: só H2
+2025-02-16,,1,390,teste: só H2
+2025-02-17,128869,4,390,teste: só H2
+2025-02-18,128532,9,390,teste: só H2
+2025-02-19,127309,19,390,teste: só H2
+2025-02-20,127601,13,390,teste: só H2
+2025-02-21,127128,13,390,teste: só H2
+2025-02-22,,4,390,teste: só H2
+2025-02-24,125401,7,390,teste: só H2
+2025-02-25,125980,15,390,teste: só H2
+2025-02-26,124769,13,390,teste: só H2
+2025-02-27,124799,13,390,teste: só H2
+2025-02-28,122799,12,390,teste: só H2
+2025-03-01,,7,390,teste: só H2
+2025-03-02,,2,390,teste: só H2
+2025-03-03,,3,390,teste: só H2
+2025-03-05,123047,11,390,teste: só H2
+2025-03-06,123358,17,390,teste: só H2
+2025-03-07,125035,6,390,teste: só H2
+2025-03-08,,4,390,teste: só H2
+2025-03-09,,2,390,teste: só H2
+2025-03-10,124519,11,390,teste: só H2
+2025-03-11,123507,13,390,teste: só H2
+2025-03-12,123864,13,390,teste: só H2
+2025-03-13,125637,14,390,teste: só H2
+2025-03-14,128957,11,390,teste: só H2
+2025-03-15,,6,390,teste: só H2
+2025-03-17,130834,12,390,teste: só H2
+2025-03-18,131475,13,390,teste: só H2
+2025-03-19,132508,8,390,teste: só H2
+2025-03-20,131955,23,390,teste: só H2
+2025-03-21,132345,11,390,teste: só H2
+2025-03-22,,12,390,teste: só H2
+2025-03-23,,1,390,teste: só H2
+2025-03-24,131321,7,390,teste: só H2
+2025-03-25,132068,21,390,teste: só H2
+2025-03-26,132520,12,390,teste: só H2
+2025-03-27,133149,15,390,teste: só H2
+2025-03-28,131902,13,390,teste: só H2
+2025-03-29,,1,390,teste: só H2
+2025-03-30,,1,390,teste: só H2
+2025-03-31,130260,8,390,teste: só H2
+2025-04-01,131147,16,390,teste: só H2
+2025-04-02,131190,12,390,teste: só H2
+2025-04-03,131141,18,390,teste: só H2
+2025-04-04,127256,30,390,teste: só H2
+2025-04-05,,18,390,teste: só H2
+2025-04-06,,4,390,teste: só H2
+2025-04-07,125588,20,390,teste: só H2
+2025-04-08,123932,28,390,teste: só H2
+2025-04-09,127796,28,390,teste: só H2
+2025-04-10,126355,30,390,teste: só H2
+2025-04-11,127682,19,390,teste: só H2
+2025-04-12,,11,390,teste: só H2
+2025-04-13,,2,390,teste: só H2
+2025-04-14,129454,15,390,teste: só H2
+2025-04-15,129245,11,390,teste: só H2
+2025-04-16,128317,7,390,teste: só H2
+2025-04-17,129650,17,390,teste: só H2
+2025-04-18,,7,390,teste: só H2
+2025-04-19,,1,390,teste: só H2
+2025-04-21,,2,390,teste: só H2
+2025-04-22,130464,13,390,teste: só H2
+2025-04-23,132216,11,390,teste: só H2
+2025-04-24,134580,9,390,teste: só H2
+2025-04-25,134739,17,390,teste: só H2
+2025-04-26,,6,390,teste: só H2
+2025-04-27,,1,390,teste: só H2
+2025-04-28,135016,7,390,teste: só H2
+2025-04-29,135093,16,390,teste: só H2
+2025-04-30,135067,8,390,teste: só H2
+2025-05-01,,8,390,teste: só H2
+2025-05-02,135134,8,390,teste: só H2
+2025-05-03,,1,390,teste: só H2
+2025-05-04,,2,390,teste: só H2
+2025-05-05,133491,8,390,teste: só H2
+2025-05-06,133516,13,390,teste: só H2
+2025-05-07,133398,19,390,teste: só H2
+2025-05-08,136232,10,390,teste: só H2
+2025-05-09,136512,13,390,teste: só H2
+2025-05-10,,3,390,teste: só H2
+2025-05-11,,3,390,teste: só H2
+2025-05-12,136563,10,390,teste: só H2
+2025-05-13,138963,17,390,teste: só H2
+2025-05-14,138423,18,390,teste: só H2
+2025-05-15,139334,12,390,teste: só H2
+2025-05-16,139187,15,390,teste: só H2
+2025-05-18,,2,390,teste: só H2
+2025-05-19,139636,17,390,teste: só H2
+2025-05-20,140110,20,390,teste: só H2
+2025-05-21,137881,21,390,teste: só H2
+2025-05-22,137273,18,390,teste: só H2
+2025-05-23,137824,22,390,teste: só H2
+2025-05-24,,3,390,teste: só H2
+2025-05-25,,1,390,teste: só H2
+2025-05-26,138136,6,390,teste: só H2
+2025-05-27,139541,11,390,teste: só H2
+2025-05-28,138888,12,390,teste: só H2
+2025-05-29,138534,14,390,teste: só H2
+2025-05-30,137027,13,390,teste: só H2
+2025-05-31,,3,390,teste: só H2
+2025-06-01,,1,390,teste: só H2
+2025-06-02,136787,11,390,teste: só H2
+2025-06-03,137546,14,390,teste: só H2
+2025-06-04,137002,16,390,teste: só H2
+2025-06-05,136236,11,390,teste: só H2
+2025-06-06,136102,5,390,teste: só H2
+2025-06-07,,3,390,teste: só H2
+2025-06-09,135699,5,390,teste: só H2
+2025-06-10,136436,12,390,teste: só H2
+2025-06-11,137128,7,390,teste: só H2
+2025-06-12,137800,2,390,teste: só H2
+2025-06-13,137213,5,390,teste: só H2
+2025-06-14,,4,390,teste: só H2
+2025-06-16,139256,0,390,teste: só H2
+2025-06-17,138840,0,390,teste: só H2
+2025-06-18,138717,0,390,teste: só H2
+2025-06-20,137116,0,390,teste: só H2
+2025-06-23,136551,0,390,teste: só H2
+2025-06-24,137165,0,390,teste: só H2
+2025-06-25,135767,0,390,teste: só H2
+2025-06-26,137114,0,390,teste: só H2
+2025-06-27,136866,0,390,teste: só H2
+2025-06-30,138855,0,390,teste: só H2
+2025-07-01,139549,0,390,teste: só H2
+2025-07-02,139051,18,390,teste: só H2
+2025-07-03,140928,11,390,teste: só H2
+2025-07-04,141478,26,390,teste: só H2
+2025-07-05,,8,390,teste: só H2
+2025-07-06,,3,390,teste: só H2
+2025-07-07,139490,12,390,teste: só H2
+2025-07-08,139303,17,390,teste: só H2
+2025-07-09,137481,12,390,teste: só H2
+2025-07-10,136743,26,390,teste: só H2
+2025-07-11,136187,13,390,teste: só H2
+2025-07-12,,7,390,teste: só H2
+2025-07-13,,2,390,teste: só H2
+2025-07-14,135299,17,390,teste: só H2
+2025-07-15,135250,13,390,teste: só H2
+2025-07-16,135511,7,390,teste: só H2
+2025-07-17,135565,14,390,teste: só H2
+2025-07-18,133382,22,390,teste: só H2
+2025-07-19,,9,390,teste: só H2
+2025-07-21,134167,12,390,teste: só H2
+2025-07-22,134036,12,390,teste: só H2
+2025-07-23,135368,14,390,teste: só H2
+2025-07-24,133808,7,390,teste: só H2
+2025-07-25,133524,12,390,teste: só H2
+2025-07-26,,3,390,teste: só H2
+2025-07-27,,4,390,teste: só H2
+2025-07-28,132129,8,390,teste: só H2
+2025-07-29,132726,11,390,teste: só H2
+2025-07-30,133990,16,390,teste: só H2
+2025-07-31,133071,21,390,teste: só H2
+2025-08-01,132437,16,390,teste: só H2
+2025-08-02,,7,390,teste: só H2
+2025-08-03,,1,390,teste: só H2
+2025-08-04,132971,7,390,teste: só H2
+2025-08-05,133151,10,390,teste: só H2
+2025-08-06,134538,12,390,teste: só H2
+2025-08-07,136528,15,390,teste: só H2
+2025-08-08,135913,16,390,teste: só H2
+2025-08-09,,6,390,teste: só H2
+2025-08-11,135623,5,390,teste: só H2
+2025-08-12,137914,13,390,teste: só H2
+2025-08-13,136687,16,390,teste: só H2
+2025-08-14,136356,9,390,teste: só H2
+2025-08-15,136341,6,390,teste: só H2
+2025-08-16,,11,390,teste: só H2
+2025-08-17,,1,390,teste: só H2
+2025-08-18,137322,10,390,teste: só H2
+2025-08-19,134432,15,390,teste: só H2
+2025-08-20,134667,20,390,teste: só H2
+2025-08-21,134511,12,390,teste: só H2
+2025-08-22,137968,13,390,teste: só H2
+2025-08-23,,5,390,teste: só H2
+2025-08-24,,2,390,teste: só H2
+2025-08-25,138025,7,390,teste: só H2
+2025-08-26,137771,9,390,teste: só H2
+2025-08-27,139206,8,390,teste: só H2
+2025-08-28,141049,13,390,teste: só H2
+2025-08-29,141422,15,390,teste: só H2
+2025-08-30,,4,390,teste: só H2
+2025-08-31,,1,390,teste: só H2
+2025-09-01,141125,7,390,teste: só H2
+2025-09-02,140335,15,390,teste: só H2
+2025-09-03,139864,8,390,teste: só H2
+2025-09-04,140993,6,390,teste: só H2
+2025-09-05,142640,19,390,teste: só H2
+2025-09-06,,10,390,teste: só H2
+2025-09-08,141792,8,390,teste: só H2
+2025-09-09,141618,9,390,teste: só H2
+2025-09-10,142349,10,390,teste: só H2
+2025-09-11,143151,6,390,teste: só H2
+2025-09-12,142272,21,390,teste: só H2
+2025-09-13,,5,390,teste: só H2
+2025-09-14,,1,390,teste: só H2
+2025-09-15,143547,20,390,teste: só H2
+2025-09-16,144062,8,390,teste: só H2
+2025-09-17,145594,16,390,teste: só H2
+2025-09-18,145500,9,390,teste: só H2
+2025-09-19,145865,11,390,teste: só H2
+2025-09-20,,5,390,teste: só H2
+2025-09-21,,3,390,teste: só H2
+2025-09-22,145109,16,390,teste: só H2
+2025-09-23,146425,16,390,teste: só H2
+2025-09-24,146492,21,390,teste: só H2
+2025-09-25,145306,10,390,teste: só H2
+2025-09-26,145447,10,390,teste: só H2
+2025-09-27,,6,390,teste: só H2
+2025-09-29,146337,5,390,teste: só H2
+2025-09-30,146237,7,390,teste: só H2
+2025-10-01,145517,6,390,teste: só H2
+2025-10-02,143950,17,390,teste: só H2
+2025-10-03,144201,10,390,teste: só H2
+2025-10-04,,1,390,teste: só H2
+2025-10-06,143608,5,390,teste: só H2
+2025-10-07,141356,12,390,teste: só H2
+2025-10-08,142145,10,390,teste: só H2
+2025-10-09,141708,13,390,teste: só H2
+2025-10-10,140680,13,390,teste: só H2
+2025-10-11,,9,390,teste: só H2
+2025-10-12,,1,390,teste: só H2
+2025-10-13,141783,11,390,teste: só H2
+2025-10-14,141683,14,390,teste: só H2
+2025-10-15,142604,4,390,teste: só H2
+2025-10-16,142200,10,390,teste: só H2
+2025-10-17,143399,11,390,teste: só H2
+2025-10-18,,2,390,teste: só H2
+2025-10-19,,1,390,teste: só H2
+2025-10-20,144509,13,390,teste: só H2
+2025-10-21,144085,11,390,teste: só H2
+2025-10-22,144873,9,390,teste: só H2
+2025-10-23,145721,14,390,teste: só H2
+2025-10-24,146172,9,390,teste: só H2
+2025-10-25,,2,390,teste: só H2
+2025-10-26,,1,390,teste: só H2
+2025-10-27,146969,12,390,teste: só H2
+2025-10-28,147429,20,390,teste: só H2
+2025-10-29,148633,15,390,teste: só H2
+2025-10-30,148780,15,390,teste: só H2
+2025-10-31,149540,16,390,teste: só H2
+2025-11-01,,4,390,teste: só H2
+2025-11-02,,1,390,teste: só H2
+2025-11-03,150454,11,390,teste: só H2
+2025-11-04,150704,28,390,teste: só H2
+2025-11-05,153294,19,390,teste: só H2
+2025-11-06,153339,12,390,teste: só H2
+2025-11-07,154064,16,390,teste: só H2
+2025-11-08,,6,390,teste: só H2
+2025-11-09,,3,390,teste: só H2
+2025-11-10,155257,10,390,teste: só H2
+2025-11-11,157749,19,390,teste: só H2
+2025-11-12,157633,15,390,teste: só H2
+2025-11-13,157162,10,390,teste: só H2
+2025-11-14,157739,16,390,teste: só H2
+2025-11-15,,3,390,teste: só H2
+2025-11-17,156993,18,390,teste: só H2
+2025-11-18,156522,13,390,
+2025-11-19,,9,390,

@@ -6,6 +6,7 @@ da amostra usadas em todas as análises (notebook 16 da versão do artigo).
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from typing import Any
 
 import numpy as np
@@ -65,11 +66,10 @@ def walk_forward_predictions(
 
     Linhas usadas só para treino (1º bloco) ficam com NaN.
     """
-    splitter = TimeSeriesSplit(n_splits=n_splits)
     predictions = {}
     for name, base_model in models.items():
         proba = np.full(len(y), np.nan)
-        for train_idx, test_idx in splitter.split(features):
+        for train_idx, test_idx in _splits(len(y), n_splits):
             if np.unique(y[train_idx]).size < 2:
                 continue
             model = clone(base_model)
@@ -79,12 +79,43 @@ def walk_forward_predictions(
     return predictions
 
 
+def _splits(n_obs: int, n_splits: int) -> Iterator[tuple[np.ndarray, np.ndarray]]:
+    """Índices de treino e teste de cada etapa (janela expansiva do TimeSeriesSplit)."""
+    splits: Iterator[tuple[np.ndarray, np.ndarray]] = TimeSeriesSplit(n_splits=n_splits).split(
+        np.zeros(n_obs)
+    )
+    return splits
+
+
 def fold_ids(n_obs: int, n_splits: int = N_SPLITS) -> np.ndarray:
     """Bloco de teste de cada linha (0, 1, …); −1 nas linhas usadas só para treino."""
     ids = np.full(n_obs, -1)
-    for fold, (_, test_idx) in enumerate(TimeSeriesSplit(n_splits=n_splits).split(np.zeros(n_obs))):
+    for fold, (_, test_idx) in enumerate(_splits(n_obs, n_splits)):
         ids[test_idx] = fold
     return ids
+
+
+def walk_forward_schedule(days: pd.Series, n_splits: int = N_SPLITS) -> pd.DataFrame:
+    """Datas e tamanhos do treino e do teste de cada etapa do walk-forward.
+
+    `days` são os dias com rótulo, na ordem das linhas da matriz (os mesmos índices das
+    previsões); as datas são o primeiro e o último dia de cada parte.
+    """
+    dates = pd.to_datetime(days).reset_index(drop=True)
+    rows = []
+    for step, (train_idx, test_idx) in enumerate(_splits(len(dates), n_splits), start=1):
+        rows.append(
+            {
+                "step": step,
+                "train_start": dates[train_idx[0]],
+                "train_end": dates[train_idx[-1]],
+                "n_train": len(train_idx),
+                "test_start": dates[test_idx[0]],
+                "test_end": dates[test_idx[-1]],
+                "n_test": len(test_idx),
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 def summarize_predictions(y: np.ndarray, predictions: dict[str, np.ndarray]) -> pd.DataFrame:

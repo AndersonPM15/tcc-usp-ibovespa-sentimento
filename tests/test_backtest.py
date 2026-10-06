@@ -80,6 +80,22 @@ def test_buy_and_hold_normalization_drops_first_return_only_from_cagr() -> None:
     assert raw["exposure"] == 1.0
 
 
+def test_realized_equity_curve_starts_at_one_and_dates_each_return_on_the_next_session() -> None:
+    calendar = pd.Series(pd.bdate_range("2024-01-01", periods=6))
+    days = calendar.iloc[[0, 1, 3]]  # o 3º pregão não tem sinal (dia sem notícias)
+    equity = pd.Series([1.01, 1.02, 0.99])
+    curve = backtest.realized_equity_curve(days, equity, calendar)
+    assert curve["equity"].tolist() == [1.0, 1.01, 1.02, 0.99]
+    assert curve["date"].tolist() == [calendar[0], calendar[1], calendar[2], calendar[4]]
+
+
+def test_buy_and_hold_equity_compounds_returns() -> None:
+    returns = pd.Series([0.10, -0.10, 0.05])
+    assert backtest.buy_and_hold_equity(returns).tolist() == pytest.approx([1.1, 0.99, 1.0395])
+    normalized = backtest.buy_and_hold_equity(returns, normalize_to_first=True)
+    assert normalized.tolist() == pytest.approx([1.0, 0.9, 0.945])
+
+
 def test_robustness_grid_covers_lags_quantiles_and_models() -> None:
     proba = list(np.random.default_rng(1).uniform(size=300))
     oof = pd.concat([_oof(proba).assign(model=model) for model in ("logreg_l2", "rf_200")])

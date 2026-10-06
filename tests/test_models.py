@@ -32,6 +32,19 @@ def test_fold_ids_match_article_walk_forward() -> None:
     assert [int((ids == fold).sum()) for fold in range(4)] == [388] * 4
 
 
+def test_walk_forward_schedule_dates_match_fold_ids() -> None:
+    days = pd.Series(pd.bdate_range("2018-01-02", periods=1942))
+    schedule = models.walk_forward_schedule(days)
+    assert schedule["n_train"].tolist() == [390, 778, 1166, 1554]
+    assert schedule["n_test"].tolist() == [388] * 4
+    assert (schedule["train_start"] == days.iloc[0]).all()
+    ids = models.fold_ids(len(days))
+    for step in schedule.itertuples(index=False):
+        in_block = days[ids == step.step - 1]
+        assert (in_block.min(), in_block.max()) == (step.test_start, step.test_end)
+        assert step.train_end == days[days < step.test_start].max()
+
+
 def test_mean_directional_accuracy() -> None:
     assert models.mean_directional_accuracy(np.array([1, 0, 1]), np.array([0.6, 0.4, 0.4])) == (
         pytest.approx(2 / 3)

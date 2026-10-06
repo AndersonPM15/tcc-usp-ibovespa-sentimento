@@ -2,7 +2,8 @@
 
 Pipeline completo, na ordem: `collect-news` → `clean-news` → `build-tfidf` e
 `download-ibovespa` → `reproduce`. Para reproduzir o artigo bastam as três entradas
-descritas em `data/MANIFEST.md` e o comando `reproduce`.
+descritas em `data/MANIFEST.md` e o comando `reproduce`; `presentation-figures` gera as
+figuras dos slides.
 """
 
 from __future__ import annotations
@@ -15,7 +16,7 @@ from pathlib import Path
 import pandas as pd
 from scipy.sparse import save_npz
 
-from tcc import manifest, market, reproduce
+from tcc import datasets, manifest, market, reproduce
 from tcc.config import Settings, load_settings
 from tcc.datasets import (
     IBOVESPA_FILE,
@@ -25,6 +26,7 @@ from tcc.datasets import (
     TFIDF_MATRIX_FILE,
 )
 from tcc.news import etl, gdelt, text
+from tcc.presentation import build as presentation
 
 MANIFEST_JSON = Path("data/MANIFEST.json")
 COLLECTION_START = date(2018, 1, 2)
@@ -69,8 +71,9 @@ def _clean_news(settings: Settings, _args: argparse.Namespace) -> None:
 
 def _build_tfidf(settings: Settings, _args: argparse.Namespace) -> None:
     """Gera a matriz TF-IDF diária e o seu índice em `data_processed/`."""
-    news = pd.read_parquet(settings.interim_dir / NEWS_CLEAN_FILE)
-    matrix, index, vocabulary = text.tfidf_matrix(text.daily_documents(news))
+    matrix, index, vocabulary = text.tfidf_matrix(
+        text.daily_documents(datasets.read_clean_news(settings))
+    )
     settings.processed_dir.mkdir(parents=True, exist_ok=True)
     save_npz(settings.processed_dir / TFIDF_MATRIX_FILE, matrix)
     index.to_csv(settings.processed_dir / TFIDF_INDEX_FILE, index=False)
@@ -132,6 +135,19 @@ def _reproduce(settings: Settings, args: argparse.Namespace) -> None:
         raise SystemExit("Algum número difere do artigo (ver linhas DIFERENTE acima).")
 
 
+def _presentation_figures(settings: Settings, _args: argparse.Namespace) -> None:
+    """Gera as figuras da apresentação (PNG, SVG e CSV) em `reports/apresentacao/`."""
+    _warn_about_inputs(settings)
+    written, skipped = presentation.write_figures(settings)
+    figures = sorted({path.stem for path in written if path.suffix == ".png"})
+    print(f"{len(figures)} figuras em {settings.presentation_dir}: {', '.join(figures)}")
+    if skipped:
+        print(
+            f"[AVISO] {' e '.join(skipped)} não gerada(s): falta "
+            f"{settings.interim_dir / NEWS_CLEAN_FILE}"
+        )
+
+
 Command = Callable[[Settings, argparse.Namespace], None]
 COMMANDS: dict[str, tuple[str, Command]] = {
     "collect-news": ("coleta as manchetes no GDELT (horas; resultado pode variar)", _collect_news),
@@ -140,6 +156,10 @@ COMMANDS: dict[str, tuple[str, Command]] = {
     "download-ibovespa": ("baixa o Ibovespa diário (02/01/2018 a 18/11/2025)", _download_ibovespa),
     "reproduce": ("reproduz as Tabelas 1–4, as figuras e as verificações a–e", _reproduce),
     "manifest": ("confere os dados contra data/MANIFEST.json (--write regrava)", _manifest),
+    "presentation-figures": (
+        "gera as figuras dos slides em reports/apresentacao/ (PNG, SVG e CSV)",
+        _presentation_figures,
+    ),
 }
 
 

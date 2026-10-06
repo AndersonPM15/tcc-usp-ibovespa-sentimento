@@ -34,6 +34,8 @@ class Strategy:
 
 
 ARTICLE_STRATEGY = Strategy()
+TABLE3_QUANTILE = 0.90  # configuração da Tabela 3 (cenário padrão da regra de quantil)
+TABLE3_LAG = 0
 
 
 def _hold_positions(enter: np.ndarray, leave: np.ndarray) -> tuple[list[int], list[int]]:
@@ -195,15 +197,43 @@ def strategy_metrics(run: pd.DataFrame) -> dict[str, float]:
     )
 
 
+def buy_and_hold_equity(returns: pd.Series, normalize_to_first: bool = False) -> pd.Series:
+    """Patrimônio do Ibovespa sempre comprado e sem custos (começa em 1 antes do 1º retorno).
+
+    `normalize_to_first` repete a Tabela 3 do artigo, que divide a curva pelo 1º valor.
+    """
+    equity = (1 + returns).cumprod()
+    return equity / equity.iloc[0] if normalize_to_first else equity
+
+
+def realized_equity_curve(
+    days: pd.Series, equity: pd.Series, trading_days: pd.Series
+) -> pd.DataFrame:
+    """Curva de patrimônio datada pelo pregão em que cada retorno D→D+1 se realiza.
+
+    Nas estratégias e no benchmark do mesmo período, a linha do dia D carrega o retorno de D
+    para o pregão seguinte. A curva começa em 1 no fechamento do 1º dia e cada valor seguinte
+    é o patrimônio no fechamento do pregão seguinte ao seu dia; o último valor é o patrimônio
+    final das métricas (CAGR e Sharpe).
+    """
+    calendar = pd.Series(pd.to_datetime(trading_days).sort_values().to_numpy())
+    next_day = dict(zip(calendar.iloc[:-1], calendar.iloc[1:], strict=True))
+    signal_days = pd.to_datetime(days).reset_index(drop=True)
+    return pd.DataFrame(
+        {
+            "date": [signal_days.iloc[0], *signal_days.map(next_day)],
+            "equity": [1.0, *equity.to_numpy()],
+        }
+    )
+
+
 def buy_and_hold_metrics(returns: pd.Series, normalize_to_first: bool = False) -> dict[str, float]:
     """Métricas do Ibovespa sempre comprado e sem custos.
 
     `normalize_to_first` repete a Tabela 3 do artigo, que divide a curva pelo 1º valor
     (o CAGR então ignora o retorno do 1º dia; o Sharpe o inclui).
     """
-    equity = (1 + returns).cumprod()
-    if normalize_to_first:
-        equity = equity / equity.iloc[0]
+    equity = buy_and_hold_equity(returns, normalize_to_first)
     zeros = pd.Series([0.0])
     return performance_metrics(
         returns.reset_index(drop=True),

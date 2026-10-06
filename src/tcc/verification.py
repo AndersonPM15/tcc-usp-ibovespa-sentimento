@@ -35,6 +35,13 @@ TEXT_ONLY = "só texto (TF-IDF)"
 TECHNICAL_ONLY = "técnico (5 retornos defasados + volatilidade de 5 e 20 dias)"
 TEXT_AND_TECHNICAL = "texto + técnico"
 SAME_PERIOD_BENCHMARK = "Ibovespa buy-and-hold — mesmas linhas e retorno das estratégias (D→D+1)"
+# (d): retorno anormal (menos a média dos 60 pregões anteriores) e τ = 0 a 4 pregões
+ABNORMAL_EVENT_STUDY: dict[str, Any] = {
+    "tau_max": 4,
+    "window_unit": "trading_days",
+    "abnormal": True,
+    "n_boot": stats.N_BOOTSTRAP_VERIFICATION,
+}
 
 
 @dataclass(frozen=True)
@@ -54,7 +61,7 @@ class VerificationInputs:
 def run_verifications(inputs: VerificationInputs) -> dict[str, pd.DataFrame]:
     """Executa (a)–(e) e devolve as tabelas pelo nome do arquivo (sem extensão)."""
     tables = {"a_benchmark_mesmo_periodo": check_benchmark(inputs)}
-    tables.update(check_h1(_sentiment_table(inputs.oof_full, inputs.returns_full)))
+    tables.update(check_h1(sentiment_table(inputs.oof_full, inputs.returns_full)))
     tables["c_backtest_sem_lookahead"] = check_backtest(
         inputs.oof_article, tables["a_benchmark_mesmo_periodo"]
     )
@@ -79,7 +86,7 @@ def check_benchmark(inputs: VerificationInputs) -> pd.DataFrame:
     oof = inputs.oof_article
     strategy_days = oof[oof["model"] == "logreg_l2"].sort_values("day")
     first_day, last_day = strategy_days["day"].min(), strategy_days["day"].max()
-    same_rows = strategy_days["ret_next"].fillna(0).reset_index(drop=True)
+    same_rows = same_period_benchmark_returns(oof).reset_index(drop=True)
     all_days = market_returns.loc[first_day:last_day].copy()
     all_days.iloc[0] = 0.0  # a curva começa em 1 no fechamento de 05/08/2019
     figure8 = market_returns.reindex(strategy_days["day"]).reset_index(drop=True)
@@ -101,7 +108,9 @@ def check_benchmark(inputs: VerificationInputs) -> pd.DataFrame:
         ),
     ]
     for model, name in MODEL_LABELS.items():
-        run = backtest.run_quantile_strategy(oof[oof["model"] == model], event_q=0.90, lag=0)
+        run = backtest.run_quantile_strategy(
+            oof[oof["model"] == model], backtest.TABLE3_QUANTILE, backtest.TABLE3_LAG
+        )
         rows.append(
             {
                 "cenario": f"{name} — Tabela 3 do artigo (lag 0, quantil 0,90)",
@@ -112,6 +121,12 @@ def check_benchmark(inputs: VerificationInputs) -> pd.DataFrame:
             }
         )
     return pd.DataFrame(rows)
+
+
+def same_period_benchmark_returns(oof_article: pd.DataFrame) -> pd.Series:
+    """Retorno D→D+1 do Ibovespa nas mesmas linhas das estratégias, indexado pelo dia D."""
+    strategy_days = oof_article[oof_article["model"] == "logreg_l2"].sort_values("day")
+    return strategy_days.set_index("day")["ret_next"].fillna(0)
 
 
 def _buy_and_hold_row(
@@ -130,7 +145,7 @@ def _buy_and_hold_row(
 # --------------------------------------------------------------------------- (b)
 
 
-def _sentiment_table(oof: pd.DataFrame, returns: pd.DataFrame) -> pd.DataFrame:
+def sentiment_table(oof: pd.DataFrame, returns: pd.DataFrame) -> pd.DataFrame:
     """Sentimento 2p − 1 por modelo (colunas), retornos de D−1→D e D→D+1 e bloco do dia."""
     wide = oof.pivot(index="day", columns="model", values="proba").mul(2).sub(1)
     per_day = oof.drop_duplicates("day").set_index("day")
@@ -266,18 +281,10 @@ def check_event_study(event_table: pd.DataFrame, returns_full: pd.DataFrame) -> 
     returns = returns_full.set_index("day")["ret"].dropna()
     scenarios: dict[str, dict[str, Any]] = {
         "artigo: retorno bruto, dias corridos, [0, τ]": {"tau_max": 5},
-        "anormal (média t−60..t−1), pregões, [0, τ]": {
-            "tau_max": 4,
-            "window_unit": "trading_days",
-            "abnormal": True,
-            "n_boot": stats.N_BOOTSTRAP_VERIFICATION,
-        },
+        "anormal (média t−60..t−1), pregões, [0, τ]": ABNORMAL_EVENT_STUDY,
         "anormal (média t−60..t−1), pregões, [1, τ] (sem o dia do evento)": {
-            "tau_max": 4,
-            "window_unit": "trading_days",
-            "abnormal": True,
+            **ABNORMAL_EVENT_STUDY,
             "first_tau": 1,
-            "n_boot": stats.N_BOOTSTRAP_VERIFICATION,
         },
     }
     tables = [

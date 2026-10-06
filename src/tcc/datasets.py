@@ -44,6 +44,11 @@ def read_tfidf(settings: Settings) -> tuple[csr_matrix, pd.DataFrame]:
     return matrix, index
 
 
+def read_clean_news(settings: Settings) -> pd.DataFrame:
+    """Manchetes deduplicadas (entrada do TF-IDF), uma linha por manchete."""
+    return pd.read_parquet(settings.interim_dir / NEWS_CLEAN_FILE)
+
+
 def missing_inputs(settings: Settings, names: tuple[str, ...]) -> list[Path]:
     """Arquivos de `data_processed/` que não existem."""
     paths = [settings.processed_dir / name for name in names]

@@ -15,6 +15,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from tcc import stats
 from tcc.config import MODEL_LABELS
 
 DPI = 300
@@ -140,7 +141,7 @@ def figure_3_model_comparison(summary: pd.DataFrame, output_dir: Path) -> None:
     _save(fig, output_dir / "Figura_3_comparativo_modelos.png")
 
 
-def _sentiment_and_returns(sentiment: pd.DataFrame, returns: pd.DataFrame) -> pd.DataFrame:
+def sentiment_and_returns(sentiment: pd.DataFrame, returns: pd.DataFrame) -> pd.DataFrame:
     """Sentimento do modelo da Figura 4 ao lado do retorno do mesmo dia (D−1 → D)."""
     model = sentiment[sentiment["model"] == FIGURE_4_MODEL][["day", "sentiment"]]
     return model.merge(returns[["day", "ret"]], on="day", how="inner").sort_values("day")
@@ -148,13 +149,13 @@ def _sentiment_and_returns(sentiment: pd.DataFrame, returns: pd.DataFrame) -> pd
 
 def figure_4_correlation(sentiment: pd.DataFrame, returns: pd.DataFrame) -> float:
     """R de Pearson entre o sentimento da Regressão Logística e o retorno do mesmo dia."""
-    merged = _sentiment_and_returns(sentiment, returns).dropna()
+    merged = sentiment_and_returns(sentiment, returns).dropna()
     return float(merged["sentiment"].corr(merged["ret"]))
 
 
 def figure_4_scatter(sentiment: pd.DataFrame, returns: pd.DataFrame, output_dir: Path) -> None:
     """Dispersão sentimento × retorno do mesmo dia, com o r de Pearson no título."""
-    merged = _sentiment_and_returns(sentiment, returns).dropna()
+    merged = sentiment_and_returns(sentiment, returns).dropna()
     correlation = figure_4_correlation(sentiment, returns)
     fig, ax = plt.subplots(figsize=(9, 5), dpi=DPI)
     ax.scatter(merged["sentiment"], merged["ret"], alpha=0.35, edgecolor="k", s=24)
@@ -174,10 +175,10 @@ def _rolling_correlation_figure(
     label: str,
     path: Path,
 ) -> None:
-    merged = _sentiment_and_returns(sentiment, returns)
+    merged = sentiment_and_returns(sentiment, returns)
     fig, ax = plt.subplots(figsize=(11, 5.5), dpi=DPI)
     for window in windows:
-        rolling = merged["sentiment"].rolling(window).corr(merged["ret"])
+        rolling = stats.rolling_correlation(merged["sentiment"], merged["ret"], window)
         ax.plot(merged["day"], rolling, label=label.format(window=window))
     ax.axhline(0, color="gray", linestyle="--", linewidth=1)
     ax.legend()

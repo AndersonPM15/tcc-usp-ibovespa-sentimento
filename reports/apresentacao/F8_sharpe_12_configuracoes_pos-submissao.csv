@@ -1,0 +1,25 @@
+limiar,modelo,lag,quantil,sharpe,cagr,sharpe_ibovespa
+limiares do artigo (quantis de todo o período),Regressão Logística,0,0.9,-0.0803747849681,-0.0316021716066,0.25456565012
+limiares do artigo (quantis de todo o período),Random Forest,0,0.9,-0.1323120801,-0.0422239104251,0.25456565012
+limiares do artigo (quantis de todo o período),Regressão Logística,0,0.95,-0.099352113658,-0.033093879625,0.25456565012
+limiares do artigo (quantis de todo o período),Random Forest,0,0.95,-0.0286459729935,-0.0211506171801,0.25456565012
+limiares do artigo (quantis de todo o período),Regressão Logística,1,0.9,0.0332297467525,-0.0115186864152,0.25456565012
+limiares do artigo (quantis de todo o período),Random Forest,1,0.9,0.0733452566889,-0.00406897334025,0.25456565012
+limiares do artigo (quantis de todo o período),Regressão Logística,1,0.95,-0.200010311165,-0.0508369902537,0.25456565012
+limiares do artigo (quantis de todo o período),Random Forest,1,0.95,0.129725590886,0.00687289901136,0.25456565012
+limiares do artigo (quantis de todo o período),Regressão Logística,2,0.9,-0.0384860152071,-0.0241016034885,0.25456565012
+limiares do artigo (quantis de todo o período),Random Forest,2,0.9,0.306552664956,0.0392028869246,0.25456565012
+limiares do artigo (quantis de todo o período),Regressão Logística,2,0.95,-0.200553369724,-0.0495236168292,0.25456565012
+limiares do artigo (quantis de todo o período),Random Forest,2,0.95,0.382819982423,0.0514936068978,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Regressão Logística,0,0.9,-0.307662259137,-0.0504129854562,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Random Forest,0,0.9,-0.247872214578,-0.0548264219769,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Regressão Logística,0,0.95,-0.340089443402,-0.0489740899397,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Random Forest,0,0.95,-0.384983668024,-0.0681801724117,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Regressão Logística,1,0.9,-0.190791163269,-0.0403943086622,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Random Forest,1,0.9,-0.304363176528,-0.0625627750495,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Regressão Logística,1,0.95,-0.119188457981,-0.0263500946044,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Random Forest,1,0.95,-0.492825883892,-0.0828068253371,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Regressão Logística,2,0.9,-0.389772394838,-0.0731478379487,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Random Forest,2,0.9,0.0460212338621,-0.00543290802477,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Regressão Logística,2,0.95,-0.402968053733,-0.0695152532932,0.25456565012
+sem look-ahead (quantis dos 60 pregões anteriores),Random Forest,2,0.95,-0.0761321087947,-0.0220131223899,0.25456565012

@@ -50,16 +50,28 @@ class ArticleResults:
     figure4_correlation: float
 
 
-def compute_article(settings: Settings) -> ArticleResults:
-    """Calcula tudo o que entra nas tabelas e figuras do artigo."""
-    matrix, index = datasets.read_tfidf(settings)
-    ibovespa = datasets.read_ibovespa(settings)
+def text_walk_forward(
+    matrix: Any, index: pd.DataFrame, ibovespa: pd.DataFrame
+) -> tuple[pd.DataFrame, Any, dict[str, np.ndarray]]:
+    """Rótulos dos dias com pregão seguinte, suas linhas da matriz e as previsões fora da amostra."""
     labels = market.build_labels(index, ibovespa)
     has_label = labels["y"].notna().to_numpy()
     labelled = labels.loc[has_label].reset_index(drop=True)
     text_features = matrix[has_label]
     y = labelled["y"].astype(int).to_numpy()
-    predictions = models.walk_forward_predictions(text_features, y, models.baseline_models())
+    return (
+        labelled,
+        text_features,
+        models.walk_forward_predictions(text_features, y, models.baseline_models()),
+    )
+
+
+def compute_article(settings: Settings) -> ArticleResults:
+    """Calcula tudo o que entra nas tabelas e figuras do artigo."""
+    matrix, index = datasets.read_tfidf(settings)
+    ibovespa = datasets.read_ibovespa(settings)
+    labelled, text_features, predictions = text_walk_forward(matrix, index, ibovespa)
+    y = labelled["y"].astype(int).to_numpy()
 
     oof_full = models.oof_frame(labelled, predictions)
     oof_article = datasets.clamp_period(oof_full, "day")
@@ -111,7 +123,9 @@ def _table3(oof: pd.DataFrame, returns: pd.DataFrame) -> pd.DataFrame:
             "dataset": "backtest_daily",
             "strategy": backtest.ARTICLE_STRATEGY.name,
             **backtest.strategy_metrics(
-                backtest.run_quantile_strategy(oof[oof["model"] == model], event_q=0.90, lag=0)
+                backtest.run_quantile_strategy(
+                    oof[oof["model"] == model], backtest.TABLE3_QUANTILE, backtest.TABLE3_LAG
+                )
             ),
         }
         for model in MODEL_LABELS
@@ -167,20 +181,23 @@ def write_article_outputs(results: ArticleResults, settings: Settings) -> None:
     figures.figure_9_rolling_robustness(results.sentiment, results.returns_article, output)
 
 
+def verification_inputs(results: ArticleResults) -> verification.VerificationInputs:
+    """Entradas das verificações pós-submissão, tiradas dos resultados do artigo."""
+    return verification.VerificationInputs(
+        oof_full=results.oof_full,
+        oof_article=results.oof_article,
+        returns_full=results.returns_full,
+        returns_article=results.returns_article,
+        events=results.events,
+        labelled=results.labelled,
+        text_features=results.text_features,
+        text_predictions=results.predictions,
+    )
+
+
 def write_verifications(results: ArticleResults, settings: Settings) -> dict[str, pd.DataFrame]:
     """Executa e grava as verificações pós-submissão (a)–(e)."""
-    tables = verification.run_verifications(
-        verification.VerificationInputs(
-            oof_full=results.oof_full,
-            oof_article=results.oof_article,
-            returns_full=results.returns_full,
-            returns_article=results.returns_article,
-            events=results.events,
-            labelled=results.labelled,
-            text_features=results.text_features,
-            text_predictions=results.predictions,
-        )
-    )
+    tables = verification.run_verifications(verification_inputs(results))
     settings.verification_dir.mkdir(parents=True, exist_ok=True)
     for name, table in tables.items():
         figures.write_csv(table, settings.verification_dir / f"{name}.csv")

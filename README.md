@@ -19,6 +19,7 @@ pip install -e ".[dev]"
 cp .env.example .env                                     # e preencha TCC_USP_BASE (pasta dos dados)
 
 python -m tcc reproduce                                  # Tabelas 1–4, Figuras 1–9 e verificações a–e
+python -m tcc presentation-figures                       # figuras dos slides (PNG, SVG e CSV)
 pytest                                                   # testes, incluindo a regressão do artigo
 ```
 
@@ -60,6 +61,7 @@ flowchart LR
         E --> F
         F --> CK["comparação com o artigo<br/>tcc.article"]
     end
+    reproduce --> AP["figuras dos slides<br/>presentation-figures · tcc.presentation"]
 ```
 
 | Etapa | Comando | Módulo | Entrada → saída |
@@ -73,6 +75,7 @@ flowchart LR
 | Eventos | `reproduce` | `tcc.events` | Figuras 1, 7A e 7B |
 | Figuras | `reproduce` | `tcc.figures` | `reports/figures/` |
 | Verificações | `reproduce` | `tcc.verification` | `reports/verificacao/` |
+| Apresentação | `presentation-figures` | `tcc.presentation` | `reports/apresentacao/` (PNG 300 dpi, SVG e CSV) |
 | Configuração | — | `tcc.config`, `tcc.datasets` | `TCC_USP_BASE` (`.env`), período e semente |
 
 A coleta do GDELT não é determinística (a API pode responder diferente em datas diferentes).
@@ -208,9 +211,11 @@ cada commit, `pre-commit install` ativa lint, tipos e o teste de reprodução do
 ```
 src/tcc/               pacote: um módulo por etapa (ver Arquitetura)
   reference/           números, tabelas e séries publicados no artigo
+  presentation/        figuras dos slides; fonts/ traz a Montserrat (licença OFL)
 tests/                 testes (pytest)
 reports/figures/       tabelas e figuras do artigo (geradas pelo reproduce)
 reports/verificacao/   verificações pós-submissão (geradas pelo reproduce)
+reports/apresentacao/  figuras dos slides (geradas pelo presentation-figures)
 data/MANIFEST.md       manifesto dos arquivos de dados
 .env.example           modelo de configuração (TCC_USP_BASE)
 ```
@@ -223,7 +228,8 @@ release `v1.0-semead2026` (o dashboard também na tag `v1.0-dashboard`).
 ## Licença e citação
 
 Código sob licença MIT (`LICENSE`). Os dados de notícias pertencem às respectivas fontes e não
-são redistribuídos.
+são redistribuídos. A fonte Montserrat, usada nas figuras dos slides, é distribuída sob a SIL
+Open Font License 1.1 (`src/tcc/presentation/fonts/OFL.txt`).
 
 MACHADO, Anderson Pantoja. Análise do Sentimento de Notícias e seu Efeito no Ibovespa: Um
 Estudo Empírico com Baselines Transparentes. In: XXIX SemeAd — Seminários em Administração

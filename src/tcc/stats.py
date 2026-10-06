@@ -90,6 +90,11 @@ def correlations(x: np.ndarray, y: np.ndarray) -> dict[str, float]:
     }
 
 
+def rolling_correlation(x: pd.Series, y: pd.Series, window: int) -> pd.Series:
+    """Correlação de Pearson em janela móvel de `window` observações (NaN antes de completá-la)."""
+    return x.rolling(window).corr(y)
+
+
 def cube_root_block_size(n: int) -> int:
     """Tamanho de bloco pela regra n^(1/3)."""
     return max(1, round(math.cbrt(n)))

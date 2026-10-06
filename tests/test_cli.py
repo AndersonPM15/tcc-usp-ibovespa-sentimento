@@ -18,6 +18,7 @@ def test_parser_knows_every_command() -> None:
     args = parser.parse_args(["reproduce", "--skip-verifications"])
     assert args.command == "reproduce" and args.skip_verifications
     assert parser.parse_args(["download-ibovespa"]).command == "download-ibovespa"
+    assert parser.parse_args(["presentation-figures"]).command == "presentation-figures"
 
 
 def test_missing_data_folder_is_reported(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
