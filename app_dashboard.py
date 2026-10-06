@@ -46,8 +46,8 @@ PREFERRED_STRATEGY = "long_only_60"
 FALLBACK_STRATEGY = "long_only_55"
 COMPARE_MODELS_ANCHOR = ["logreg_l2", "rf_200"]
 MODEL_DISPLAY_NAMES = {
-    "logreg_l2": "Média simples do sentimento",
-    "rf_200": "Média ponderada por volume",
+    "logreg_l2": "Regressão Logística",
+    "rf_200": "Random Forest",
 }
 
 PLOTLY_CONFIG = dict(

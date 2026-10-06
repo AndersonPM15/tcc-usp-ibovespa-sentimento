@@ -2,13 +2,20 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 import pandas as pd
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from src.io import paths  # noqa: E402
+
 START = pd.Timestamp("2018-01-02")
 END = pd.Timestamp("2024-12-31")
-DATA_DIR = Path(r"C:\TCC_USP\data_processed")
+DATA_DIR = paths.DATA_PROCESSED  # respeita TCC_USP_BASE (ver .env.example)
 
 
 def load_ibov(path: Path) -> pd.DataFrame:
