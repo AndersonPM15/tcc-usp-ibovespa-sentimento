@@ -1,0 +1,5 @@
+modelo,comparacao,diferenca_auc,ic95_inferior,ic95_superior,ic_inclui_zero,bloco,n,rotulo
+Regressão Logística,técnico (5 retornos defasados + volatilidade de 5 e 20 dias) − só texto (TF-IDF),-0.0073748960931006025,-0.049774651064174,0.0349938559056325,True,12,1552,pós-submissão; não consta do artigo
+Random Forest,técnico (5 retornos defasados + volatilidade de 5 e 20 dias) − só texto (TF-IDF),-0.0026151288445552257,-0.04020979850349652,0.031065239334029448,True,12,1552,pós-submissão; não consta do artigo
+Regressão Logística,texto + técnico − só texto (TF-IDF),0.0007464671654198174,-0.022319286646608105,0.02368712690083161,True,12,1552,pós-submissão; não consta do artigo
+Random Forest,texto + técnico − só texto (TF-IDF),0.007642560266001741,-0.01634964641446698,0.032446350497856866,True,12,1552,pós-submissão; não consta do artigo

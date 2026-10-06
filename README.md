@@ -66,6 +66,10 @@ os números do artigo, a pasta apontada por `TCC_USP_BASE` deve conter `data_pro
 
 Configure a variável copiando `.env.example` para `.env`, ou com `export TCC_USP_BASE=...`.
 
+As verificações pós-submissão usam também o Ibovespa até 18/11/2025, lido do histórico do git
+(versão de `ibovespa_clean.csv` no blob `1e9e2ec`). Por isso, precisam de um clone com histórico
+completo.
+
 ---
 
 ## Reprodução
@@ -77,6 +81,7 @@ export TCC_USP_BASE=/caminho/para/TCC_USP                # pasta que contém dat
 
 pytest                                                   # confere os números do artigo
 python scripts/export_tcc_figures.py --strategy long_only_60 --run_robustness   # regenera reports/figures
+python scripts/run_post_submission_checks.py             # verificações pós-submissão (reports/verificacao)
 ```
 
 O teste `tests/test_article_reproduction.py` confere as Tabelas 1 a 4, as Figuras 3, 4 e 8 e o
@@ -101,6 +106,28 @@ Testadas em ambiente limpo com **Python 3.11.15**:
 
 Os notebooks-protótipo de embeddings e LSTM (04, 08 e 09) usam TensorFlow e
 sentence-transformers. Eles não fazem parte do artigo e essas bibliotecas não estão fixadas.
+
+---
+
+## Verificações pós-submissão
+
+**Pós-submissão; não consta do artigo.** Em [`reports/verificacao/`](reports/verificacao/README.md)
+há cinco análises feitas depois da submissão, com as mesmas previsões fora da amostra:
+
+- **(a)** benchmark no mesmo período das estratégias;
+- **(b)** H1 com IC por bootstrap em blocos, Newey-West e ADF/KPSS;
+- **(c)** backtest sem *look-ahead* (limiares dos 60 pregões anteriores);
+- **(d)** estudo de eventos com retorno anormal e janela em pregões;
+- **(e)** modelo técnico e modelo texto + técnico.
+
+Elas confirmam as conclusões centrais do artigo: não há poder preditivo nem valor econômico.
+Também mostram dois pontos que não se sustentam:
+
+- o r ≈ −0,13 é contemporâneo e significativo, não preditivo;
+- o CAAR negativo em τ = 4 da Figura 7B.
+
+As opções novas ficam no mesmo código do artigo, por exemplo `threshold_mode="rolling"` e
+`window_unit="trading_days"`. O padrão de cada uma continua reproduzindo o artigo.
 
 ---
 
@@ -129,9 +156,14 @@ notebooks/
                               fora do pipeline do artigo
 scripts/export_tcc_figures.py Figuras e tabelas do artigo (reports/figures)
 scripts/generate_event_study_latency.py  Eventos do estudo de eventos
+scripts/run_post_submission_checks.py    Verificações pós-submissão (reports/verificacao)
 src/                          Módulos reutilizáveis (caminhos, configuração, coletores, validação)
+  models/walk_forward.py      Walk-forward dos classificadores (mesma lógica do notebook 16)
+  features/technical.py       Variáveis técnicas (retornos defasados, volatilidade)
+  analysis/h1_tests.py        Bootstrap em blocos, Newey-West, ADF/KPSS
 tests/                        Testes (pytest), incluindo a reprodução do artigo
 reports/figures/              Figuras e tabelas exportadas
+reports/verificacao/          Resultados pós-submissão (não constam do artigo)
 ```
 
 ---

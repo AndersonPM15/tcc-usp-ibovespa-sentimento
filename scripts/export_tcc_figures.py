@@ -448,35 +448,93 @@ def _bootstrap_mean_ci(
     )
 
 
-def figure_caar_event_time(events: pd.DataFrame, ibov: pd.DataFrame, tau_max: int = 5) -> None:
-    returns = ibov.set_index("day")["ret"].dropna()
-    rows: list[dict[str, float | int | str]] = []
-    for _, row in events.iterrows():
-        event_day = row["event_day"]
-        polarity = row["polarity"]
-        for tau in range(0, tau_max + 1):
+def _event_cars(
+    returns: pd.Series,
+    event_day: pd.Timestamp,
+    tau_max: int,
+    window_unit: str,
+    abnormal: bool,
+    estimation_window: int,
+    first_tau: int,
+) -> dict[int, float]:
+    """CAR do evento para cada τ disponível (retorno bruto ou anormal, somado a partir de `first_tau`)."""
+    position = returns.index.get_indexer([event_day])[0]
+    expected = 0.0
+    if abnormal:
+        if position < estimation_window:
+            return {}
+        expected = float(returns.iloc[position - estimation_window : position].mean())
+    cars = {}
+    for tau in range(first_tau, tau_max + 1):
+        if window_unit == "calendar_days":
             window = returns.loc[event_day : event_day + pd.Timedelta(days=tau)]
             if len(window) < tau + 1:
                 continue
-            car = window.iloc[: tau + 1].sum()
-            rows.append({"tau": tau, "polarity": polarity, "car": car})
+            window = window.iloc[first_tau : tau + 1]
+        elif window_unit == "trading_days":
+            if position < 0 or position + tau >= len(returns):
+                continue
+            window = returns.iloc[position + first_tau : position + tau + 1]
+        else:
+            raise ValueError(f"window_unit inválido: {window_unit!r}")
+        cars[tau] = float((window - expected).sum())
+    return cars
+
+
+def compute_caar_by_event_time(
+    events: pd.DataFrame,
+    returns: pd.Series,
+    tau_max: int = 5,
+    window_unit: str = "calendar_days",
+    abnormal: bool = False,
+    estimation_window: int = 60,
+    first_tau: int = 0,
+    n_boot: int = 1000,
+    seed: int = BOOTSTRAP_SEED,
+) -> pd.DataFrame:
+    """CAAR por polaridade e τ, com IC 95% por bootstrap i.i.d. dos eventos.
+
+    Padrão (artigo): janela de τ dias corridos a partir do evento e retornos brutos.
+    Verificação pós-submissão: `window_unit="trading_days"` (τ pregões, todos os eventos
+    entram em todo τ) e `abnormal=True` (retorno anormal = retorno − média dos
+    `estimation_window` pregões anteriores ao evento). Com `first_tau=1`, o retorno do
+    próprio dia do evento fica de fora da soma.
+    """
+    rows: list[dict[str, float | int | str]] = []
+    for _, row in events.iterrows():
+        cars = _event_cars(
+            returns,
+            row["event_day"],
+            tau_max,
+            window_unit,
+            abnormal,
+            estimation_window,
+            first_tau,
+        )
+        rows.extend(
+            {"tau": tau, "polarity": row["polarity"], "car": car} for tau, car in cars.items()
+        )
     car_df = pd.DataFrame(rows)
     if car_df.empty or car_df["tau"].nunique() <= 1:
         raise RuntimeError("CAAR: número insuficiente de pontos tau (>1) para plotar curva.")
     out_rows: list[dict[str, float | int]] = []
-    taus_sorted = sorted(car_df["tau"].unique())
-    for tau in taus_sorted:
+    for tau in sorted(car_df["tau"].unique()):
         sub = car_df[car_df["tau"] == tau]
-        entry: dict[str, float | int] = {"tau": tau, "n_boot": 1000}
+        entry: dict[str, float | int] = {"tau": tau, "n_boot": n_boot}
         for pol in ["neg", "pos"]:
             pol_vals = sub.loc[sub["polarity"] == pol, "car"].dropna().values
-            mean, low, high = _bootstrap_mean_ci(pol_vals)
+            mean, low, high = _bootstrap_mean_ci(pol_vals, n_boot=n_boot, seed=seed)
             entry[f"caar_{pol}_mean"] = mean
             entry[f"caar_{pol}_ci_low"] = low
             entry[f"caar_{pol}_ci_high"] = high
             entry[f"n_events_{pol}"] = int(len(pol_vals))
         out_rows.append(entry)
-    out_df = pd.DataFrame(out_rows)
+    return pd.DataFrame(out_rows)
+
+
+def figure_caar_event_time(events: pd.DataFrame, ibov: pd.DataFrame, tau_max: int = 5) -> None:
+    returns = ibov.set_index("day")["ret"].dropna()
+    out_df = compute_caar_by_event_time(events, returns, tau_max)
     if out_df["tau"].nunique() <= 1:
         raise RuntimeError("CAAR CSV: pontos tau insuficientes.")
     out_df.to_csv(OUTPUT_DIR / "Figura_7B_event_time_CAAR.csv", index=False)
@@ -677,25 +735,47 @@ def _max_drawdown(equity: pd.Series) -> float:
     return float(dd)
 
 
+def _quantile_thresholds(
+    proba: pd.Series, event_q: float, allow_short: bool, threshold_mode: str, threshold_window: int
+) -> tuple[np.ndarray, np.ndarray]:
+    """Limiares diários de entrada (quantil `event_q`) e de saída/venda.
+
+    - "full_sample" (artigo): quantis de p no período inteiro, o que usa informação futura;
+    - "rolling" (verificação pós-submissão): quantis de p nos `threshold_window` pregões
+      anteriores; nos primeiros pregões não há limiar e a estratégia fica fora do mercado.
+    A saída usa a mediana (só compra) ou o quantil 1 − `event_q` (compra e venda).
+    """
+    exit_q = 1 - event_q if allow_short else 0.50
+    if threshold_mode == "full_sample":
+        n_days = len(proba)
+        return np.full(n_days, proba.quantile(event_q)), np.full(n_days, proba.quantile(exit_q))
+    if threshold_mode == "rolling":
+        past = proba.shift(1).rolling(threshold_window, min_periods=threshold_window)
+        return past.quantile(event_q).to_numpy(), past.quantile(exit_q).to_numpy()
+    raise ValueError(
+        f"threshold_mode inválido: {threshold_mode!r} (use 'full_sample' ou 'rolling')."
+    )
+
+
 def _run_strategy_quantile(
     oof_model: pd.DataFrame,
     cfg: dict[str, float],
     event_q: float,
     lag: int,
+    threshold_mode: str = "full_sample",
+    threshold_window: int = 60,
 ) -> pd.DataFrame:
     df = oof_model.sort_values("day").copy()
     allow_short = cfg.get("allow_short", True)
     cost = cfg.get("cost", 0.0005)
-    long_th = df["proba"].quantile(event_q)
-    if allow_short:
-        short_th = df["proba"].quantile(1 - event_q)
-    else:
-        short_th = df["proba"].quantile(0.50)
+    long_ths, short_ths = _quantile_thresholds(
+        df["proba"], event_q, allow_short, threshold_mode, threshold_window
+    )
 
     positions = []
     turnovers = []
     pos_prev = 0
-    for proba in df["proba"]:
+    for proba, long_th, short_th in zip(df["proba"], long_ths, short_ths, strict=True):
         if proba >= long_th:
             pos = 1
         elif allow_short and proba <= short_th:
@@ -750,6 +830,8 @@ def _run_robust_backtest_grid(
     strategy_name: str,
     lags: list[int],
     event_qs: list[float],
+    threshold_mode: str = "full_sample",
+    threshold_window: int = 60,
 ) -> pd.DataFrame:
     cfg = next((c for c in STRATEGIES_CFG if c["name"] == strategy_name), None)
     if cfg is None:
@@ -761,7 +843,14 @@ def _run_robust_backtest_grid(
                 df_model = oof[oof["model"] == model].copy()
                 if df_model.empty:
                     continue
-                strat = _run_strategy_quantile(df_model, cfg, event_q=eq, lag=lag)
+                strat = _run_strategy_quantile(
+                    df_model,
+                    cfg,
+                    event_q=eq,
+                    lag=lag,
+                    threshold_mode=threshold_mode,
+                    threshold_window=threshold_window,
+                )
                 ret = strat["strategy_ret"]
                 equity = strat["equity"]
                 metrics = _compute_metrics(
