@@ -1,29 +1,20 @@
-"""Teste que garante que a série do Ibovespa respeita o intervalo oficial
-2018-01-02 a 2024-12-31 definido para o TCC."""
+"""Garante que a série do Ibovespa respeita o período oficial do estudo (2018-01-02 a 2024-12-31)."""
 
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
-from src.config.constants import START_DATE, END_DATE
+from src.config.constants import END_DATE, START_DATE
 from src.io.paths import DATA_PROCESSED
 
 
-def test_ibovespa_clean_periodo_oficial():
+def test_ibovespa_clean_within_official_period() -> None:
     csv_path: Path = DATA_PROCESSED / "ibovespa_clean.csv"
     if not csv_path.exists():
-        raise AssertionError(f"Arquivo não encontrado: {csv_path}")
+        pytest.skip(f"Arquivo não encontrado: {csv_path} (defina TCC_USP_BASE).")
 
-    df = pd.read_csv(csv_path)
-    if "date" not in df.columns:
-        raise AssertionError("Coluna 'date' não encontrada em ibovespa_clean.csv")
+    dates = pd.to_datetime(pd.read_csv(csv_path)["date"])
 
-    df["date"] = pd.to_datetime(df["date"])
-    min_date = df["date"].min().date()
-    max_date = df["date"].max().date()
-
-    if not (min_date >= START_DATE and max_date <= END_DATE):
-        raise AssertionError(
-            f"Período de ibovespa_clean.csv fora dos limites oficiais do TCC: "
-            f"{min_date} -> {max_date}"
-        )
+    assert dates.min().date() >= START_DATE
+    assert dates.max().date() <= END_DATE

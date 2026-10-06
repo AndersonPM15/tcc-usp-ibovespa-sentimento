@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Dashboard do TCC USP: Sentimento de Notícias x Ibovespa.
 Run: python app_dashboard.py
@@ -14,14 +13,13 @@ import sys
 import webbrowser
 from datetime import datetime
 from pathlib import Path
-from typing import List
 
 import pandas as pd
 import plotly.graph_objects as go
-from dash import Dash, Input, Output, dash_table, dcc, html, ctx
+from dash import Dash, Input, Output, ctx, dash_table, dcc, html
 
 from src.config import loader as cfg
-from src.config.constants import START_DATE, END_DATE
+from src.config.constants import END_DATE, START_DATE
 from src.io import paths
 
 # ------------------------------------------------------------------------------
@@ -165,9 +163,9 @@ def load_sentiment() -> pd.DataFrame:
 
 
 def load_results_table() -> pd.DataFrame:
-    rows: List[dict] = []
+    rows: list[dict] = []
     if RESULTS16_PATH.exists():
-        with open(RESULTS16_PATH, "r", encoding="utf-8") as fh:
+        with open(RESULTS16_PATH, encoding="utf-8") as fh:
             results16 = json.load(fh)
         for model_name, values in results16.get("models", {}).items():
             rows.append(
@@ -229,7 +227,8 @@ RESULTS_DF = load_results_table()
 LATENCY_DF = load_latency_events()
 BACKTEST_DF = load_backtest_curves()
 BACKTEST_RESULTS_DF = _safe_read_csv(BACKTEST_PATH)
-if not BACKTEST_RESULTS_DF.empty and "dataset" not in BACKTEST_RESULTS_DF.columns:
+if "dataset" not in BACKTEST_RESULTS_DF.columns:
+    # Também cria a coluna quando a tabela está vazia: o filtro abaixo depende dela.
     BACKTEST_RESULTS_DF["dataset"] = "backtest_daily"
 
 
@@ -713,15 +712,14 @@ def toggle_export_class(toggle_value):
 
 
 app.clientside_callback(
-    """
-    function(toggle){
+    f"""
+    function(toggle){{
         const isExport = Array.isArray(toggle) && toggle.includes("export");
-        const h = isExport ? %d : %d;
-        const style = {"height": h + "px", "flex": "1 1 auto"};
+        const h = isExport ? {H_EXPORT:d} : {H_NORMAL:d};
+        const style = {{"height": h + "px", "flex": "1 1 auto"}};
         return [style,style,style,style,style,style,style,style];
-    }
-    """
-    % (H_EXPORT, H_NORMAL),
+    }}
+    """,
     Output("ibov-graph", "style"),
     Output("sentiment-graph", "style"),
     Output("model-comparison-graph", "style"),

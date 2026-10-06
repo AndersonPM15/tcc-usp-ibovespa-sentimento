@@ -1,0 +1,12 @@
+[tool.ruff]
+line-length = 100  # padrão já usado no código existente
+target-version = "py311"
+extend-exclude = ["notebooks/_runs", "mlruns"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]  # comprimento de linha fica a cargo do formatador
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

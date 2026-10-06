@@ -1,0 +1,21 @@
+# Ganchos executados antes de cada commit (instalação: `pre-commit install`).
+# Os dados do artigo ficam fora do repositório: defina TCC_USP_BASE antes de commitar.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-lint
+        name: ruff (lint)
+        entry: ruff check
+        language: system
+        types_or: [python, jupyter]
+      - id: ruff-format
+        name: ruff (formatação)
+        entry: ruff format --check
+        language: system
+        types_or: [python, jupyter]
+      - id: article-reproduction
+        name: números do artigo (pytest)
+        entry: pytest -q tests/test_article_reproduction.py
+        language: system
+        pass_filenames: false
+        always_run: true
