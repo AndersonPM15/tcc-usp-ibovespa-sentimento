@@ -1,0 +1,30 @@
+# Lint, tipos, código morto e testes a cada push.
+# Os dados do artigo não estão no repositório: sem eles, os testes de regressão são pulados
+# com aviso (pytest -ra lista o motivo) e os testes unitários rodam com dados sintéticos.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  qualidade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Instalar o pacote
+        run: pip install -e ".[dev]"
+      - name: Lint (ruff)
+        run: |
+          ruff check .
+          ruff format --check .
+      - name: Tipos (mypy)
+        run: mypy
+      - name: Código morto (vulture)
+        run: vulture
+      - name: Testes (pytest)
+        run: pytest -ra
