@@ -33,6 +33,7 @@ data_interim/
 *.npz
 
 # Temporários / logs
+data/results_registry.json
 *.log
 *.tmp
 tmp_*
