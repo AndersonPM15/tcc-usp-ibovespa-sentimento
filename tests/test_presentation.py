@@ -17,6 +17,8 @@ import matplotlib.image as mpimg
 import numpy as np
 import pandas as pd
 import pytest
+from matplotlib.collections import PolyCollection
+from matplotlib.colors import to_hex
 from matplotlib.figure import Figure
 from matplotlib.text import Text
 
@@ -70,7 +72,11 @@ def _drawers() -> dict[str, Callable[[pd.DataFrame], Figure]]:
     }
 
 
-COMMITTED_STEMS = sorted(path.stem for path in COMMITTED.glob("*.csv"))
+COMMITTED_STEMS = sorted(path.stem for path in COMMITTED.glob("*.csv"))  # figuras e tabelas
+FIGURE_STEMS = sorted(path.stem for path in COMMITTED.glob("*.png"))
+F5B = "F5b_auc_por_bloco_pos-submissao"
+F6 = "F6_caar_retorno_anormal_pos-submissao"
+F9 = "F9_auc_token_none_pos-submissao"
 
 
 # --------------------------------------------------------------------------- padrão visual
@@ -108,7 +114,7 @@ def test_save_writes_png_svg_and_csv_in_slide_size(tmp_path: Path, full_width: b
     pd.testing.assert_frame_equal(pd.read_csv(tmp_path / "a" / "figura.csv"), data)
 
 
-@pytest.mark.parametrize("stem", COMMITTED_STEMS)
+@pytest.mark.parametrize("stem", FIGURE_STEMS)
 def test_committed_data_redraws_in_slide_format(stem: str, tmp_path: Path) -> None:
     frame = _read(stem)
     with style.slide_style():
@@ -127,8 +133,43 @@ def test_committed_data_redraws_in_slide_format(stem: str, tmp_path: Path) -> No
 
 
 def test_post_submission_results_are_labelled_in_the_file_name() -> None:
-    labelled = {stem.split("_")[0] for stem in COMMITTED_STEMS if build.POST_SUBMISSION in stem}
+    labelled = {stem.split("_")[0] for stem in FIGURE_STEMS if build.POST_SUBMISSION in stem}
     assert labelled == {"F4a", "F5b", "F6", "F7a", "F7b", "F8", "F9"}
+
+
+def test_event_study_uses_the_polarity_colors() -> None:
+    with style.slide_style():
+        fig = charts.event_study(_read(F6))
+    ax = fig.axes[0]
+    lines = {
+        to_hex(line.get_color()).upper() for line in ax.get_lines() if line.get_marker() == "o"
+    }
+    assert lines == {color.upper() for color in style.POLARITY_COLORS.values()}
+    assert not lines & {color.upper() for color in style.MODEL_COLORS.values()}
+    bands = [band for band in ax.collections if isinstance(band, PolyCollection)]
+    assert len(bands) == 2 and all(band.get_alpha() == style.CI_ALPHA for band in bands)
+
+
+@pytest.mark.parametrize("stem", [F5B, F9])
+def test_value_labels_stay_clear_of_the_auc_reference_line(stem: str) -> None:
+    with style.slide_style():
+        fig = _drawers()[stem](_read(stem))
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()  # type: ignore[attr-defined]
+        ax = fig.axes[0]
+        line_y = ax.transData.transform((0, 0.5))[1]
+        labels = [text for text in ax.texts if re.fullmatch(r"0,\d{3}", text.get_text())]
+        boxes = [text.get_window_extent(renderer) for text in labels]
+    assert len(labels) == len(_read(stem))  # um rótulo por ponto
+    assert all(box.y0 > line_y or box.y1 < line_y for box in boxes)
+
+
+def test_headline_coverage_by_year() -> None:
+    coverage = _read(build.COVERAGE_STEM).set_index("ano")
+    assert coverage.loc[2018, "mediana_por_dia"] == 72
+    assert coverage.loc[2024, "mediana_por_dia"] == 10
+    assert coverage["total_manchetes"].sum() == 91941
+    assert coverage.index.tolist() == list(range(2018, 2026))
 
 
 # --------------------------------------------------------------------------- com os dados

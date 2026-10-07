@@ -60,11 +60,29 @@ def study_periods(
     }
 
 
+def headlines_per_day(news: pd.DataFrame) -> pd.Series:
+    """Número de manchetes da base limpa em cada dia que tem ao menos uma, em ordem de data."""
+    return pd.to_datetime(news["date"]).dt.floor("D").value_counts().sort_index()
+
+
+def coverage_by_year(news: pd.DataFrame) -> pd.DataFrame:
+    """Cobertura da base limpa por ano: média, mediana e total de manchetes por dia.
+
+    Conta só os dias com ao menos uma manchete (2025 vai até 19/11, fim da coleta).
+    """
+    per_day = headlines_per_day(news)
+    coverage = per_day.groupby(pd.DatetimeIndex(per_day.index).year).agg(
+        ["size", "mean", "median", "sum"]
+    )
+    coverage.columns = ["dias_com_manchete", "media_por_dia", "mediana_por_dia", "total_manchetes"]
+    return coverage.rename_axis("ano").reset_index()
+
+
 def ibovespa_and_headlines(
     results: ArticleResults, news: pd.DataFrame, schedule: pd.DataFrame
 ) -> pd.DataFrame:
     """F1: fechamento do Ibovespa, manchetes da base limpa por dia e faixa do estudo."""
-    headlines = pd.to_datetime(news["date"]).dt.floor("D").value_counts().rename("manchetes")
+    headlines = headlines_per_day(news).rename("manchetes")
     prices = results.returns_full.set_index("day")["close"].rename("ibovespa")
     frame = pd.concat([prices, headlines], axis=1).sort_index().rename_axis("dia").reset_index()
     frame["manchetes"] = frame["manchetes"].fillna(0).astype(int)

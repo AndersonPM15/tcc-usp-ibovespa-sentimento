@@ -44,6 +44,9 @@ TEXT_COLOR = "#1F2A37"
 MUTED_COLOR = "#6B7280"
 GRID_COLOR = "#E5E7EB"
 CI_ALPHA = 0.15
+# Polaridade do sentimento extremo (F6): fora da paleta dos modelos e distinguíveis com
+# daltonismo (pior caso: ΔE 8,2 em OKLab na deuteranopia)
+POLARITY_COLORS = {"pos": "#0F766E", "neg": "#9F1239"}
 
 FONT_FILE = Path(__file__).parent / "fonts" / "Montserrat-Regular.ttf"
 FONT = "Montserrat"

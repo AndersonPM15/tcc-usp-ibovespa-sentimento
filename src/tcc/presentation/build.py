@@ -18,10 +18,16 @@ from matplotlib.figure import Figure
 
 from tcc import datasets, reproduce
 from tcc.config import Settings
+from tcc.figures import write_csv
 from tcc.presentation import charts, style
 from tcc.presentation import data as slide_data
 
 POST_SUBMISSION = "pos-submissao"
+COVERAGE_STEM = "F1_cobertura_por_ano"
+COVERAGE_DESCRIPTION = (
+    "Tabela de apoio à F1 (só CSV): dias com manchete, média, mediana e total de manchetes "
+    "por dia em cada ano da base limpa (2025 até 19/11)"
+)
 NEEDS_NEWS = ("F1", "F9")
 
 
@@ -130,8 +136,8 @@ def slides(
     return [first, *items, last]
 
 
-def readme(items: list[Slide]) -> str:
-    """Lista das figuras para `reports/apresentacao/README.md`."""
+def readme(items: list[Slide], tables: dict[str, str]) -> str:
+    """Lista das figuras e das tabelas de apoio para `reports/apresentacao/README.md`."""
     lines = [
         "# Figuras da apresentação",
         "",
@@ -147,6 +153,7 @@ def readme(items: list[Slide]) -> str:
         "|---|---|",
     ]
     lines += [f"| `{item.stem}` | {item.description} |" for item in items]
+    lines += [f"| `{stem}` | {description} |" for stem, description in tables.items()]
     return "\n".join(lines) + "\n"
 
 
@@ -164,7 +171,13 @@ def write_figures(
         items = slides(results, news, ibovespa)
         for item in items:
             written += style.save(item.draw(item.data), item.data, output, item.stem)
+    tables: dict[str, str] = {}
+    if news is not None:
+        coverage_path = output / f"{COVERAGE_STEM}.csv"
+        write_csv(slide_data.coverage_by_year(news), coverage_path)
+        written.append(coverage_path)
+        tables[COVERAGE_STEM] = COVERAGE_DESCRIPTION
     readme_path = output / "README.md"
-    readme_path.write_text(readme(items), encoding="utf-8")
+    readme_path.write_text(readme(items, tables), encoding="utf-8")
     skipped = [] if news is not None else list(NEEDS_NEWS)
     return [*written, readme_path], skipped

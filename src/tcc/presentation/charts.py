@@ -26,6 +26,7 @@ from tcc.presentation.style import (
     IBOVESPA_COLOR,
     MODEL_COLORS,
     MUTED_COLOR,
+    POLARITY_COLORS,
     TEXT_COLOR,
     date_br,
     decimal,
@@ -44,7 +45,11 @@ BAND_COLORS = {
 }
 TRAIN_BAR_COLOR = "#D1D5DB"
 TEST_BAR_COLOR = "#374151"
-EVENT_COLORS = {slide_data.POSITIVE_EVENTS: "#1B7F3B", slide_data.NEGATIVE_EVENTS: "#B42318"}
+EVENT_COLORS = {
+    slide_data.POSITIVE_EVENTS: POLARITY_COLORS["pos"],
+    slide_data.NEGATIVE_EVENTS: POLARITY_COLORS["neg"],
+}
+LABEL_OFFSET_PT = 12  # distância entre o ponto e o seu rótulo de valor
 VERSION_MARKERS = {slide_data.WITH_NONE: "o", slide_data.WITHOUT_NONE: "D"}
 HEATMAP_LIMIT = 0.5  # escala de cor comum aos dois painéis da F8 (Sharpe de −0,5 a 0,5)
 
@@ -65,18 +70,24 @@ def _years_from_january(ax: Axes, first: pd.Timestamp, last: pd.Timestamp) -> No
     year_ticks(ax.xaxis)
 
 
-def _value_label(ax: Axes, text: str, xy: tuple[float, float], side: int, color: str) -> None:
-    """Valor escrito ao lado de um ponto (à esquerda se `side` < 0), sobre fundo branco."""
+def _value_label(
+    ax: Axes, text: str, xy: tuple[float, float], side: int, color: str, reference: float
+) -> None:
+    """Valor ao lado de um ponto (à esquerda se `side` < 0), do lado oposto à linha `reference`.
+
+    O rótulo fica inteiro acima da linha quando o valor está nela ou acima, e inteiro abaixo
+    quando está abaixo: assim nunca cruza a linha tracejada de referência (AUC = 0,50).
+    """
+    above = xy[1] >= reference
     ax.annotate(
         text,
         xy,
-        xytext=(side * 12, 0),
+        xytext=(side * LABEL_OFFSET_PT, LABEL_OFFSET_PT / 2 if above else -LABEL_OFFSET_PT / 2),
         textcoords="offset points",
         ha="right" if side < 0 else "left",
-        va="center",
+        va="bottom" if above else "top",
         fontsize=AXIS_PT,
         color=color,
-        bbox={"facecolor": "white", "edgecolor": "none", "pad": 1},
     )
 
 
@@ -374,7 +385,7 @@ def auc_by_block(frame: pd.DataFrame) -> Figure:
         )
         side = -1 if offsets[model] < 0 else 1
         for xi, auc in zip(x, rows["auc"], strict=True):
-            _value_label(ax, decimal(auc), (xi, auc), side, color)
+            _value_label(ax, decimal(auc), (xi, auc), side, color, reference=0.5)
     _zero_line(ax, 0.5)
     blocks = frame.drop_duplicates("bloco")
     ax.set_xticks(
@@ -574,7 +585,7 @@ def none_token_auc(frame: pd.DataFrame) -> Figure:
                 markeredgewidth=2,
             )
             side = -1 if offsets[version] < 0 else 1
-            _value_label(ax, decimal(row["auc"]), (x, row["auc"]), side, color)
+            _value_label(ax, decimal(row["auc"]), (x, row["auc"]), side, color, reference=0.5)
     _zero_line(ax, 0.5)
     ax.set_xticks(range(len(MODEL_COLORS)), list(MODEL_COLORS))
     ax.set_xlim(-0.6, len(MODEL_COLORS) - 0.4)

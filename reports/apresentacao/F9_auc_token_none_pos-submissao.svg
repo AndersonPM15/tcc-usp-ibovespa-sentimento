@@ -1258,16 +1258,8 @@ L 810.59976 352.09576
 " style="fill: none; stroke: #6b7280; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="text_12">
-    <g id="patch_5">
-     <path d="M 174.555263 169.39132 
-L 219.020263 169.39132 
-L 219.020263 147.96732 
-L 174.555263 147.96732 
-z
-" style="fill: #ffffff"/>
-    </g>
     <!-- 0,502 -->
-    <g style="fill: #004aad" transform="translate(175.515263 164.41532) scale(0.16 -0.16)">
+    <g style="fill: #004aad" transform="translate(175.515263 148.66332) scale(0.16 -0.16)">
      <use xlink:href="#Montserrat-Regular-845"/>
      <use xlink:href="#Montserrat-Regular-8c9" transform="translate(65.109375 0)"/>
      <use xlink:href="#Montserrat-Regular-84a" transform="translate(86.3125 0)"/>
@@ -1276,16 +1268,8 @@ z
     </g>
    </g>
    <g id="text_13">
-    <g id="patch_6">
-     <path d="M 322.105774 176.0378 
-L 368.075774 176.0378 
-L 368.075774 154.6138 
-L 322.105774 154.6138 
-z
-" style="fill: #ffffff"/>
-    </g>
     <!-- 0,500 -->
-    <g style="fill: #004aad" transform="translate(323.065774 171.0618) scale(0.16 -0.16)">
+    <g style="fill: #004aad" transform="translate(323.065774 155.3098) scale(0.16 -0.16)">
      <use xlink:href="#Montserrat-Regular-845"/>
      <use xlink:href="#Montserrat-Regular-8c9" transform="translate(65.109375 0)"/>
      <use xlink:href="#Montserrat-Regular-84a" transform="translate(86.3125 0)"/>
@@ -1294,16 +1278,8 @@ z
     </g>
    </g>
    <g id="text_14">
-    <g id="patch_7">
-     <path d="M 515.053226 216.550036 
-L 556.543226 216.550036 
-L 556.543226 195.126036 
-L 515.053226 195.126036 
-z
-" style="fill: #ffffff"/>
-    </g>
     <!-- 0,491 -->
-    <g style="fill: #f08217" transform="translate(516.013226 211.574036) scale(0.16 -0.16)">
+    <g style="fill: #f08217" transform="translate(516.013226 227.326036) scale(0.16 -0.16)">
      <use xlink:href="#Montserrat-Regular-845"/>
      <use xlink:href="#Montserrat-Regular-8c9" transform="translate(65.109375 0)"/>
      <use xlink:href="#Montserrat-Regular-849" transform="translate(85.015625 0)"/>
@@ -1312,16 +1288,8 @@ z
     </g>
    </g>
    <g id="text_15">
-    <g id="patch_8">
-     <path d="M 659.628737 188.262438 
-L 704.641237 188.262438 
-L 704.641237 166.838438 
-L 659.628737 166.838438 
-z
-" style="fill: #ffffff"/>
-    </g>
     <!-- 0,497 -->
-    <g style="fill: #f08217" transform="translate(660.588737 183.286438) scale(0.16 -0.16)">
+    <g style="fill: #f08217" transform="translate(660.588737 199.038438) scale(0.16 -0.16)">
      <use xlink:href="#Montserrat-Regular-845"/>
      <use xlink:href="#Montserrat-Regular-8c9" transform="translate(65.109375 0)"/>
      <use xlink:href="#Montserrat-Regular-849" transform="translate(85.015625 0)"/>

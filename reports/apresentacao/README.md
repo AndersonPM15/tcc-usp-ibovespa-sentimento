@@ -22,3 +22,4 @@ CSV; vírgula decimal nas figuras). Tamanho de slide 11,3 × 5,3 pol. (largura t
 | `F7b_patrimonio_sem_lookahead_pos-submissao` | O mesmo, com limiares sem look-ahead (verificação c) |
 | `F8_sharpe_12_configuracoes_pos-submissao` | Sharpe das 12 configurações da Tabela 4, com os limiares do artigo e sem look-ahead, e o Sharpe do Ibovespa no mesmo período (verificações a e c) |
 | `F9_auc_token_none_pos-submissao` | AUC com e sem o token espúrio "None" (bug 12), com IC 95% |
+| `F1_cobertura_por_ano` | Tabela de apoio à F1 (só CSV): dias com manchete, média, mediana e total de manchetes por dia em cada ano da base limpa (2025 até 19/11) |
