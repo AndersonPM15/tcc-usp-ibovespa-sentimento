@@ -151,6 +151,39 @@ no código e cobertos por teste:
 
 ---
 
+## Diferenças entre o texto dos anais e o código
+
+Quatro pontos em que o texto dos anais e o código não coincidem. Cada um foi conferido no
+código, nos dados e em `reports/`.
+
+1. **Fonte das notícias.** Não é um único portal. A base vem 100% do GDELT DOC 2.0 (consulta
+   por Ibovespa, B3, bolsa, ações e mercado, em português): 91.941 manchetes de 508 domínios,
+   e o maior deles, `economia.uol.com.br`, responde por 13,6% delas (`tcc.news.gdelt`).
+2. **Duas séries de sentimento = dois modelos.** São as probabilidades da Regressão Logística e
+   do Random Forest, convertidas em 2p − 1 (`tcc.models`). O código não calcula média simples
+   nem média ponderada por volume. A única média é a dos dois modelos, usada para detectar
+   eventos (`tcc.events`). Ver "Rótulos no artigo", acima.
+3. **Token "None".** Uma falha de limpeza gravou "None" no texto de todas as manchetes, e o
+   token entrou no TF-IDF: 4.035 bigramas com "none", 8,9% dos 45.473 termos. Sem ele (47.301
+   termos), o AUC fica em 0,500 (Regressão Logística) e 0,497 (Random Forest), contra 0,502 e
+   0,491 no artigo (pós-submissão; não consta do artigo:
+   `reports/apresentacao/F9_auc_token_none_pos-submissao.csv`).
+4. **Validação e pré-processamento.** A validação executada é um walk-forward de janela
+   expansiva: treino inicial de 390 pregões e 4 etapas de teste de 388 pregões cada
+   (`tcc.models`). Não há lematização. O TF-IDF é ajustado uma vez, no corpus inteiro (2.771
+   dias, até 19/11/2025), antes do walk-forward; assim, o vocabulário e os pesos IDF de cada
+   etapa incluem dias posteriores ao seu treino (`tcc.news.text`).
+
+Todos os números publicados no artigo (Tabelas 1 a 4, Figuras 3, 4, 7B e 8 e os 270 eventos)
+são reproduzidos pelo código, com a ressalva documentada da Figura 7B (o bootstrap do artigo
+não tinha semente; o código usa a 42). Nenhuma das diferenças acima altera a conclusão do
+artigo, de que não há poder preditivo nem valor econômico (ver
+[`reports/verificacao/`](reports/verificacao/README.md)): os números publicados são os que
+este código produz, e a correção do "None", a única que muda um número, mantém o AUC em torno
+de 0,50. O efeito de ajustar o TF-IDF só no treino de cada etapa não foi medido.
+
+---
+
 ## Dados
 
 Os dados não são versionados (licenças das fontes de notícias). O manifesto
